@@ -1,0 +1,260 @@
+[gd_scene load_steps=25 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/player/Player.tscn" id="1_player"]
+[ext_resource type="PackedScene" path="res://scenes/opening/GhostGirl.tscn" id="2_girl"]
+[ext_resource type="Texture2D" path="res://assets/textures/earth_albedo.jpg" id="3_earth_a"]
+[ext_resource type="Texture2D" path="res://assets/textures/earth_normal.jpg" id="4_earth_n"]
+[ext_resource type="Texture2D" path="res://assets/textures/earth_orm.jpg" id="5_earth_orm"]
+[ext_resource type="Texture2D" path="res://assets/textures/brick_red_albedo.jpg" id="6_brick_a"]
+[ext_resource type="Texture2D" path="res://assets/textures/brick_red_normal.jpg" id="7_brick_n"]
+[ext_resource type="Texture2D" path="res://assets/textures/brick_red_orm.jpg" id="8_brick_orm"]
+[ext_resource type="Texture2D" path="res://assets/textures/wood_weathered_albedo.jpg" id="9_wood_a"]
+
+[sub_resource type="ORMMaterial3D" id="Mat_Ground"]
+albedo_color = Color(0.55, 0.55, 0.55, 1)
+albedo_texture = ExtResource("3_earth_a")
+orm_texture = ExtResource("5_earth_orm")
+roughness = 1.0
+normal_enabled = true
+normal_texture = ExtResource("4_earth_n")
+uv1_scale = Vector3(0.48, 0.48, 0.48)
+uv1_triplanar = true
+uv1_world_triplanar = true
+texture_filter = 5
+
+[sub_resource type="ORMMaterial3D" id="Mat_YardBrick"]
+albedo_color = Color(0.5, 0.48, 0.47, 1)
+albedo_texture = ExtResource("6_brick_a")
+orm_texture = ExtResource("8_brick_orm")
+roughness = 1.0
+normal_enabled = true
+normal_texture = ExtResource("7_brick_n")
+uv1_scale = Vector3(0.71, 0.71, 0.71)
+uv1_triplanar = true
+uv1_world_triplanar = true
+texture_filter = 5
+
+[sub_resource type="ORMMaterial3D" id="Mat_WallBrick"]
+albedo_color = Color(0.45, 0.42, 0.4, 1)
+albedo_texture = ExtResource("6_brick_a")
+orm_texture = ExtResource("8_brick_orm")
+roughness = 1.0
+normal_enabled = true
+normal_texture = ExtResource("7_brick_n")
+uv1_scale = Vector3(0.71, 0.71, 0.71)
+uv1_triplanar = true
+uv1_world_triplanar = true
+texture_filter = 5
+
+[sub_resource type="StandardMaterial3D" id="Mat_Bark"]
+albedo_color = Color(0.16, 0.14, 0.13, 1)
+albedo_texture = ExtResource("9_wood_a")
+roughness = 1.0
+uv1_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="Mat_Silhouette"]
+albedo_color = Color(0.03, 0.035, 0.04, 1)
+roughness = 1.0
+
+[sub_resource type="StandardMaterial3D" id="Mat_Jar"]
+albedo_color = Color(0.22, 0.15, 0.1, 1)
+metallic_specular = 0.7
+roughness = 0.35
+
+[sub_resource type="CylinderMesh" id="Mesh_Jar"]
+top_radius = 0.22
+bottom_radius = 0.2
+height = 0.75
+radial_segments = 20
+
+[sub_resource type="SphereMesh" id="Mesh_JarBelly"]
+radius = 0.33
+height = 0.6
+radial_segments = 20
+rings = 10
+
+[sub_resource type="CylinderMesh" id="Mesh_Trunk"]
+top_radius = 0.07
+bottom_radius = 0.18
+height = 3.2
+radial_segments = 10
+
+[sub_resource type="CylinderMesh" id="Mesh_Branch"]
+top_radius = 0.015
+bottom_radius = 0.06
+height = 1.6
+radial_segments = 6
+
+[sub_resource type="PrismMesh" id="Mesh_Roof"]
+size = Vector3(9, 2.2, 6)
+
+[sub_resource type="BoxShape3D" id="Shape_BoundX"]
+size = Vector3(0.5, 4, 24)
+
+[sub_resource type="BoxShape3D" id="Shape_BoundZ"]
+size = Vector3(24, 4, 0.5)
+
+[sub_resource type="Environment" id="Env_Nightmare"]
+background_mode = 1
+background_color = Color(0.02, 0.025, 0.035, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.3, 0.36, 0.46, 1)
+ambient_light_energy = 0.22
+tonemap_mode = 3
+tonemap_exposure = 1.1
+glow_enabled = true
+glow_intensity = 0.5
+glow_bloom = 0.1
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.075
+volumetric_fog_albedo = Color(0.6, 0.67, 0.74, 1)
+volumetric_fog_emission = Color(0.03, 0.04, 0.055, 1)
+volumetric_fog_emission_energy = 1.0
+volumetric_fog_anisotropy = 0.4
+volumetric_fog_length = 48.0
+volumetric_fog_ambient_inject = 0.3
+adjustment_enabled = true
+adjustment_contrast = 1.08
+adjustment_saturation = 0.55
+
+[sub_resource type="BoxMesh" id="Mesh_HouseBox"]
+size = Vector3(8, 3.2, 5)
+
+[node name="NightmareYard" type="Node3D"]
+
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env_Nightmare")
+
+[node name="Moon" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.9397, 0, 0.342, 0.1606, 0.8829, 0.4412, -0.302, 0.4695, -0.8297, 0, 10, 0)
+light_color = Color(0.55, 0.64, 0.82, 1)
+light_energy = 0.35
+light_volumetric_fog_energy = 1.4
+shadow_enabled = true
+directional_shadow_max_distance = 30.0
+
+[node name="Structure" type="CSGCombiner3D" parent="."]
+use_collision = true
+
+[node name="Ground" type="CSGBox3D" parent="Structure"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+size = Vector3(60, 1, 60)
+material = SubResource("Mat_Ground")
+
+[node name="YardBricks" type="CSGBox3D" parent="Structure"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, -1)
+size = Vector3(9, 0.04, 16)
+material = SubResource("Mat_YardBrick")
+
+[node name="Wall1" type="CSGBox3D" parent="Structure"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.4, 0.7, -9)
+size = Vector3(4.2, 1.4, 0.22)
+material = SubResource("Mat_WallBrick")
+
+[node name="Wall2" type="CSGBox3D" parent="Structure"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.4, 0.7, -9)
+size = Vector3(4.2, 1.4, 0.22)
+material = SubResource("Mat_WallBrick")
+
+[node name="Wall3" type="CSGBox3D" parent="Structure"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 0.7, -3)
+size = Vector3(0.22, 1.4, 10)
+material = SubResource("Mat_WallBrick")
+
+[node name="Wall4" type="CSGBox3D" parent="Structure"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 0.7, -1)
+size = Vector3(0.22, 1.4, 14)
+material = SubResource("Mat_WallBrick")
+
+[node name="HouseSilhouette" type="Node3D" parent="."]
+transform = Transform3D(0.9903, 0, 0.1392, 0, 1, 0, -0.1392, 0, 0.9903, 1.5, 0, -17)
+
+[node name="Walls" type="MeshInstance3D" parent="HouseSilhouette"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
+mesh = SubResource("Mesh_HouseBox")
+surface_material_override/0 = SubResource("Mat_Silhouette")
+
+[node name="Roof" type="MeshInstance3D" parent="HouseSilhouette"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.3, 0)
+mesh = SubResource("Mesh_Roof")
+surface_material_override/0 = SubResource("Mat_Silhouette")
+
+[node name="DeadTree" type="Node3D" parent="."]
+transform = Transform3D(0.9397, 0, -0.342, 0, 1, 0, 0.342, 0, 0.9397, -3.6, 0, -6.8)
+
+[node name="Trunk" type="MeshInstance3D" parent="DeadTree"]
+transform = Transform3D(0.9976, 0.0698, 0, -0.0698, 0.9976, 0, 0, 0, 1, 0, 1.6, 0)
+mesh = SubResource("Mesh_Trunk")
+surface_material_override/0 = SubResource("Mat_Bark")
+
+[node name="Branch1" type="MeshInstance3D" parent="DeadTree"]
+transform = Transform3D(0.5736, 0.8192, 0, -0.8192, 0.5736, 0, 0, 0, 1, 0, 2.4, 0)
+mesh = SubResource("Mesh_Branch")
+surface_material_override/0 = SubResource("Mat_Bark")
+
+[node name="Branch2" type="MeshInstance3D" parent="DeadTree"]
+transform = Transform3D(0.4924, -0.766, -0.4132, 0.5868, 0.6428, -0.4924, 0.6428, 0, 0.766, 0, 2.9, 0)
+mesh = SubResource("Mesh_Branch")
+surface_material_override/0 = SubResource("Mat_Bark")
+
+[node name="Branch3" type="MeshInstance3D" parent="DeadTree"]
+transform = Transform3D(-0.2113, -0.9063, -0.366, -0.4532, 0.4226, -0.7849, 0.866, 0, -0.5, 0, 2, 0)
+mesh = SubResource("Mesh_Branch")
+surface_material_override/0 = SubResource("Mat_Bark")
+
+[node name="Branch4" type="MeshInstance3D" parent="DeadTree"]
+transform = Transform3D(-0.7698, 0.5736, 0.2802, 0.539, 0.8192, -0.1962, -0.342, 0, -0.9397, 0, 3.1, 0)
+mesh = SubResource("Mesh_Branch")
+surface_material_override/0 = SubResource("Mat_Bark")
+
+[node name="Jar1" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.6, 0, -7.4)
+
+[node name="Belly" type="MeshInstance3D" parent="Jar1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.38, 0)
+mesh = SubResource("Mesh_JarBelly")
+surface_material_override/0 = SubResource("Mat_Jar")
+
+[node name="Neck" type="MeshInstance3D" parent="Jar1"]
+transform = Transform3D(0.75, 0, 0, 0, 0.5, 0, 0, 0, 0.75, 0, 0.55, 0)
+mesh = SubResource("Mesh_Jar")
+surface_material_override/0 = SubResource("Mat_Jar")
+
+[node name="Jar2" type="Node3D" parent="."]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 4.4, 0, -6.6)
+
+[node name="Belly" type="MeshInstance3D" parent="Jar2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.38, 0)
+mesh = SubResource("Mesh_JarBelly")
+surface_material_override/0 = SubResource("Mat_Jar")
+
+[node name="Neck" type="MeshInstance3D" parent="Jar2"]
+transform = Transform3D(0.75, 0, 0, 0, 0.5, 0, 0, 0, 0.75, 0, 0.55, 0)
+mesh = SubResource("Mesh_Jar")
+surface_material_override/0 = SubResource("Mat_Jar")
+
+[node name="Bounds" type="StaticBody3D" parent="."]
+
+
+[node name="Shape1" type="CollisionShape3D" parent="Bounds"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2, 0)
+shape = SubResource("Shape_BoundX")
+
+[node name="Shape2" type="CollisionShape3D" parent="Bounds"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2, 0)
+shape = SubResource("Shape_BoundX")
+
+[node name="Shape3" type="CollisionShape3D" parent="Bounds"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -10)
+shape = SubResource("Shape_BoundZ")
+
+[node name="Shape4" type="CollisionShape3D" parent="Bounds"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 7)
+shape = SubResource("Shape_BoundZ")
+
+[node name="GhostGirl" parent="." instance=ExtResource("2_girl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 0, -6)
+
+[node name="Player" parent="." instance=ExtResource("1_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 5)
