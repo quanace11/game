@@ -1,0 +1,60 @@
+{
+  "portable_cassette_player": {
+    "authors": [
+      "Mateusz Sadek"
+    ],
+    "license": "CC0 1.0",
+    "source": "https://polyhaven.com/a/portable_cassette_player"
+  },
+  "pot_enamel_01": {
+    "authors": [
+      "Kuutti Siitonen"
+    ],
+    "license": "CC0 1.0",
+    "source": "https://polyhaven.com/a/pot_enamel_01"
+  },
+  "potted_plant_02": {
+    "authors": [
+      "Rico Cilliers"
+    ],
+    "license": "CC0 1.0",
+    "source": "https://polyhaven.com/a/potted_plant_02"
+  },
+  "tea_set_01": {
+    "authors": [
+      "James Ray Cock",
+      "Jurita Burger",
+      "Rico Cilliers"
+    ],
+    "license": "CC0 1.0",
+    "source": "https://polyhaven.com/a/tea_set_01"
+  },
+  "vintage_oil_lamp": {
+    "authors": [
+      "Monsta3D"
+    ],
+    "license": "CC0 1.0",
+    "source": "https://polyhaven.com/a/vintage_oil_lamp"
+  },
+  "wicker_basket_01": {
+    "authors": [
+      "Kuutti Siitonen"
+    ],
+    "license": "CC0 1.0",
+    "source": "https://polyhaven.com/a/wicker_basket_01"
+  },
+  "wooden_bucket_01": {
+    "authors": [
+      "James Ray Cock"
+    ],
+    "license": "CC0 1.0",
+    "source": "https://polyhaven.com/a/wooden_bucket_01"
+  },
+  "wooden_crate_01": {
+    "authors": [
+      "James Ray Cock"
+    ],
+    "license": "CC0 1.0",
+    "source": "https://polyhaven.com/a/wooden_crate_01"
+  }
+}

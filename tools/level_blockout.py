@@ -4,8 +4,9 @@
 Chạy:  python3 tools/level_blockout.py
 Kết quả: scenes/levels/DreamBedroom.tscn và scenes/levels/OldHouse.tscn
 
-Texture lấy từ res://assets/textures/ (sinh bằng tools/bake_textures.gd). Muốn thay
-bằng texture CC0 thật thì chép đè file cùng tên, không phải sửa script này.
+Texture lấy từ res://assets/textures/: phần lớn là texture CC0 thật của Poly Haven
+(tools/fetch_cc0_assets.py, danh sách trong assets/textures/cc0_sets.json), phần còn lại
+sinh bằng tools/bake_textures.gd. Model trang trí CC0 nằm trong res://assets/models/.
 
 LƯU Ý: chạy lại script sẽ GHI ĐÈ hai file .tscn trên. Nếu đã chỉnh scene
 bằng Godot editor thì đừng chạy lại, hoặc sửa số đo ở đây trước rồi mới chạy.
@@ -17,12 +18,17 @@ Quy ước: 1 đơn vị = 1 mét, trục +Y lên trên, mặt tiền nhà quay 
   và nhập lại, có thể gắn lại chức năng theo tên.
 """
 
+import json
 import math
 import os
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEX = "res://assets/textures/"
 DECAL = "res://assets/textures/decals/"
+
+# Bộ texture CC0 thật (tải bằng tools/fetch_cc0_assets.py): albedo + normal + ORM, kèm kích thước thật.
+_CC0_PATH = os.path.join(ROOT, "assets", "textures", "cc0_sets.json")
+CC0 = json.load(open(_CC0_PATH)) if os.path.exists(_CC0_PATH) else {}
 
 
 def f(v):
@@ -144,18 +150,36 @@ class Scene:
         """
         if name in self.materials:
             return self.materials[name]
+        cc0 = CC0.get(tex)
         a = self.ext_res("Texture2D", TEX + tex + "_albedo.jpg")
-        n = self.ext_res("Texture2D", TEX + tex + "_normal.png")
-        r = self.ext_res("Texture2D", TEX + tex + "_rough.jpg")
         props = [
             ("albedo_color", color(tint)),
             ("albedo_texture", 'ExtResource("%s")' % a),
         ]
-        if metallic:
-            props.append(("metallic", f(metallic)))
+        if cc0:
+            # Texture thật: trải theo kích thước ngoài đời, AO/roughness/metallic gói trong 1 ảnh ORM.
+            tile = cc0["size_m"]
+            normal = min(normal, 1.0)  # normal map chụp thật, không cần phóng đại như ảnh sinh thủ tục
+            n = self.ext_res("Texture2D", TEX + tex + "_normal.jpg")
+            orm = self.ext_res("Texture2D", TEX + tex + "_orm.jpg")
+            props += [
+                ("orm_texture", 'ExtResource("%s")' % orm),
+                ("ao_enabled", "true"), ("ao_light_affect", "0.25"),
+                ("metallic", f(1.0 if metallic else 0.0)),
+                ("roughness", f(rough)),
+            ]
+            kind = "ORMMaterial3D"
+        else:
+            n = self.ext_res("Texture2D", TEX + tex + "_normal.png")
+            r = self.ext_res("Texture2D", TEX + tex + "_rough.jpg")
+            if metallic:
+                props.append(("metallic", f(metallic)))
+            props += [
+                ("roughness", f(rough)),
+                ("roughness_texture", 'ExtResource("%s")' % r),
+            ]
+            kind = "StandardMaterial3D"
         props += [
-            ("roughness", f(rough)),
-            ("roughness_texture", 'ExtResource("%s")' % r),
             ("normal_enabled", "true"),
             ("normal_scale", f(normal)),
             ("normal_texture", 'ExtResource("%s")' % n),
@@ -167,7 +191,7 @@ class Scene:
         else:
             props.append(("uv1_scale", vec3((uv_scale[0], uv_scale[1], 1))))
         props.append(("texture_filter", "5"))
-        rid = self.sub_res("StandardMaterial3D", "Mat_" + name, props)
+        rid = self.sub_res(kind, "Mat_" + name, props)
         self.materials[name] = rid
         return rid
 
@@ -280,6 +304,13 @@ class Scene:
             props.append(("material_override", 'SubResource("%s")' % mat))
         props += list(extra)
         return self.node(name, "MeshInstance3D", parent, props)
+
+    def model(self, name, parent, asset, pos, rot_y=0.0, scale=1.0):
+        """Model CC0 (glTF trong assets/models/<asset>/), chỉ để nhìn, không va chạm."""
+        rid = self.ext_res("PackedScene", "res://assets/models/%s/%s.gltf" % (asset, asset))
+        b = basis_mul(basis_y(rot_y), basis_scale(scale, scale, scale))
+        self.nodes.append('[node name="%s" parent="%s" instance=ExtResource("%s")]\ntransform = %s\n'
+                          % (self.uniq(parent, name), parent, rid, xform(pos, basis=b)))
 
     def decal(self, name, parent, pos, facing, size, mat, roll=0.0, offset=0.006):
         """Tấm dán phẳng sát bề mặt. `facing` là hướng pháp tuyến của bề mặt (vd '+z')."""
@@ -531,8 +562,9 @@ def sun(sc, name, direction, light_color, energy, extra=()):
 
 def dust(sc, name, parent, center, extents, amount=60, col=(1, 0.95, 0.85, 0.35), size=0.012):
     """Bụi lơ lửng (bắt sáng ở luồng nắng / dưới bóng đèn)."""
-    m = sc.mat("DustMote%d" % len(sc.materials), col[:3], 1.0, alpha=col[3], unshaded=True, billboard=True)
-    q = sc.mesh_res("quad", (size, size))
+    m = sc.mat("DustMote%d" % len(sc.materials), col[:3], 1.0, alpha=col[3] * 0.7, unshaded=True, billboard=True)
+    # Hạt tròn nhỏ thay vì tấm vuông: ở gần không còn lộ thành ô vuông trắng.
+    q = sc.mesh_res("sphere", (size * 0.3, size * 0.6))
     sc.node(name, "CPUParticles3D", parent, [
         ("transform", xform(center)),
         ("amount", str(amount)), ("lifetime", "12.0"), ("preprocess", "12.0"),
@@ -595,8 +627,8 @@ def build_dream_bedroom():
     sage = sc.pbr("Sage", "fabric", (0.62, 0.68, 0.6), tile=0.15, normal=1.4)
     wood_light = sc.pbr("WoodLight", "oak_floor", (1.08, 1.06, 1.02), tile=2.4, normal=0.4)
     wood_front = sc.mat("WoodFront", (0.93, 0.9, 0.84), 0.5)
-    metal_dark = sc.pbr("SafeSteel", "rust_metal", (0.55, 0.58, 0.62), tile=0.8, rough=0.55, normal=0.3,
-                        metallic=0.75)
+    # Két sắt sơn tĩnh điện đen (giấc mơ sạch sẽ, không gỉ sét).
+    metal_dark = sc.mat("SafeSteel", (0.07, 0.075, 0.08), 0.38, metallic=0.6)
     brass = sc.mat("Brass", (0.85, 0.68, 0.38), 0.28, metallic=0.95)
     curtain = sc.mat("Curtain", (0.99, 0.97, 0.93), 0.95, alpha=0.55)
     drape = sc.pbr("Drape", "fabric", (0.86, 0.8, 0.7), tile=0.25, normal=1.0)
@@ -628,7 +660,7 @@ def build_dream_bedroom():
     photo = sc.decal_mat("PhotoSmall", "family_photo.png", tint=(1.1, 1.08, 1.05, 1), opaque=True)
 
     environment(sc, "day", (0.32, 0.52, 0.85), (0.78, 0.86, 0.95), (0.6, 0.65, 0.6), (0.2, 0.25, 0.2),
-                (0.95, 0.96, 1.0), 0.45, sky_energy=1.1, exposure=0.85, extra=[
+                (0.95, 0.96, 1.0), 0.75, sky_energy=1.1, exposure=1.2, extra=[
                     ("sdfgi_enabled", "true"), ("sdfgi_use_occlusion", "true"), ("sdfgi_energy", "1.2"),
                     ("ssil_enabled", "true"),
                     ("volumetric_fog_enabled", "true"), ("volumetric_fog_density", "0.012"),
@@ -808,21 +840,9 @@ def build_dream_bedroom():
 
     # Cây cảnh trong chậu: thân + lá to.
     pg = sc.group("Plant", ".", (2.35, 0, 0.3))
-    sc.cyl("Pot", pg, (0, 0.2, 0), 0.2, 0.4, terracotta, sides=20)
-    sc.mesh("Soil", pg, "cyl", (0.18, 0.18, 0.02, 16), (0, 0.39, 0), sc.mat("Soil", (0.2, 0.14, 0.1), 1.0))
-    for k in range(14):
-        a = k * 137.5
-        h = 0.35 + 0.5 * ((k * 5) % 7) / 6.0
-        tilt = 15 + 35 * ((k * 3) % 5) / 4.0
-        b = basis_mul(basis_y(a), basis_x(tilt))
-        d = (b[1], b[4], b[7])
-        base = (0.04 * math.sin(math.radians(a)), 0.38, 0.04 * math.cos(math.radians(a)))
-        mid = tuple(base[i] + d[i] * h / 2 for i in range(3))
-        end = tuple(base[i] + d[i] * h for i in range(3))
-        sc.mesh("Stalk", pg, "cyl", (0.005, 0.008, h, 6), mid, stem, basis=b)
-        # Lá hình elip dẹt gắn ở đầu cuống, ngả ra ngoài.
-        sc.mesh("Leaf", pg, "sphere", (0.15, 0.3), end, leaf,
-                basis=basis_mul(basis_y(a), basis_x(tilt + 25), basis_scale(0.7, 1.2, 0.12)))
+    # Khối va chạm cho chậu, phần nhìn là model CC0 (Poly Haven potted_plant_02).
+    sc.cyl("PotCollision", pg, (0, 0.2, 0), 0.22, 0.4, sc.mat("Invisible", (0, 0, 0), alpha=0.0))
+    sc.model("PlantModel", ".", "potted_plant_02", (2.35, 0, 0.3), 30, 1.2)
 
     # Dấu chân ướt trẻ con: từ cửa sổ trái đi về phía tủ quần áo hé mở.
     for k in range(7):
@@ -841,12 +861,12 @@ def build_dream_bedroom():
     # Đèn phụ giả ánh sáng hắt từ cửa sổ (cho renderer Compatibility không có GI).
     sc.node("WindowBounce", "OmniLight3D", ".", [
         ("transform", xform((0, 1.4, 1.6))), ("light_color", color((1, 0.97, 0.92))),
-        ("light_energy", "0.35"), ("omni_range", "5.5"), ("shadow_enabled", "false"),
+        ("light_energy", "0.6"), ("omni_range", "5.5"), ("shadow_enabled", "false"),
         ("light_specular", "0.1")])
     # Phản chiếu cho gương, kim loại, kính.
     sc.node("ReflectionProbe", "ReflectionProbe", ".", [
         ("transform", xform((0, 1.5, 0))), ("size", vec3((W, H, D))), ("box_projection", "true"),
-        ("interior", "true"), ("enable_shadows", "true"), ("ambient_mode", "0")])
+        ("enable_shadows", "true"), ("update_mode", "1")])
     dust(sc, "SunDust", ".", (-0.4, 1.4, 0.8), (1.6, 1.0, 1.4), amount=90)
 
     # Khung cảnh ngoài cửa sổ: sân cỏ, hàng rào trắng, bụi cây, một cây lớn.
@@ -877,7 +897,7 @@ def build_old_house():
     sc = Scene("OldHouse")
     p_rid = sc.ext_res("PackedScene", "res://scenes/player/Player.tscn")
 
-    lime = sc.pbr("WallLimewash", "limewash_old", (0.95, 0.93, 0.9), tile=3.0, normal=1.0)
+    lime = sc.pbr("WallLimewash", "limewash_old", (1.0, 0.9, 0.7), tile=3.0, normal=1.0)  # vôi ve vàng
     lime_kitchen = sc.pbr("WallKitchen", "limewash_old", (0.72, 0.67, 0.6), tile=2.4, normal=1.2)
     tiles = sc.pbr("FloorBrickTile", "tile_terracotta", (1, 1, 1), tile=1.2, normal=1.0)
     ceil = sc.pbr("CeilingCot", "bamboo_weave", (0.9, 0.85, 0.78), tile=1.6, normal=1.0)
@@ -956,6 +976,9 @@ def build_old_house():
                 (0.42, 0.48, 0.68), 0.22, sky_energy=0.6, fog_color=(0.07, 0.08, 0.11), fog_density=0.03,
                 exposure=1.15, extra=[
                     ("fog_sky_affect", "0.6"),
+                    # Ánh đèn sợi đốt hắt lên tường/trần (SSIL) cho có chiều sâu, vẫn giữ góc tối.
+                    # Không bật SDFGI: với nền đất dày và đêm tối, SDFGI làm tắt hẳn ánh sáng môi trường.
+                    ("ssil_enabled", "true"), ("ssil_intensity", "1.0"),
                     ("volumetric_fog_enabled", "true"), ("volumetric_fog_density", "0.035"),
                     ("volumetric_fog_albedo", color((0.75, 0.78, 0.85))),
                     ("volumetric_fog_emission", color((0.01, 0.012, 0.02))),
@@ -1245,6 +1268,7 @@ def build_old_house():
     sc.mesh("Teapot", tg, "sphere", (0.07, 0.11), (0.3, 0.24, 0.0), porcelain_blue)
     sc.mesh("Bottle", tg, "cyl", (0.03, 0.04, 0.24, 12), (0.65, 0.3, 0.0), sc.mat("BottleGreen", (0.15, 0.3, 0.2), 0.05, alpha=0.7))
     sc.box("Top", tg, (0, 0.82, 0), (1.86, 0.04, 0.52), wood)
+    sc.model("CassettePlayer", tg, "portable_cassette_player", (0.68, 0.9, 0.08), -12)
     sc.mesh("Doily", tg, "box", (0.7, 0.004, 0.42), (0, 0.842, 0), white_cloth, shadow=False)
     tv = sc.group("TV_CRT", ".", (-2.12, 0.84, 0.9), 90)
     sc.box("Body", tv, (0, 0.24, -0.03), (0.58, 0.46, 0.44), tv_body)
@@ -1268,12 +1292,7 @@ def build_old_house():
 
     # Bộ bàn ghế gỗ tiếp khách, ấm chén, phích nước.
     table(sc, "Salon_Table", ".", (0.2, 0, 0.9), 0, 1.1, 0.6, 0.48, wood, turned=True)
-    sc.mesh("Tray", "Salon_Table", "box", (0.4, 0.02, 0.28), (-0.15, 0.47, 0), lacquer)
-    sc.mesh("Teapot", "Salon_Table", "sphere", (0.07, 0.11), (-0.2, 0.53, 0), porcelain_blue)
-    sc.mesh("TeapotSpout", "Salon_Table", "cyl", (0.008, 0.015, 0.08, 6), (-0.13, 0.55, 0), porcelain_blue,
-            basis=basis_z(-55))
-    for k in range(4):
-        sc.mesh("Cup", "Salon_Table", "cyl", (0.025, 0.02, 0.035, 12), (-0.05, 0.495, -0.09 + k * 0.06), ceramic)
+    sc.model("TeaSet", "Salon_Table", "tea_set_01", (-0.12, 0.48, 0), 90, 0.6)
     sc.mesh("Thermos", "Salon_Table", "cyl", (0.055, 0.06, 0.32, 16), (0.32, 0.62, 0.1), green_thermos)
     sc.mesh("ThermosCap", "Salon_Table", "cyl", (0.035, 0.045, 0.05, 12), (0.32, 0.8, 0.1), aluminium)
     sc.mesh("Ashtray", "Salon_Table", "cyl", (0.06, 0.05, 0.02, 12), (0.3, 0.47, -0.15), glass_dark)
@@ -1362,8 +1381,7 @@ def build_old_house():
     sc.mesh("BlanketLump", "Bed_Her", "sphere", (0.22, 0.32), (0.05, 0.52, 0.15), blanket,
             basis=basis_scale(1.1, 0.7, 3.0))
     chest_of_drawers(sc, "Nightstand_Her", ".", (5.75, 0, -1.1), -90, 0.45, 0.55, 0.4, wood, wood_mid, drawers=2)
-    sc.mesh("OilLamp", "Nightstand_Her", "cyl", (0.03, 0.05, 0.1, 12), (0, 0.6, 0), glass_dark)
-    sc.mesh("OilLampChimney", "Nightstand_Her", "cyl", (0.025, 0.035, 0.14, 12), (0, 0.72, 0), glass_dark)
+    sc.model("OilLamp", "Nightstand_Her", "vintage_oil_lamp", (0, 0.55, 0), 0, 0.45)
     wardrobe(sc, "Wardrobe_Her", ".", (3.4, 0, -2.44), 0, 1.2, 1.9, 0.58, wood, wood_mid, ajar=(1, 25), dark=soot)
     desk(sc, "Desk_Her", ".", (2.88, 0, 1.15), 90, 1.1, 0.55, wood_mid, wood, drawer_side=-1)
     for k in range(4):
@@ -1455,6 +1473,7 @@ def build_old_house():
         sc.box("Box", cr, (0, 0.22, 0), (0.45, 0.44, 0.45), wood_old)
         for y in (0.08, 0.36):
             sc.mesh("Slat", cr, "box", (0.47, 0.06, 0.47), (0, y, 0), wood_old)
+    sc.model("Cellar_OldCrate", ".", "wooden_crate_01", (5.45, -2.3, 1.9), 75)
     sg = sc.group("Cellar_Sacks", ".", (5.6, -2.3, 0.2))
     for k, (dz, dy) in enumerate([(-0.25, 0.18), (0.25, 0.18), (0.0, 0.48)]):
         sc.box("Sack%d" % (k + 1), sg, (0, dy, dz), (0.5, 0.32, 0.6), sack, rot_y=k * 23)
@@ -1548,10 +1567,13 @@ def build_old_house():
         sc.mesh("Lid", wj, "cyl", (0.26, 0.26, 0.02, 20), (0.1 if i else -0.1, 0.7, 0.0), wood_old,
                 basis=basis_z(6 if i else -4))
     sc.mesh("CoconutLadle", ".", "sphere", (0.07, 0.07), (1.4, 0.035, -6.2), wood_old)
+    sc.model("WaterBucket", ".", "wooden_bucket_01", (1.25, 0, -6.7), 25)
+    sc.model("WickerBasket", ".", "wicker_basket_01", (-1.6, 0, -5.7), 15)
     table(sc, "Kitchen_LowTable", ".", (0.4, 0, -4.6), 0, 0.8, 0.8, 0.32, wood_old, t=0.04, apron=False)
     for k in range(3):
         sc.mesh("Bowl", "Kitchen_LowTable", "cyl", (0.06, 0.035, 0.05, 12), (-0.15 + k * 0.15, 0.345, 0.1), ceramic)
     sc.mesh("Chopsticks", "Kitchen_LowTable", "box", (0.24, 0.008, 0.02), (0.05, 0.325, -0.15), wood_mid, rot_y=10)
+    sc.model("EnamelPot", "Kitchen_LowTable", "pot_enamel_01", (-0.22, 0.32, -0.15), 30)
     for i, (x, z) in enumerate([(0.4, -5.25), (0.4, -3.95), (-0.25, -4.6), (1.05, -4.6)]):
         table(sc, "Kitchen_Stool%d" % (i + 1), ".", (x, 0, z), i * 11, 0.28, 0.28, 0.24, wood_old, t=0.03, apron=False)
     shelf = sc.group("Kitchen_Shelf", ".", (2.1, 1.5, -3.6), -90, collision=False)
