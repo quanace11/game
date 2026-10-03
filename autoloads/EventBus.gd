@@ -28,4 +28,15 @@ signal memory_unlocked(memory_id: StringName)
 ## [param old_level]: mức trước khi đổi, để UI/hiệu ứng biết tăng hay giảm.
 signal curse_level_changed(new_level: int, old_level: int)
 
+## Lời nhắc tương tác thay đổi (đã dịch). Chuỗi rỗng nghĩa là ẩn lời nhắc.
+signal interaction_prompt_changed(text: String)
+
+## Yêu cầu UI hiển thị monologue nội tâm ngắn.
+## [param text]: câu đã dịch bằng tr().
+## [param duration]: số giây hiển thị.
+signal inner_monologue_requested(text: String, duration: float)
+
+## Yêu cầu bật hiệu ứng ký ức (sương mờ/vignette) trong [param duration] giây.
+signal memory_effect_requested(memory_id: StringName, duration: float)
+
 @warning_ignore_restore("unused_signal")
