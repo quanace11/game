@@ -21,11 +21,18 @@ extends CharacterBody3D
 @onready var flashlight: SpotLight3D = $Head/Camera3D/Flashlight
 
 var controls_locked := false
+## Chỉ khóa di chuyển, vẫn cho xoay nhìn (ví dụ An ngồi trên giường nghe lén).
+var movement_locked := false
 
 
 func _ready() -> void:
 	capture_mouse()
-	EventBus.player_controls_locked.connect(func(locked: bool) -> void: controls_locked = locked)
+	EventBus.player_controls_locked.connect(_on_controls_locked)
+
+
+func _exit_tree() -> void:
+	if EventBus.player_controls_locked.is_connected(_on_controls_locked):
+		EventBus.player_controls_locked.disconnect(_on_controls_locked)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -47,7 +54,7 @@ func _physics_process(delta: float) -> void:
 		velocity += get_gravity() * delta
 
 	var input := Vector2.ZERO
-	if not controls_locked:
+	if not controls_locked and not movement_locked:
 		input = Input.get_vector(&"move_left", &"move_right", &"move_forward", &"move_back")
 	var direction := (transform.basis * Vector3(input.x, 0.0, input.y)).normalized()
 	var target := direction * walk_speed
@@ -71,3 +78,7 @@ func _look(relative: Vector2) -> void:
 	head.rotate_x(-relative.y * mouse_sensitivity)
 	var limit := deg_to_rad(max_pitch_degrees)
 	head.rotation.x = clampf(head.rotation.x, -limit, limit)
+
+
+func _on_controls_locked(locked: bool) -> void:
+	controls_locked = locked

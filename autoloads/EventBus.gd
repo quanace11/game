@@ -52,4 +52,33 @@ signal inner_monologue_requested(text: String, duration: float)
 ## Yêu cầu bật hiệu ứng ký ức (sương mờ/vignette) trong [param duration] giây.
 signal memory_effect_requested(memory_id: StringName, duration: float)
 
+# --- Cinematic / phân cảnh kịch bản ---
+
+## Hiện một câu thoại có người nói (phụ đề). [param speaker] và [param text] đã dịch bằng tr().
+## [param speaker] rỗng nghĩa là chú thích âm thanh, ví dụ "(tiếng khóc thút thít)".
+signal subtitle_requested(speaker: String, text: String, duration: float)
+
+## Xóa ngay phụ đề và monologue đang hiện (khi người chơi bấm bỏ qua).
+signal subtitles_cleared
+
+## Cập nhật mục tiêu. [param text] đã dịch. [param is_new] = true để UI nhấn mạnh "Mục tiêu mới".
+signal objective_updated(text: String, is_new: bool)
+
+## Phủ màn hình bằng màu [param color], tween độ mờ tới [param alpha] trong [param duration] giây.
+## Dùng cho fade-in/out, chớp trắng, sập tối.
+signal screen_fade_requested(color: Color, alpha: float, duration: float)
+
+## Tween một hiệu ứng màn hình tới [param value] trong [param duration] giây.
+## [param effect]: &"blur" (0-6), &"eyes_open" (0 nhắm - 1 mở), &"vignette" (0-1, sắc lạnh).
+signal screen_effect_requested(effect: StringName, value: float, duration: float)
+
+## Rung camera người chơi. [param strength] tính bằng mét lệch tối đa.
+signal camera_shake_requested(strength: float, duration: float)
+
+## Phân cảnh mở đầu chuyển trạng thái. [param state] là OpeningSequenceManager.State.
+signal opening_state_changed(state: int)
+
+## Phân cảnh mở đầu kết thúc, gameplay tự do bắt đầu.
+signal opening_sequence_finished
+
 @warning_ignore_restore("unused_signal")

@@ -53,3 +53,27 @@ UI_DOC_PAGE,Trang {current}/{total},Page {current}/{total}
 UI_DOC_HINT,[A/D] Lật trang    [E/Esc] Gập sổ,[A/D] Turn page    [E/Esc] Close
 UI_INSPECT_HINT,[1-5] Đổi vật phẩm    [E/Esc] Đóng,[1-5] Switch item    [E/Esc] Close
 OBJ_SAFE_NAME,Két sắt,Safe
+UI_OBJECTIVE,Mục tiêu,Objective
+UI_OBJECTIVE_NEW,Mục tiêu mới,New objective
+SPEAKER_AN,An,An
+SPEAKER_MOTHER,Mẹ,Mother
+SPEAKER_FATHER,Bố,Father
+NPC_GIRL_NAME,Bé gái,Little girl
+PROMPT_ACTION_ASK,[E] Hỏi thăm,[E] Ask
+CAPTION_CRYING,(tiếng khóc thút thít),(soft sobbing)
+CAPTION_BREATHING,(thở dốc),(gasping for breath)
+CAPTION_WHISPER,(tiếng thì thầm vọng qua vách cửa),(whispers through the door)
+CAPTION_FOOTSTEPS,(tiếng bước chân xa dần),(footsteps fading away)
+OPENING_MONO_GIRL_NOTICE,Bé gái nào đằng kia thế nhỉ... nhìn bóng lưng sao quen thuộc quá...,Who's that little girl over there... why does her back look so familiar...
+OPENING_AN_ASK_GIRL,Này em... sao em lại đứng đây khóc một mình thế?,Hey... why are you standing here crying all by yourself?
+OPENING_MONO_COLD,Kỳ lạ thật... sao người con bé lại lạnh ngắt như tảng băng thế này?,Strange... why is she as cold as a block of ice?
+OPENING_MONO_WAKE,Lại là giấc mơ đó... Suốt một tuần nay ngày nào mình cũng mơ thấy con bé... Nó rốt cuộc là ai?,That dream again... Every night for a week I've dreamed of that girl... Who is she?
+OBJ_LISTEN_PARENTS,Lắng nghe cuộc nói chuyện bên ngoài.,Listen to the conversation outside.
+OPENING_MOTHER_01,"Ông à, sắp tròn 7 năm rồi đấy... Chắc cuối tuần này phải về lại căn nhà cũ ở Thôn Đoài để trấn yểm lại thôi.",It's almost seven years now... We'll have to go back to the old house in Thôn Đoài this weekend and renew the binding.
+OPENING_MOTHER_02,"Dạo này sức khỏe thằng An sút đi trông thấy, tôi lo quá...","An's health has gone downhill lately, I'm so worried..."
+OPENING_FATHER_01,Tôi biết rồi. Đã hẹn với ông thầy bùa cuối tuần sau sang làm phép lại.,I know. I've arranged for the sorcerer to come and redo the ritual next weekend.
+OPENING_FATHER_02,Địa chỉ chính xác của ngôi nhà cũ tôi ghi trong cuốn sổ trên bàn phòng khách rồi.,I wrote the old house's exact address in the notebook on the living room table.
+OPENING_FATHER_03,"Thôi khuya rồi ngủ đi, chuyện này tuyệt đối không được để thằng An nó biết.","It's late, go to sleep. An must never find out about this."
+OPENING_MONO_CALL_01,Trấn yểm? Bệnh tình của mình liên quan đến căn nhà cũ sao?,A binding? My illness has something to do with the old house?
+OPENING_MONO_CALL_02,"Bố mẹ đang giấu mình chuyện gì chứ... Sáng mai chờ bố mẹ đi làm, mình nhất định phải tìm cuốn sổ đó.","What are they hiding from me... Tomorrow, once they've left for work, I have to find that notebook."
+OBJ_FIND_NOTEBOOK,"Chờ trời sáng, tìm cuốn sổ ghi địa chỉ nhà cũ.","Wait for morning, then find the notebook with the old house's address."

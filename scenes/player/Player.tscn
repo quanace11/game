@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scripts/player/PlayerController.gd" id="1_controller"]
 [ext_resource type="Script" path="res://scripts/player/PlayerInteractor.gd" id="2_interactor"]
 [ext_resource type="PackedScene" path="res://scenes/ui/HUD.tscn" id="3_hud"]
 [ext_resource type="PackedScene" path="res://scenes/ui/DocumentViewer.tscn" id="4_viewer"]
+[ext_resource type="Script" path="res://scripts/player/CameraShake.gd" id="5_shake"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
 radius = 0.35
@@ -40,6 +41,9 @@ target_position = Vector3(0, 0, -2)
 collide_with_areas = true
 script = ExtResource("2_interactor")
 actor = NodePath("../../..")
+
+[node name="CameraShake" type="Node" parent="Head/Camera3D"]
+script = ExtResource("5_shake")
 
 [node name="HUD" parent="." instance=ExtResource("3_hud")]
 

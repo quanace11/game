@@ -1,0 +1,40 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/opening/OpeningSequenceManager.gd" id="1_manager"]
+[ext_resource type="PackedScene" path="res://scenes/opening/NightmareYard.tscn" id="2_nightmare"]
+[ext_resource type="PackedScene" path="res://scenes/levels/DreamBedroom.tscn" id="3_bedroom"]
+[ext_resource type="Script" path="res://scripts/opening/BedroomNightMode.gd" id="4_night"]
+[ext_resource type="PackedScene" path="res://scenes/ui/CinematicOverlay.tscn" id="5_overlay"]
+
+[node name="OpeningSequence" type="Node3D"]
+script = ExtResource("1_manager")
+nightmare_scene = ExtResource("2_nightmare")
+bedroom_scene = ExtResource("3_bedroom")
+
+[node name="LevelRoot" type="Node3D" parent="."]
+
+[node name="BedroomNightMode" type="Node" parent="."]
+script = ExtResource("4_night")
+
+[node name="Stinger" type="AudioStreamPlayer" parent="."]
+volume_db = 2.0
+bus = &"SFX"
+
+[node name="Breathing" type="AudioStreamPlayer" parent="."]
+bus = &"SFX"
+
+[node name="ParentsVoice" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.2, 1.5, 1.1)
+unit_size = 4.0
+max_distance = 20.0
+bus = &"Muffled"
+attenuation_filter_cutoff_hz = 650.0
+
+[node name="Footsteps" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.2, 0.2, 1.1)
+unit_size = 4.0
+max_distance = 20.0
+bus = &"Muffled"
+attenuation_filter_cutoff_hz = 650.0
+
+[node name="CinematicOverlay" parent="." instance=ExtResource("5_overlay")]

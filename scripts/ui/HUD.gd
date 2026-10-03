@@ -36,6 +36,11 @@ func _ready() -> void:
 	Inventory.slot_changed.connect(_update_slot)
 
 
+## Ẩn/hiện Hotbar (ví dụ ẩn trong phân cảnh mở đầu khi An chưa có đồ).
+func set_hotbar_visible(value: bool) -> void:
+	_slots.visible = value
+
+
 func is_inspecting() -> bool:
 	return _inspect_index != -1
 
