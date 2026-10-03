@@ -2,13 +2,12 @@
 
 [ext_resource type="Script" path="res://scripts/player/PlayerController.gd" id="1_controller"]
 [ext_resource type="Script" path="res://scripts/player/PlayerInteractor.gd" id="2_interactor"]
+[ext_resource type="PackedScene" path="res://scenes/ui/HUD.tscn" id="3_hud"]
+[ext_resource type="PackedScene" path="res://scenes/ui/DocumentViewer.tscn" id="4_viewer"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
 radius = 0.35
 height = 1.8
-
-[sub_resource type="SphereShape3D" id="SphereShape3D_reach"]
-radius = 0.6
 
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_controller")
@@ -26,6 +25,7 @@ fov = 70.0
 near = 0.05
 
 [node name="Flashlight" type="SpotLight3D" parent="Head/Camera3D"]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.15, -0.15, -0.1)
 light_color = Color(1, 0.94, 0.82, 1)
 light_energy = 2.5
@@ -35,10 +35,12 @@ spot_attenuation = 1.5
 spot_angle = 28.0
 spot_angle_attenuation = 0.6
 
-[node name="PlayerInteractor" type="Area3D" parent="Head/Camera3D" node_paths=PackedStringArray("actor")]
+[node name="PlayerInteractor" type="RayCast3D" parent="Head/Camera3D" node_paths=PackedStringArray("actor")]
+target_position = Vector3(0, 0, -2)
+collide_with_areas = true
 script = ExtResource("2_interactor")
 actor = NodePath("../../..")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Head/Camera3D/PlayerInteractor"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.9)
-shape = SubResource("SphereShape3D_reach")
+[node name="HUD" parent="." instance=ExtResource("3_hud")]
+
+[node name="DocumentViewer" parent="." instance=ExtResource("4_viewer")]

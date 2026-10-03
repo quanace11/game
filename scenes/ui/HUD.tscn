@@ -1,0 +1,320 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/HUD.gd" id="1_hud"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_slot"]
+content_margin_left = 6.0
+content_margin_top = 4.0
+content_margin_right = 6.0
+content_margin_bottom = 6.0
+bg_color = Color(0.06, 0.05, 0.05, 0.55)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.85, 0.8, 0.7, 0.35)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_inspect"]
+content_margin_left = 28.0
+content_margin_top = 22.0
+content_margin_right = 28.0
+content_margin_bottom = 22.0
+bg_color = Color(0.07, 0.06, 0.06, 0.88)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.85, 0.8, 0.7, 0.4)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[node name="HUD" type="CanvasLayer"]
+script = ExtResource("1_hud")
+
+[node name="Root" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Crosshair" type="ColorRect" parent="Root"]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0.3)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -2.0
+offset_top = -2.0
+offset_right = 2.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.95, 0.93, 0.88, 1)
+
+[node name="FocusInfo" type="VBoxContainer" parent="Root"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = 14.0
+offset_right = 200.0
+offset_bottom = 74.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_constants/separation = 2
+
+[node name="ItemName" type="Label" parent="Root/FocusInfo"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.8)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
+
+[node name="Prompt" type="Label" parent="Root/FocusInfo"]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0.75)
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.8)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 14
+horizontal_alignment = 1
+
+[node name="Hotbar" type="MarginContainer" parent="Root"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -240.0
+offset_top = -112.0
+offset_right = 240.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme_override_constants/margin_bottom = 20
+
+[node name="Slots" type="HBoxContainer" parent="Root/Hotbar"]
+unique_name_in_owner = true
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 8
+
+[node name="Slot1" type="PanelContainer" parent="Root/Hotbar/Slots"]
+custom_minimum_size = Vector2(88, 88)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_slot")
+
+[node name="VBox" type="VBoxContainer" parent="Root/Hotbar/Slots/Slot1"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Number" type="Label" parent="Root/Hotbar/Slots/Slot1/VBox"]
+modulate = Color(1, 1, 1, 0.5)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "1"
+
+[node name="Icon" type="TextureRect" parent="Root/Hotbar/Slots/Slot1/VBox"]
+visible = false
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Name" type="Label" parent="Root/Hotbar/Slots/Slot1/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="Slot2" type="PanelContainer" parent="Root/Hotbar/Slots"]
+custom_minimum_size = Vector2(88, 88)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_slot")
+
+[node name="VBox" type="VBoxContainer" parent="Root/Hotbar/Slots/Slot2"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Number" type="Label" parent="Root/Hotbar/Slots/Slot2/VBox"]
+modulate = Color(1, 1, 1, 0.5)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "2"
+
+[node name="Icon" type="TextureRect" parent="Root/Hotbar/Slots/Slot2/VBox"]
+visible = false
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Name" type="Label" parent="Root/Hotbar/Slots/Slot2/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="Slot3" type="PanelContainer" parent="Root/Hotbar/Slots"]
+custom_minimum_size = Vector2(88, 88)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_slot")
+
+[node name="VBox" type="VBoxContainer" parent="Root/Hotbar/Slots/Slot3"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Number" type="Label" parent="Root/Hotbar/Slots/Slot3/VBox"]
+modulate = Color(1, 1, 1, 0.5)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "3"
+
+[node name="Icon" type="TextureRect" parent="Root/Hotbar/Slots/Slot3/VBox"]
+visible = false
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Name" type="Label" parent="Root/Hotbar/Slots/Slot3/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="Slot4" type="PanelContainer" parent="Root/Hotbar/Slots"]
+custom_minimum_size = Vector2(88, 88)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_slot")
+
+[node name="VBox" type="VBoxContainer" parent="Root/Hotbar/Slots/Slot4"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Number" type="Label" parent="Root/Hotbar/Slots/Slot4/VBox"]
+modulate = Color(1, 1, 1, 0.5)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "4"
+
+[node name="Icon" type="TextureRect" parent="Root/Hotbar/Slots/Slot4/VBox"]
+visible = false
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Name" type="Label" parent="Root/Hotbar/Slots/Slot4/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="Slot5" type="PanelContainer" parent="Root/Hotbar/Slots"]
+custom_minimum_size = Vector2(88, 88)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_slot")
+
+[node name="VBox" type="VBoxContainer" parent="Root/Hotbar/Slots/Slot5"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Number" type="Label" parent="Root/Hotbar/Slots/Slot5/VBox"]
+modulate = Color(1, 1, 1, 0.5)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "5"
+
+[node name="Icon" type="TextureRect" parent="Root/Hotbar/Slots/Slot5/VBox"]
+visible = false
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Name" type="Label" parent="Root/Hotbar/Slots/Slot5/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="InspectPanel" type="PanelContainer" parent="Root"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(420, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -210.0
+offset_top = -140.0
+offset_right = 210.0
+offset_bottom = -40.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBox_inspect")
+
+[node name="VBox" type="VBoxContainer" parent="Root/InspectPanel"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="InspectTitle" type="Label" parent="Root/InspectPanel/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+horizontal_alignment = 1
+
+[node name="InspectIcon" type="TextureRect" parent="Root/InspectPanel/VBox"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="InspectDescription" type="Label" parent="Root/InspectPanel/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(364, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+autowrap_mode = 3
+
+[node name="InspectHint" type="Label" parent="Root/InspectPanel/VBox"]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0.5)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+horizontal_alignment = 1
