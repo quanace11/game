@@ -5,8 +5,8 @@
 ## Kết quả nằm trong res://assets/textures/. Mọi texture đều lặp liền mạch (tileable)
 ## để dùng với triplanar mapping trên CSG. Seed cố định nên chạy lại cho ra đúng ảnh cũ.
 ##
-## Đây là bộ texture "tự vẽ bằng code". Khi có texture CC0 thật (Poly Haven, ambientCG),
-## chỉ cần chép đè file cùng tên, các scene không phải sửa.
+## Bộ nào đã có texture CC0 thật (ghi trong assets/textures/cc0_sets.json, tải bằng
+## tools/fetch_cc0_assets.py) thì bị bỏ qua để không ghi đè ảnh thật.
 extends SceneTree
 
 const OUT := "res://assets/textures/"
@@ -23,8 +23,14 @@ func _init() -> void:
 		"wood_dark", "wood_weathered", "painted_wood", "grass", "rug_dream", "newspaper",
 		"decals",
 	]
+	var cc0 := {}
+	if FileAccess.file_exists(OUT + "cc0_sets.json"):
+		cc0 = JSON.parse_string(FileAccess.get_file_as_string(OUT + "cc0_sets.json"))
 	for job in jobs:
 		if only != "" and not (job in only.split(",")):
+			continue
+		if cc0.has(job):
+			print("skip %s (CC0 texture)" % job)
 			continue
 		var t := Time.get_ticks_msec()
 		call("bake_" + job)

@@ -1,0 +1,167 @@
+{
+  "bamboo_weave": {
+    "asset": "bamboo_wall_02",
+    "authors": [
+      "Amal Kumar"
+    ],
+    "license": "CC0 1.0",
+    "resolution": "1k",
+    "size_m": 1.7,
+    "source": "https://polyhaven.com/a/bamboo_wall_02"
+  },
+  "brick_red": {
+    "asset": "red_brick",
+    "authors": [
+      "Rob Tuytel"
+    ],
+    "license": "CC0 1.0",
+    "resolution": "1k",
+    "size_m": 1.4,
+    "source": "https://polyhaven.com/a/red_brick"
+  },
+  "concrete_damp": {
+    "asset": "dirty_concrete",
+    "authors": [
+      "Rob Tuytel"
+    ],
+    "license": "CC0 1.0",
+    "resolution": "1k",
+    "size_m": 3.0,
+    "source": "https://polyhaven.com/a/dirty_concrete"
+  },
+  "earth": {
+    "asset": "dirt_floor",
+    "authors": [
+      "eye-candy.xyz"
+    ],
+    "license": "CC0 1.0",
+    "resolution": "1k",
+    "size_m": 2.07,
+    "source": "https://polyhaven.com/a/dirt_floor"
+  },
+  "fabric": {
+    "asset": "cotton_jersey",
+    "authors": [
+      "Rico Cilliers",
+      "colormass"
+    ],
+    "license": "CC0 1.0",
+    "resolution": "1k",
+    "size_m": 0.264,
+    "source": "https://polyhaven.com/a/cotton_jersey"
+  },
+  "grass": {
+    "asset": "leafy_grass",
+    "authors": [
+      "Charlotte Baglioni"
+    ],
+    "license": "CC0 1.0",
+    "resolution": "1k",
+    "size_m": 2.0,
+    "source": "https://polyhaven.com/a/leafy_grass"
+  },
+  "lacquer_red": {
+    "asset": "lacquered_cherry_wood",
+    "authors": [
+      "Jenelle van Heerden",
+      "Rico Cilliers"
+    ],
+    "license": "CC0 1.0",
+    "resolution": "1k",
+    "size_m": 1.0,
+    "source": "https://polyhaven.com/a/lacquered_cherry_wood"
+  },
+  "limewash_old": {
+    "asset": "white_plaster_02",
+    "authors": [
+      "Rob Tuytel"
+    ],
+    "license": "CC0 1.0",
+    "resolution": "2k",
+    "size_m": 2.0,
+    "source": "https://polyhaven.com/a/white_plaster_02"
+  },
+  "oak_floor": {
+    "asset": "laminate_floor_02",
+    "authors": [
+      "Charlotte Baglioni",
+      "Dario Barresi"
+    ],
+    "license": "CC0 1.0",
+    "resolution": "2k",
+    "size_m": 1.7,
+    "source": "https://polyhaven.com/a/laminate_floor_02"
+  },
+  "painted_wood": {
+    "asset": "blue_painted_planks",
+    "authors": [
+      "Rob Tuytel"
+    ],
+    "license": "CC0 1.0",
+    "resolution": "1k",
+    "size_m": 1.0,
+    "source": "https://polyhaven.com/a/blue_painted_planks"
+  },
+  "plaster_white": {
+    "asset": "plastered_wall",
+    "authors": [
+      "Amal Kumar"
+    ],
+    "license": "CC0 1.0",
+    "resolution": "2k",
+    "size_m": 2.0,
+    "source": "https://polyhaven.com/a/plastered_wall"
+  },
+  "roof_tile": {
+    "asset": "clay_roof_tiles_02",
+    "authors": [
+      "Amal Kumar"
+    ],
+    "license": "CC0 1.0",
+    "resolution": "1k",
+    "size_m": 2.5,
+    "source": "https://polyhaven.com/a/clay_roof_tiles_02"
+  },
+  "rust_metal": {
+    "asset": "rusty_metal_02",
+    "authors": [
+      "Rob Tuytel"
+    ],
+    "license": "CC0 1.0",
+    "resolution": "1k",
+    "size_m": 1.0,
+    "source": "https://polyhaven.com/a/rusty_metal_02"
+  },
+  "tile_terracotta": {
+    "asset": "terracotta_floor_tiles",
+    "authors": [
+      "Dimitrios Savva"
+    ],
+    "license": "CC0 1.0",
+    "resolution": "2k",
+    "size_m": 2.08,
+    "source": "https://polyhaven.com/a/terracotta_floor_tiles"
+  },
+  "wood_dark": {
+    "asset": "wood_table_001",
+    "authors": [
+      "Dimitrios Savva",
+      "Rico Cilliers"
+    ],
+    "license": "CC0 1.0",
+    "resolution": "1k",
+    "size_m": 1.5,
+    "source": "https://polyhaven.com/a/wood_table_001"
+  },
+  "wood_weathered": {
+    "asset": "weathered_brown_planks",
+    "authors": [
+      "Dimitrios Savva",
+      "Rico Cilliers"
+    ],
+    "license": "CC0 1.0",
+    "resolution": "1k",
+    "size_m": 1.8,
+    "source": "https://polyhaven.com/a/weathered_brown_planks"
+  }
+}
