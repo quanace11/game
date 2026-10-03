@@ -1,0 +1,182 @@
+[gd_scene load_steps=21 format=3]
+
+[ext_resource type="Script" path="res://scripts/bus/BusRideDirector.gd" id="1_director"]
+[ext_resource type="PackedScene" path="res://scenes/levels/Bus.tscn" id="2_bus"]
+[ext_resource type="Script" path="res://scripts/interaction/Interactable.gd" id="3_interactable"]
+[ext_resource type="PackedScene" path="res://scenes/opening/GhostGirl.tscn" id="4_girl"]
+[ext_resource type="Script" path="res://scripts/ui/SfxPlayer.gd" id="5_sfx"]
+[ext_resource type="PackedScene" path="res://scenes/ui/CinematicOverlay.tscn" id="6_overlay"]
+[ext_resource type="Script" path="res://scripts/puzzles/FocusMonologue.gd" id="7_focus"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_Ticket"]
+albedo_color = Color(0.86, 0.78, 0.58, 1)
+roughness = 1.0
+
+[sub_resource type="StandardMaterial3D" id="Mat_TicketInk"]
+albedo_color = Color(0.55, 0.12, 0.1, 1)
+roughness = 1.0
+
+[sub_resource type="StandardMaterial3D" id="Mat_HatRotten"]
+cull_mode = 2
+albedo_color = Color(0.3, 0.26, 0.18, 1)
+roughness = 1.0
+
+[sub_resource type="StandardMaterial3D" id="Mat_HatStrap"]
+albedo_color = Color(0.12, 0.08, 0.06, 1)
+roughness = 1.0
+
+[sub_resource type="BoxMesh" id="Mesh_ticket"]
+size = Vector3(0.06, 0.002, 0.11)
+
+[sub_resource type="BoxMesh" id="Mesh_ticket_stripe"]
+size = Vector3(0.062, 0.0025, 0.012)
+
+[sub_resource type="BoxShape3D" id="Shape_ticket"]
+size = Vector3(0.22, 0.08, 0.24)
+
+[sub_resource type="CylinderMesh" id="Mesh_hat"]
+top_radius = 0.005
+bottom_radius = 0.24
+height = 0.13
+radial_segments = 18
+rings = 1
+
+[sub_resource type="TorusMesh" id="Mesh_hat_strap"]
+inner_radius = 0.07
+outer_radius = 0.08
+rings = 16
+ring_segments = 6
+
+[sub_resource type="BoxShape3D" id="Shape_hat"]
+size = Vector3(0.5, 0.2, 0.5)
+
+[sub_resource type="BoxShape3D" id="Shape_seat"]
+size = Vector3(0.86, 0.26, 0.42)
+
+[sub_resource type="BoxShape3D" id="Shape_stains"]
+size = Vector3(0.42, 0.45, 0.1)
+
+[sub_resource type="BoxShape3D" id="Shape_door"]
+size = Vector3(0.12, 1.9, 0.85)
+
+[node name="BusRide" type="Node3D" node_paths=PackedStringArray("level", "seat", "bus_door", "derelict_interactables", "apparition")]
+script = ExtResource("1_director")
+level = NodePath("Level")
+seat = NodePath("AnSeat")
+bus_door = NodePath("BusDoor")
+derelict_interactables = [NodePath("Ticket"), NodePath("OldHat"), NodePath("SeatStains")]
+apparition = NodePath("Apparition")
+
+[node name="Level" parent="." instance=ExtResource("2_bus")]
+
+[node name="AnSeat" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.82, 0.55, -0.5)
+script = ExtResource("3_interactable")
+item_id = &"bus_seat"
+display_name_key = "OBJ_BUS_SEAT_NAME"
+prompt_text_key = "PROMPT_SIT_DOWN"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AnSeat"]
+shape = SubResource("Shape_seat")
+
+[node name="Ticket" type="Area3D" parent="."]
+transform = Transform3D(0.94, 0, 0.342, 0, 1, 0, -0.342, 0, 0.94, -0.6, 0.522, -0.52)
+script = ExtResource("3_interactable")
+item_id = &"bus_ticket_1999"
+display_name_key = "ITEM_BUS_TICKET_NAME"
+can_pickup = true
+description_key = "ITEM_BUS_TICKET_DESC"
+pages = Array[String](["DOC_BUS_TICKET"])
+prompt_text_key = "PROMPT_PICK_TICKET"
+interact_sfx = &"sfx_paper"
+
+[node name="Paper" type="MeshInstance3D" parent="Ticket"]
+mesh = SubResource("Mesh_ticket")
+surface_material_override/0 = SubResource("Mat_Ticket")
+
+[node name="Stripe" type="MeshInstance3D" parent="Ticket"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.035)
+mesh = SubResource("Mesh_ticket_stripe")
+surface_material_override/0 = SubResource("Mat_TicketInk")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ticket"]
+shape = SubResource("Shape_ticket")
+
+[node name="FocusMonologue" type="Node" parent="Ticket"]
+script = ExtResource("7_focus")
+monologue_key = "BUS_MONO_TICKET_SEEN"
+
+[node name="OldHat" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.9397, -0.342, 0, 0.342, 0.9397, -1.02, 0.56, -0.5)
+script = ExtResource("3_interactable")
+item_id = &"memory_bus_old_hat"
+display_name_key = "OBJ_OLD_HAT_NAME"
+interaction_type = 1
+prompt_text_key = "PROMPT_LOOK_CLOSER"
+monologue_key = "BUS_MONO_HAT"
+one_shot = true
+
+[node name="Hat" type="MeshInstance3D" parent="OldHat"]
+mesh = SubResource("Mesh_hat")
+surface_material_override/0 = SubResource("Mat_HatRotten")
+
+[node name="Strap" type="MeshInstance3D" parent="OldHat"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.06, 0.02)
+mesh = SubResource("Mesh_hat_strap")
+surface_material_override/0 = SubResource("Mat_HatStrap")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="OldHat"]
+shape = SubResource("Shape_hat")
+
+[node name="SeatStains" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.03, 0.88, -0.34)
+script = ExtResource("3_interactable")
+item_id = &"memory_bus_five_stains"
+display_name_key = "OBJ_SEAT_STAINS_NAME"
+interaction_type = 1
+prompt_text_key = "PROMPT_LOOK_CLOSER"
+monologue_key = "BUS_MONO_FIVE_STAINS"
+one_shot = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SeatStains"]
+shape = SubResource("Shape_stains")
+
+[node name="BusDoor" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.18, 0.95, -4.15)
+script = ExtResource("3_interactable")
+item_id = &"bus_door"
+display_name_key = "OBJ_BUS_DOOR_NAME"
+prompt_text_key = "PROMPT_OPEN_BUS_DOOR"
+interact_sfx = &"sfx_bus_door_jammed"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BusDoor"]
+shape = SubResource("Shape_door")
+
+[node name="Apparition" type="Node3D" parent="."]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 1.7, 0.52, -4.22)
+
+[node name="Girl" parent="Apparition" instance=ExtResource("4_girl")]
+
+[node name="RimLight" type="OmniLight3D" parent="Apparition"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, -0.7)
+light_color = Color(0.62, 0.74, 1, 1)
+light_energy = 0.8
+omni_range = 1.6
+
+[node name="SfxPlayer" type="Node3D" parent="."]
+script = ExtResource("5_sfx")
+
+[node name="StationAmbience" type="AudioStreamPlayer" parent="."]
+bus = &"SFX"
+
+[node name="Engine" type="AudioStreamPlayer" parent="."]
+bus = &"SFX"
+
+[node name="DerelictAmbience" type="AudioStreamPlayer" parent="."]
+bus = &"SFX"
+
+[node name="Stinger" type="AudioStreamPlayer" parent="."]
+volume_db = 2.0
+bus = &"SFX"
+
+[node name="CinematicOverlay" parent="." instance=ExtResource("6_overlay")]
