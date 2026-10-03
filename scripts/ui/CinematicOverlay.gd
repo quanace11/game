@@ -18,6 +18,9 @@ const NEUTRAL := {&"blur": 0.0, &"eyes_open": 1.0, &"vignette": 0.0}
 @onready var _objective_box: Control = %ObjectiveBox
 @onready var _objective_header: Label = %ObjectiveHeader
 @onready var _objective_text: Label = %ObjectiveText
+@onready var _title_card: Control = %TitleCard
+@onready var _title_label: Label = %TitleLabel
+@onready var _title_sub: Label = %TitleSub
 
 var _fx_material: ShaderMaterial
 var _fade_tween: Tween
@@ -25,6 +28,7 @@ var _fx_tweens: Dictionary[StringName, Tween] = {}
 var _subtitle_tween: Tween
 var _monologue_tween: Tween
 var _objective_tween: Tween
+var _title_tween: Tween
 
 
 func _ready() -> void:
@@ -36,6 +40,7 @@ func _ready() -> void:
 	_subtitle.modulate.a = 0.0
 	_monologue.modulate.a = 0.0
 	_objective_box.modulate.a = 0.0
+	_title_card.modulate.a = 0.0
 	_update_fx_visibility()
 	EventBus.subtitle_requested.connect(_on_subtitle_requested)
 	EventBus.inner_monologue_requested.connect(_on_monologue_requested)
@@ -43,6 +48,7 @@ func _ready() -> void:
 	EventBus.objective_updated.connect(_on_objective_updated)
 	EventBus.screen_fade_requested.connect(_on_fade_requested)
 	EventBus.screen_effect_requested.connect(_on_effect_requested)
+	EventBus.title_card_requested.connect(_on_title_card_requested)
 
 
 func _exit_tree() -> void:
@@ -53,6 +59,7 @@ func _exit_tree() -> void:
 		EventBus.objective_updated: _on_objective_updated,
 		EventBus.screen_fade_requested: _on_fade_requested,
 		EventBus.screen_effect_requested: _on_effect_requested,
+		EventBus.title_card_requested: _on_title_card_requested,
 	}
 	for sig: Signal in links:
 		if sig.is_connected(links[sig]):
@@ -66,6 +73,18 @@ func _on_subtitle_requested(speaker: String, text: String, duration: float) -> v
 	else:
 		_subtitle.text = "[color=%s]%s:[/color] %s" % [SPEAKER_COLOR, _escape(speaker), body]
 	_subtitle_tween = _show_timed(_subtitle, _subtitle_tween, duration)
+
+
+func _on_title_card_requested(title: String, subtitle: String, duration: float) -> void:
+	_title_label.text = title
+	_title_sub.text = subtitle
+	_title_sub.visible = not subtitle.is_empty()
+	if _title_tween:
+		_title_tween.kill()
+	_title_tween = create_tween()
+	_title_tween.tween_property(_title_card, "modulate:a", 1.0, 1.2)
+	_title_tween.tween_interval(maxf(duration - 2.4, 0.2))
+	_title_tween.tween_property(_title_card, "modulate:a", 0.0, 1.2)
 
 
 func _on_monologue_requested(text: String, duration: float) -> void:

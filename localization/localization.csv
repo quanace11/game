@@ -201,4 +201,67 @@ ITEM_ADDRESS_NOTE_NAME,Mảnh giấy ố vàng,Yellowed scrap of paper
 ITEM_ADDRESS_NOTE_DESC,Mảnh giấy ố vàng ghi địa chỉ ngôi nhà cũ ở Thôn Đoài.,A yellowed scrap with the old house's address in Thôn Đoài.
 PROMPT_PICK_NOTE,[E] Nhặt mảnh giấy,[E] Pick up the paper
 DOC_ADDRESS_NOTE,Ngôi nhà cũ bên bờ sông - Thôn Đoài (Xây năm 1987),The old house by the river - Thôn Đoài (Built in 1987)
-OBJ_RIDE_TO_THON_DOAI,Lấy xe đạp và lên đường đến Thôn Đoài.,Take the bicycle and set off for Thôn Đoài.
+OBJ_RIDE_TO_THON_DOAI,"Ra bến xe, bắt chuyến xe khách về Thôn Đoài.","Head to the bus station and catch the bus to Thôn Đoài."
+OBJ_BEDROOM_DOOR_NAME,Cửa phòng,Bedroom door
+PROMPT_OPEN_DOOR,[E] Mở cửa,[E] Open the door
+MORNING_MONO_DOOR_NOT_YET,Chưa được. Bố mẹ giấu thứ gì đó trong phòng này... mình phải tìm cho ra đã.,Not yet. Mum and Dad hid something in this room... I have to find it first.
+BUS_CHAPTER_TITLE,Chương I - Chuyến xe cuối,Chapter I - The Last Bus
+BUS_TITLE_PLACE,"Bến xe huyện, chuyến chiều về Thôn Đoài","District bus station, the afternoon bus to Thôn Đoài"
+BUS_CAPTION_STATION,"(tiếng còi xe, tiếng rao lẫn trong tiếng động cơ)",(horns and hawkers' calls over the rumble of engines)
+SPEAKER_CONDUCTOR,Phụ xe,Conductor
+SPEAKER_OLD_WOMAN,Bà cụ,Old woman
+SPEAKER_UNKNOWN,???,???
+BUS_CONDUCTOR_CALL,"Thôn Đoài đây! Ai về Thôn Đoài lên xe nhanh, xe chạy bây giờ!","Thôn Đoài! Anyone for Thôn Đoài, get on, we're leaving now!"
+BUS_MONO_INTRO,Bố mẹ chưa bao giờ nhắc đến Thôn Đoài. Vậy mà họ khóa địa chỉ ấy trong két sắt suốt bao nhiêu năm.,Mum and Dad never once mentioned Thôn Đoài. Yet they kept that address locked in a safe for all these years.
+OBJ_FIND_SEAT,Tìm một chỗ trống và ngồi xuống.,Find an empty seat and sit down.
+OBJ_BUS_SEAT_NAME,Ghế trống,Empty seat
+PROMPT_SIT_DOWN,[E] Ngồi xuống,[E] Sit down
+OBJ_BUS_RIDE,Ngồi yên chờ xe về đến Thôn Đoài.,Sit tight until the bus reaches Thôn Đoài.
+BUS_CAPTION_ENGINE,"(động cơ rền lên, xe lắc lư lăn bánh)",(the engine roars and the bus lurches forward)
+BUS_CONDUCTOR_ASK,Cháu xuống đâu?,Where are you getting off?
+BUS_AN_ANSWER,"Dạ, cháu về Thôn Đoài.","Thôn Đoài, please."
+BUS_CONDUCTOR_PAUSE,...Thôn Đoài à? Mấy năm nay chẳng mấy ai xuống bến ấy nữa.,...Thôn Đoài? Hardly anyone gets off there these days.
+BUS_CONDUCTOR_LAST,"Bến cuối đấy. Cứ ngồi yên, đến nơi chú gọi.","It's the last stop. Sit tight, I'll call you when we get there."
+BUS_OLD_WOMAN_ASK,Cháu về Thôn Đoài thăm ai đấy?,"Who are you visiting in Thôn Đoài, dear?"
+BUS_AN_OLD_HOUSE,Dạ... cháu về xem lại ngôi nhà cũ của gia đình.,I'm... going to see my family's old house.
+BUS_OLD_WOMAN_RIVER,Cái nhà bên bờ sông ấy hả...,The house by the river...
+BUS_MONO_RIVER,Sao bà ấy biết là bên bờ sông...? Mình đã nói gì đâu.,How does she know it's by the river...? I never said.
+BUS_OLD_WOMAN_SLEEP,Ngủ một giấc đi cháu. Đường về đấy còn xa lắm.,"Get some sleep, dear. It's a long way back there."
+BUS_MONO_DROWSY,Tiếng máy xe đều đều... mí mắt mình nặng trĩu.,The engine drones on... my eyelids are so heavy.
+BUS_MONO_FIGHT,Không được ngủ... không được...,Mustn't sleep... mustn't...
+BUS_WHISPER_ARRIVED,...Đến bến rồi.,...We're here.
+BUS_CAPTION_SILENCE,(im lặng. Gió rít qua khe cửa kính),(silence. Wind whistles through a crack in the glass)
+BUS_MONO_WAKE,Xe dừng rồi sao...? Mọi người đâu cả rồi?,Have we stopped...? Where did everyone go?
+BUS_MONO_DERELICT,Chiếc xe này... sao lại mục nát như bị bỏ hoang hàng chục năm?,"This bus... why is it rotten, like it's been abandoned for decades?"
+OBJ_SEARCH_BUS,Tìm hiểu chuyện gì đã xảy ra trên xe.,Find out what happened on the bus.
+ITEM_BUS_TICKET_NAME,Vé xe cũ,Old bus ticket
+ITEM_BUS_TICKET_DESC,"Tấm vé xe khách ố vàng, tuyến về Thôn Đoài, ngày 14 tháng 4 năm 1999. Ghế số 07.","A yellowed bus ticket to Thôn Đoài, dated 14 April 1999. Seat 07."
+PROMPT_PICK_TICKET,[E] Nhặt tấm vé,[E] Pick up the ticket
+DOC_BUS_TICKET,"VÉ XE KHÁCH
+
+Tuyến: Bến xe huyện - Thôn Đoài
+Ngày: 14/04/1999
+Ghế số: 07
+Giá vé: 20.000đ
+
+(Mặt sau, nét bút chì run rẩy: ""Đừng để nó ngủ."")","BUS TICKET
+
+Route: District station - Thôn Đoài
+Date: 14/04/1999
+Seat: 07
+Fare: 20,000đ
+
+(On the back, in a shaky pencil hand: ""Don't let it fall asleep."")"
+BUS_MONO_TICKET_SEEN,Trên ghế của bà cụ... có tờ giấy gì kia?,There's something on the old woman's seat...
+BUS_MONO_TICKET,"Tháng Tư năm 1999... đúng tuần có dòng ""Tiền xe về Thôn Đoài"" trong sổ của mẹ.","April 1999... the same week as ""Bus fare to Thôn Đoài"" in Mum's book."
+OBJ_OLD_HAT_NAME,Chiếc nón mục,Rotten conical hat
+PROMPT_LOOK_CLOSER,[E] Xem kỹ,[E] Look closer
+BUS_MONO_HAT,Nón của bà cụ... mục nát như đã nằm đây từ rất lâu rồi.,"The old woman's hat... rotted through, as if it's lain here for years."
+OBJ_SEAT_STAINS_NAME,Vết thâm trên lưng ghế,Stains on the seat back
+BUS_MONO_FIVE_STAINS,Năm vết thâm đen... đúng chỗ lưng mình vừa tựa vào.,Five dark stains... right where my back was resting.
+OBJ_BUS_DOOR_NAME,Cửa xe,Bus door
+PROMPT_OPEN_BUS_DOOR,[E] Mở cửa xe,[E] Open the bus door
+BUS_MONO_DOOR_JAMMED,Kẹt cứng... như có ai ghì chặt từ bên ngoài.,It won't budge... as if someone's holding it shut from outside.
+BUS_MONO_WHO,Ai... ai vừa đứng đó?,Who... who was standing there?
+OBJ_ESCAPE_BUS,Tìm cách ra khỏi chiếc xe.,Find a way off the bus.
+SIGN_BUS_STOP_THON_DOAI,BẾN THÔN ĐOÀI,THÔN ĐOÀI STOP

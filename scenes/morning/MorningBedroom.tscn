@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=3]
+[gd_scene load_steps=35 format=3]
 
 [ext_resource type="Script" path="res://scripts/morning/MorningBedroomDirector.gd" id="1_director"]
 [ext_resource type="PackedScene" path="res://scenes/levels/DreamBedroom.tscn" id="2_level"]
@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/LockInspectUI.tscn" id="10_lock_ui"]
 [ext_resource type="PackedScene" path="res://scenes/ui/ExpenseBookUI.tscn" id="11_book_ui"]
 [ext_resource type="PackedScene" path="res://scenes/ui/SafeKeypadUI.tscn" id="12_keypad_ui"]
+[ext_resource type="Script" path="res://scripts/puzzles/ExitDoor.gd" id="13_exit_door"]
 
 [sub_resource type="StandardMaterial3D" id="Mat_Linen"]
 albedo_color = Color(0.97, 0.96, 0.94, 1)
@@ -69,6 +70,9 @@ size = Vector3(0.14, 0.016, 0.19)
 
 [sub_resource type="BoxShape3D" id="Shape_book"]
 size = Vector3(0.2, 0.08, 0.24)
+
+[sub_resource type="BoxShape3D" id="Shape_door"]
+size = Vector3(0.92, 2.1, 0.1)
 
 [node name="MorningBedroom" type="Node3D" node_paths=PackedStringArray("level")]
 script = ExtResource("1_director")
@@ -170,6 +174,23 @@ monologue_key = "MORNING_MONO_BOOK_FOUND"
 
 [node name="Safe" parent="." instance=ExtResource("6_safe")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -2.48, 0, -1.05)
+
+[node name="BedroomDoor" type="Area3D" parent="." node_paths=PackedStringArray("hinge")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 2.73, 0, 1.4)
+script = ExtResource("13_exit_door")
+next_scene_path = "res://scenes/bus/BusRide.tscn"
+required_flag = &"objective_ride_to_thon_doai"
+hinge = NodePath("Hinge")
+leaf_nodes = Array[NodePath]([NodePath("../Level/Decor/Door/Leaf"), NodePath("../Level/Decor/Door/Panel1"), NodePath("../Level/Decor/Door/Panel2"), NodePath("../Level/Decor/Door/Handle"), NodePath("../Level/Decor/Door/Rose")])
+item_id = &"bedroom_door"
+display_name_key = "OBJ_BEDROOM_DOOR_NAME"
+
+[node name="Hinge" type="Node3D" parent="BedroomDoor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.46, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BedroomDoor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, 0.03)
+shape = SubResource("Shape_door")
 
 [node name="SfxPlayer" type="Node3D" parent="."]
 script = ExtResource("8_sfx")

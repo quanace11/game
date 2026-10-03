@@ -72,6 +72,10 @@ signal screen_fade_requested(color: Color, alpha: float, duration: float)
 ## [param effect]: &"blur" (0-6), &"eyes_open" (0 nhắm - 1 mở), &"vignette" (0-1, sắc lạnh).
 signal screen_effect_requested(effect: StringName, value: float, duration: float)
 
+## Hiện màn chữ mở đầu chương ở giữa màn hình (thường trên nền đen).
+## [param title] và [param subtitle] đã dịch bằng tr(); [param subtitle] rỗng thì chỉ hiện tiêu đề.
+signal title_card_requested(title: String, subtitle: String, duration: float)
+
 ## Rung camera người chơi. [param strength] tính bằng mét lệch tối đa.
 signal camera_shake_requested(strength: float, duration: float)
 
@@ -116,5 +120,8 @@ signal safe_unlocked(safe_id: StringName)
 
 ## Phân cảnh buổi sáng chuyển trạng thái. [param state] là MorningBedroomDirector.State.
 signal morning_state_changed(state: int)
+
+## Phân cảnh xe khách chuyển trạng thái. [param state] là BusRideDirector.State.
+signal bus_state_changed(state: int)
 
 @warning_ignore_restore("unused_signal")
