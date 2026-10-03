@@ -23,3 +23,32 @@ PROMPT_REMEMBER,Cố nhớ lại,Try to remember
 MONOLOGUE_PROLOGUE_NAILS,"Năm cái đinh... Mình đã từng thấy chúng ở đâu đó rồi.","Five nails... I've seen them somewhere before."
 MONOLOGUE_PROLOGUE_NIGHTMARE,"Không phải mơ. Cái bóng ấy... nó vẫn còn ở đây.","It wasn't a dream. That shadow... it's still here."
 MONOLOGUE_HAIRPIN,"Chiếc kẹp tóc này... của ai? Sao tay mình lại run thế này?","This hairpin... whose is it? Why are my hands shaking?"
+PROMPT_ACTION_PICKUP,[E] Nhặt lấy,[E] Pick up
+PROMPT_ACTION_READ,[E] Đọc / Xem,[E] Read / Examine
+ITEM_HAIRPIN_NAME,Kẹp tóc,Hairpin
+ITEM_HAIRPIN_DESC,"Một chiếc kẹp tóc bằng đồng đã xỉn màu, đầu kẹp hơi cong như từng bị dùng để cạy khóa. Có vài sợi tóc dài vẫn còn vướng lại.","A tarnished brass hairpin, its tip bent as if used to pick a lock. A few long strands of hair are still caught in it."
+ITEM_OLD_KEY_NAME,Chìa khóa cũ,Old key
+ITEM_OLD_KEY_DESC,"Chìa khóa sắt nặng trịch, gỉ sét bám đầy răng chìa. Trên móc khắc mờ chữ ""H"". Có lẽ nó mở một cánh cửa dưới hầm.","A heavy iron key, its teeth crusted with rust. A faint ""H"" is carved into the bow. Perhaps it opens a door in the cellar."
+DOC_DIARY_NAME,Sổ nhật ký,Diary
+DOC_DIARY_PAGE_1,"Ngày 3 tháng 7.
+
+Đêm qua lại nghe tiếng gõ từ phía cánh cửa. Năm tiếng, đều đặn như ai đó đang đóng đinh. Sáng ra mình kiểm tra, cửa vẫn khóa từ bên trong.","July 3rd.
+
+Last night I heard the knocking at the door again. Five knocks, steady, like someone hammering nails. In the morning I checked: the door was still locked from the inside."
+DOC_DIARY_PAGE_2,"Ngày 5 tháng 7.
+
+Mẹ bảo đừng bao giờ nhặt kẹp tóc rơi trong nhà này. ""Của ai thì để người ấy tự quay về lấy."" Mình đã không nghe lời.","July 5th.
+
+Mother said never to pick up a hairpin dropped in this house. ""Whoever it belongs to will come back for it."" I didn't listen."
+DOC_DIARY_PAGE_3,"Ngày 6 tháng 7.
+
+Tiếng thì thầm giờ ở ngay trong phòng. Nó đếm. Một... hai... ba...
+
+Nếu ai đọc được những dòng này, đừng để nó đếm đến năm.","July 6th.
+
+The whispering is inside the room now. It counts. One... two... three...
+
+If anyone reads this, don't let it reach five."
+UI_DOC_PAGE,Trang {current}/{total},Page {current}/{total}
+UI_DOC_HINT,[A/D] Lật trang    [E/Esc] Gập sổ,[A/D] Turn page    [E/Esc] Close
+UI_INSPECT_HINT,[1-5] Đổi vật phẩm    [E/Esc] Đóng,[1-5] Switch item    [E/Esc] Close

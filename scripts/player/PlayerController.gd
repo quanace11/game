@@ -3,6 +3,7 @@
 ## - WASD để di chuyển, chuột để nhìn quanh.
 ## - Chuột bị khóa khi chơi; Esc để nhả chuột, click chuột trái để khóa lại.
 ## - Yaw (xoay trái/phải) quay cả thân; pitch (nhìn lên/xuống) chỉ quay node Head.
+## - Khi UI (sổ, Inspect) mở, [signal EventBus.player_controls_locked] khóa di chuyển và xoay nhìn.
 class_name PlayerController
 extends CharacterBody3D
 
@@ -16,14 +17,20 @@ extends CharacterBody3D
 
 @onready var head: Node3D = $Head
 @onready var camera: Camera3D = $Head/Camera3D
+## Đèn pin, tắt mặc định. Bật lại bằng flashlight.visible = true khi xuống hầm.
 @onready var flashlight: SpotLight3D = $Head/Camera3D/Flashlight
+
+var controls_locked := false
 
 
 func _ready() -> void:
 	capture_mouse()
+	EventBus.player_controls_locked.connect(func(locked: bool) -> void: controls_locked = locked)
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if controls_locked:
+		return
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		_look(event.screen_relative)
 	elif event.is_action_pressed(&"ui_cancel"):
@@ -39,7 +46,9 @@ func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 
-	var input := Input.get_vector(&"move_left", &"move_right", &"move_forward", &"move_back")
+	var input := Vector2.ZERO
+	if not controls_locked:
+		input = Input.get_vector(&"move_left", &"move_right", &"move_forward", &"move_back")
 	var direction := (transform.basis * Vector3(input.x, 0.0, input.y)).normalized()
 	var target := direction * walk_speed
 	var weight := clampf(acceleration * delta, 0.0, 1.0)

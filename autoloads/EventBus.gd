@@ -28,8 +28,21 @@ signal memory_unlocked(memory_id: StringName)
 ## [param old_level]: mức trước khi đổi, để UI/hiệu ứng biết tăng hay giảm.
 signal curse_level_changed(new_level: int, old_level: int)
 
-## Lời nhắc tương tác thay đổi (đã dịch). Chuỗi rỗng nghĩa là ẩn lời nhắc.
-signal interaction_prompt_changed(text: String)
+## Tâm ngắm chuyển sang vật khác. [param interactable] là null khi không rọi trúng gì.
+## HUD dùng [method Interactable.get_display_name] và [method Interactable.get_prompt_text].
+signal interaction_focus_changed(interactable: Node)
+
+## Một vật vừa được nhặt vào ô [param slot_index] của Hotbar.
+signal item_picked_up(item: ItemData, slot_index: int)
+
+## Người chơi cố nhặt đồ nhưng Hotbar đã đầy.
+signal inventory_full
+
+## Mở trình đọc tài liệu. [param title] và [param pages] đã được dịch bằng tr().
+signal document_requested(title: String, pages: Array[String])
+
+## Khóa/mở khóa điều khiển của An (di chuyển, xoay nhìn, tương tác) khi UI mở.
+signal player_controls_locked(locked: bool)
 
 ## Yêu cầu UI hiển thị monologue nội tâm ngắn.
 ## [param text]: câu đã dịch bằng tr().
