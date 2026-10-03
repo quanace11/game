@@ -66,6 +66,11 @@ func open_inspect(index: int) -> void:
 	var item := Inventory.get_item(index)
 	if item == null:
 		return
+	# Sổ đặc biệt có giao diện đọc riêng (ExpenseBookUI).
+	if not item.document_id.is_empty():
+		close_inspect()
+		EventBus.book_requested.emit(item.document_id)
+		return
 	var was_open := is_inspecting()
 	_inspect_index = index
 	_inspect_title.text = item.get_display_name()

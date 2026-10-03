@@ -8,6 +8,8 @@
 ## - [member can_pickup] = true: bấm E thì vật vào Hotbar và biến mất khỏi cảnh.
 ## - [member can_pickup] = false: bấm E thì mở trình đọc với [member pages]
 ##   (nếu có trang), vật vẫn ở yên chỗ.
+## Với cả hai kiểu, nếu có [member document_id] hoặc [member pages] thì trình đọc
+## mở ngay sau khi tương tác (vật nhặt được vẫn vào Hotbar).
 ## Độc lập với hai kiểu trên, MEMORY_TRIGGER còn mở khóa ký ức qua MemoryManager.
 class_name Interactable
 extends Area3D
@@ -34,6 +36,8 @@ signal interacted(actor: Node)
 ## Key dịch mô tả manh mối, hiện khi bấm phím số để Inspect.
 @export var description_key: String
 @export var icon: Texture2D
+## Sổ đặc biệt mở ngay khi nhặt (và khi bấm phím số trên Hotbar), ví dụ &"expense_book_1999".
+@export var document_id: StringName
 
 @export_group("Tài liệu đọc tại chỗ")
 ## Key dịch từng trang. Chỉ dùng khi can_pickup = false.
@@ -44,6 +48,8 @@ signal interacted(actor: Node)
 @export var prompt_text_key: String
 ## Key dịch monologue nội tâm khi kích hoạt ký ức (chỉ dùng cho MEMORY_TRIGGER).
 @export var monologue_key: String
+## ID âm thanh phát tại vị trí vật khi tương tác thành công (ví dụ &"sfx_key_jingle").
+@export var interact_sfx: StringName
 ## Tắt tương tác sau lần dùng đầu tiên.
 @export var one_shot: bool = false
 ## Tắt thì tâm ngắm bỏ qua vật này.
@@ -81,6 +87,7 @@ func to_item_data() -> ItemData:
 	item.name_key = display_name_key
 	item.description_key = description_key
 	item.icon = icon
+	item.document_id = document_id
 	return item
 
 
@@ -94,16 +101,27 @@ func interact(actor: Node) -> bool:
 
 	interacted.emit(actor)
 	EventBus.interaction_requested.emit(self, actor)
+	if not interact_sfx.is_empty():
+		EventBus.sfx_requested.emit(interact_sfx, global_position)
+	_open_reading()
 
 	if can_pickup:
 		enabled = false
 		queue_free()
 		return true
-	if not pages.is_empty():
-		var translated: Array[String] = []
-		for key in pages:
-			translated.append(tr(key))
-		EventBus.document_requested.emit(get_display_name(), translated)
 	if one_shot:
 		enabled = false
 	return true
+
+
+## Mở sổ đặc biệt hoặc trình đọc tài liệu nếu vật có nội dung để đọc.
+func _open_reading() -> void:
+	if not document_id.is_empty():
+		EventBus.book_requested.emit(document_id)
+		return
+	if pages.is_empty():
+		return
+	var translated: Array[String] = []
+	for key in pages:
+		translated.append(tr(key))
+	EventBus.document_requested.emit(get_display_name(), translated)

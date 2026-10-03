@@ -77,3 +77,128 @@ OPENING_FATHER_03,"Thôi khuya rồi ngủ đi, chuyện này tuyệt đối kh�
 OPENING_MONO_CALL_01,Trấn yểm? Bệnh tình của mình liên quan đến căn nhà cũ sao?,A binding? My illness has something to do with the old house?
 OPENING_MONO_CALL_02,"Bố mẹ đang giấu mình chuyện gì chứ... Sáng mai chờ bố mẹ đi làm, mình nhất định phải tìm cuốn sổ đó.","What are they hiding from me... Tomorrow, once they've left for work, I have to find that notebook."
 OBJ_FIND_NOTEBOOK,"Chờ trời sáng, tìm cuốn sổ ghi địa chỉ nhà cũ.","Wait for morning, then find the notebook with the old house's address."
+MORNING_MONO_START,Đợi mãi bố mẹ mới đi vắng... Phải tranh thủ tìm kiếm thôi!,"Finally, Mom and Dad are out... I have to search while I can!"
+OBJ_SEARCH_ROOM,Tìm kiếm manh mối trong phòng.,Search the room for clues.
+OBJ_PILLOW_NAME,Gối nằm,Pillow
+PROMPT_PILLOW_LIFT,[E] Nhấc gối,[E] Lift the pillow
+ITEM_CABINET_KEY_NAME,Chìa khóa đồng,Brass key
+ITEM_CABINET_KEY_DESC,"Chiếc chìa khóa đồng nhỏ, xỉn màu, giấu ngay dưới gối của mình. Ai đã đặt nó ở đây?","A small, tarnished brass key, hidden right under my own pillow. Who put it here?"
+PROMPT_PICK_KEY,[E] Nhặt chìa khóa đồng,[E] Pick up the brass key
+OBJ_DRAWER_NAME,Hộc bàn,Desk drawer
+OBJ_DRAWER_LOCKED_NAME,Hộc bàn có khóa,Locked desk drawer
+PROMPT_DRAWER_PULL,[E] Kéo hộc tủ,[E] Pull the drawer
+PROMPT_DRAWER_PUSH,[E] Đẩy hộc tủ vào,[E] Push the drawer in
+PROMPT_DRAWER_INSPECT_LOCK,[E] Xem ổ khóa,[E] Inspect the lock
+MORNING_MONO_DRAWER_LOCKED,Hộc này bị khóa rồi... Phải có chìa mới mở được.,This drawer is locked... I need a key to open it.
+UI_LOCK_TITLE,Ổ khóa hộc bàn,Drawer lock
+UI_LOCK_HINT_NO_KEY,Cần chìa khóa để mở.    [E/Esc] Quay lại,It needs a key.    [E/Esc] Back
+UI_LOCK_HINT_USE,[{slot}] Tra {item}    [E/Esc] Quay lại,[{slot}] Use {item}    [E/Esc] Back
+ITEM_EXPENSE_BOOK_NAME,Sổ chi tiêu năm 1999,1999 expense book
+ITEM_EXPENSE_BOOK_DESC,"Sổ chi tiêu gia đình năm 1999. Vài trang bị xé, trang nhiều trang ít... như có ai cố tình.","A family expense book from 1999. Some pages are torn out, some more than others... as if on purpose."
+PROMPT_TAKE_BOOK,[E] Cầm xem cuốn sổ,[E] Take the notebook
+MORNING_MONO_BOOK_FOUND,Sổ chi tiêu gia đình... nhưng sao lại là năm 1999?,A family expense book... but why from 1999?
+MORNING_MONO_BOOK_TORN,"Trang thì xé sạch, trang chỉ mất một góc... Sao lại xé chỗ nhiều chỗ ít thế này?","One page ripped out completely, another missing just a corner... why tear them so unevenly?"
+UI_BOOK_HINT,"[A/D] Lật trang    [E/Esc] Gấp sổ, cất vào người",[A/D] Turn page    [E/Esc] Close and keep it
+EXPENSE_PAGE_1,"Tuần 1 - tháng Ba năm 1999
+
+- Gạo 10 cân ............ 35.000đ
+- Tiền chợ cả tuần ...... 70.000đ
+- Dầu hỏa, diêm ............ 8.000đ
+- Thuốc ho cho con ....... 12.000đ
+
+Cộng: 125.000đ","Week 1 - March 1999
+
+- Rice, 10 kg ............ 35,000đ
+- Market, whole week ..... 70,000đ
+- Kerosene, matches ....... 8,000đ
+- Cough syrup for the kid 12,000đ
+
+Total: 125,000đ"
+EXPENSE_PAGE_2,"Tuần 2 - tháng Ba năm 1999
+
+- Gạo 10 cân ............ 35.000đ
+- Tiền chợ ................ 65.000đ
+- Tiền điện ............... 22.000đ","Week 2 - March 1999
+
+- Rice, 10 kg ............ 35,000đ
+- Market .................. 65,000đ
+- Electricity ............. 22,000đ"
+EXPENSE_PAGE_3,"Tuần 3 - tháng Ba năm 1999
+
+- Tiền chợ ................ 68.000đ
+- Học phí cho con ......... 45.000đ
+- Nước mắm, muối .......... 9.000đ
+- Sửa xe đạp ............... 15.000đ
+
+Cộng: 137.000đ","Week 3 - March 1999
+
+- Market .................. 68,000đ
+- School fees ............. 45,000đ
+- Fish sauce, salt ......... 9,000đ
+- Bicycle repair .......... 15,000đ
+
+Total: 137,000đ"
+EXPENSE_PAGE_4,"Tuần 4 - tháng Ba năm 1999
+
+- Thuốc bắc cho con (3 thang) .. 60.000đ
+- Tiền khám bệnh ......... 30.000đ
+- Tiền chợ ................ 52.000đ
+- Con sốt mãi không dứt","Week 4 - March 1999
+
+- Herbal medicine (3 doses) .. 60,000đ
+- Doctor's visit ............ 30,000đ
+- Market .................... 52,000đ
+- The fever won't break"
+EXPENSE_PAGE_5,"Tuần 1 - tháng Tư năm 1999
+
+- Hương, nến .............. 10.000đ
+- Gạo 10 cân ............ 35.000đ
+- Thuốc cho con ........... 40.000đ
+- Đêm nào con cũng khóc","Week 1 - April 1999
+
+- Incense, candles ........ 10,000đ
+- Rice, 10 kg ............ 35,000đ
+- Medicine for the kid .... 40,000đ
+- The kid cries every night"
+EXPENSE_PAGE_6,"Tuần 2 - tháng Tư năm 1999
+
+- Lễ thầy cúng ........... 150.000đ
+- Chum sành (1 cái) ....... 40.000đ
+- Đinh sắt (5 chiếc) ........ 2.000đ
+- Vàng mã, gà luộc ........ 35.000đ
+
+Cộng: 227.000đ","Week 2 - April 1999
+
+- Shaman's ritual ......... 150,000đ
+- Clay jar (one) ........... 40,000đ
+- Iron nails (five) .......... 2,000đ
+- Votive paper, boiled chicken 35,000đ
+
+Total: 227,000đ"
+EXPENSE_PAGE_7,"Tuần 3 - tháng Tư năm 1999
+
+- Gạo 10 cân ............ 35.000đ
+- Tiền chợ ................ 60.000đ
+- Tiền xe về Thôn Đoài ..... 20.000đ
+
+Cộng: 115.000đ","Week 3 - April 1999
+
+- Rice, 10 kg ............ 35,000đ
+- Market .................. 60,000đ
+- Bus fare to Thôn Đoài .... 20,000đ
+
+Total: 115,000đ"
+PROMPT_SAFE_KEYPAD,[E] Nhập mật mã,[E] Enter the code
+UI_KEYPAD_TITLE,Nhập mật mã,Enter code
+UI_KEYPAD_HINT,[Mũi tên/WASD hoặc chuột] Chọn phím    [E] Bấm    [Esc] Thoát,[Arrows/WASD or mouse] Select    [E] Press    [Esc] Leave
+UI_KEYPAD_CLEAR,C,C
+UI_KEYPAD_OK,OK,OK
+UI_SAFE_WRONG,SAI,WRONG
+UI_SAFE_OPEN,MỞ,OPEN
+ITEM_OLD_MONEY_NAME,Xấp tiền cũ,Stack of old money
+ITEM_OLD_MONEY_DESC,"Một xấp tiền giấy cũ buộc dây chun, toàn tờ mệnh giá đã thôi lưu hành từ lâu.","A rubber-banded stack of old banknotes, all long out of circulation."
+ITEM_ADDRESS_NOTE_NAME,Mảnh giấy ố vàng,Yellowed scrap of paper
+ITEM_ADDRESS_NOTE_DESC,Mảnh giấy ố vàng ghi địa chỉ ngôi nhà cũ ở Thôn Đoài.,A yellowed scrap with the old house's address in Thôn Đoài.
+PROMPT_PICK_NOTE,[E] Nhặt mảnh giấy,[E] Pick up the paper
+DOC_ADDRESS_NOTE,Ngôi nhà cũ bên bờ sông - Thôn Đoài (Xây năm 1987),The old house by the river - Thôn Đoài (Built in 1987)
+OBJ_RIDE_TO_THON_DOAI,Lấy xe đạp và lên đường đến Thôn Đoài.,Take the bicycle and set off for Thôn Đoài.

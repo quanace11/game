@@ -81,4 +81,40 @@ signal opening_state_changed(state: int)
 ## Phân cảnh mở đầu kết thúc, gameplay tự do bắt đầu.
 signal opening_sequence_finished
 
+# --- Câu đố / đồ vật cơ khí ---
+
+## Phát hiệu ứng âm thanh 3D [param sound_id] tại [param at] (tọa độ thế giới).
+## SfxPlayer tìm file res://assets/audio/<sound_id>.ogg|wav|mp3, thiếu file thì im lặng.
+signal sfx_requested(sound_id: StringName, at: Vector3)
+
+## Phát âm thanh giao diện (không định vị), ví dụ tiếng bấm phím két sắt.
+signal ui_sfx_requested(sound_id: StringName)
+
+## Một cờ trạng thái cốt truyện trong GameManager thay đổi.
+signal story_flag_changed(flag: StringName, value: bool)
+
+## Mở giao diện soi ổ khóa [param lock_id]. [param key_item_id] là ID vật phẩm mở được khóa này.
+signal lock_inspect_requested(lock_id: StringName, key_item_id: StringName)
+
+## Ổ khóa [param lock_id] vừa được mở bằng chìa (sau hoạt ảnh tra chìa và vặn).
+signal lock_opened(lock_id: StringName)
+
+## Mở giao diện đọc sổ đặc biệt (ví dụ sổ chi tiêu bị xé trang).
+signal book_requested(book_id: StringName)
+
+## Người chơi vừa gập sổ [param book_id].
+signal book_closed(book_id: StringName)
+
+## DocumentViewer vừa đóng.
+signal document_closed
+
+## Mở bàn phím két sắt [param safe_id]; [param code] là mật mã đúng.
+signal keypad_requested(safe_id: StringName, code: String)
+
+## Nhập đúng mật mã két sắt [param safe_id].
+signal safe_unlocked(safe_id: StringName)
+
+## Phân cảnh buổi sáng chuyển trạng thái. [param state] là MorningBedroomDirector.State.
+signal morning_state_changed(state: int)
+
 @warning_ignore_restore("unused_signal")
