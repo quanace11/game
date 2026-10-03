@@ -9,6 +9,9 @@ extends Resource
 @export var description_key: String
 ## Icon hiện trong ô Hotbar (để trống thì chỉ hiện tên).
 @export var icon: Texture2D
+## Khác rỗng: bấm phím số của ô này sẽ mở sổ đặc biệt ([signal EventBus.book_requested])
+## thay vì khung Inspect, ví dụ &"expense_book_1999".
+@export var document_id: StringName
 
 
 func get_display_name() -> String:

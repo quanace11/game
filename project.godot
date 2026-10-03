@@ -20,6 +20,7 @@ config/icon="res://icon.svg"
 EventBus="*res://autoloads/EventBus.gd"
 MemoryManager="*res://autoloads/MemoryManager.gd"
 Inventory="*res://autoloads/Inventory.gd"
+GameManager="*res://autoloads/GameManager.gd"
 
 [input]
 

@@ -1,0 +1,183 @@
+[gd_scene load_steps=33 format=3]
+
+[ext_resource type="Script" path="res://scripts/morning/MorningBedroomDirector.gd" id="1_director"]
+[ext_resource type="PackedScene" path="res://scenes/levels/DreamBedroom.tscn" id="2_level"]
+[ext_resource type="Script" path="res://scripts/puzzles/PillowInteraction.gd" id="3_pillow"]
+[ext_resource type="Script" path="res://scripts/interaction/Interactable.gd" id="4_interactable"]
+[ext_resource type="PackedScene" path="res://scenes/puzzles/Drawer.tscn" id="5_drawer"]
+[ext_resource type="PackedScene" path="res://scenes/puzzles/Safe.tscn" id="6_safe"]
+[ext_resource type="Script" path="res://scripts/puzzles/FocusMonologue.gd" id="7_focus"]
+[ext_resource type="Script" path="res://scripts/ui/SfxPlayer.gd" id="8_sfx"]
+[ext_resource type="PackedScene" path="res://scenes/ui/CinematicOverlay.tscn" id="9_overlay"]
+[ext_resource type="PackedScene" path="res://scenes/ui/LockInspectUI.tscn" id="10_lock_ui"]
+[ext_resource type="PackedScene" path="res://scenes/ui/ExpenseBookUI.tscn" id="11_book_ui"]
+[ext_resource type="PackedScene" path="res://scenes/ui/SafeKeypadUI.tscn" id="12_keypad_ui"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_Linen"]
+albedo_color = Color(0.97, 0.96, 0.94, 1)
+roughness = 1.0
+
+[sub_resource type="StandardMaterial3D" id="Mat_Brass"]
+albedo_color = Color(0.85, 0.68, 0.38, 1)
+metallic = 0.95
+roughness = 0.25
+
+[sub_resource type="StandardMaterial3D" id="Mat_BookCover"]
+albedo_color = Color(0.36, 0.13, 0.1, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="Mat_BookPages"]
+albedo_color = Color(0.84, 0.78, 0.62, 1)
+roughness = 1.0
+
+[sub_resource type="StandardMaterial3D" id="Mat_Sage"]
+albedo_color = Color(0.62, 0.68, 0.6, 1)
+roughness = 1.0
+
+[sub_resource type="BoxMesh" id="Mesh_cushion"]
+size = Vector3(0.42, 0.3, 0.1)
+
+[sub_resource type="BoxShape3D" id="Shape_cushion"]
+size = Vector3(0.44, 0.32, 0.14)
+
+[sub_resource type="BoxMesh" id="Mesh_pillow"]
+size = Vector3(0.77, 0.11, 0.36)
+
+[sub_resource type="BoxShape3D" id="Shape_pillow"]
+size = Vector3(0.8, 0.16, 0.4)
+
+[sub_resource type="TorusMesh" id="Mesh_key_bow"]
+inner_radius = 0.008
+outer_radius = 0.016
+rings = 16
+ring_segments = 8
+
+[sub_resource type="BoxMesh" id="Mesh_key_shaft"]
+size = Vector3(0.045, 0.005, 0.006)
+
+[sub_resource type="BoxMesh" id="Mesh_key_bit"]
+size = Vector3(0.008, 0.004, 0.012)
+
+[sub_resource type="BoxShape3D" id="Shape_key"]
+size = Vector3(0.16, 0.06, 0.1)
+
+[sub_resource type="BoxMesh" id="Mesh_book_cover"]
+size = Vector3(0.15, 0.022, 0.2)
+
+[sub_resource type="BoxMesh" id="Mesh_book_pages"]
+size = Vector3(0.14, 0.016, 0.19)
+
+[sub_resource type="BoxShape3D" id="Shape_book"]
+size = Vector3(0.2, 0.08, 0.24)
+
+[node name="MorningBedroom" type="Node3D" node_paths=PackedStringArray("level")]
+script = ExtResource("1_director")
+level = NodePath("Level")
+
+[node name="Level" parent="." instance=ExtResource("2_level")]
+
+[node name="Pillow" type="Area3D" parent="." node_paths=PackedStringArray("revealed")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.475, 0.61, -2.15)
+script = ExtResource("3_pillow")
+revealed = NodePath("../SmallKey")
+item_id = &"pillow"
+display_name_key = "OBJ_PILLOW_NAME"
+
+[node name="Mesh" type="MeshInstance3D" parent="Pillow"]
+mesh = SubResource("Mesh_pillow")
+surface_material_override/0 = SubResource("Mat_Linen")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Pillow"]
+shape = SubResource("Shape_pillow")
+
+[node name="Cushion" type="MeshInstance3D" parent="Pillow"]
+transform = Transform3D(1, 0, 0, 0, 0.9659, 0.2588, 0, -0.2588, 0.9659, 0.055, 0.13, 0.07)
+mesh = SubResource("Mesh_cushion")
+surface_material_override/0 = SubResource("Mat_Sage")
+
+[node name="CushionShape" type="CollisionShape3D" parent="Pillow"]
+transform = Transform3D(1, 0, 0, 0, 0.9659, 0.2588, 0, -0.2588, 0.9659, 0.055, 0.13, 0.07)
+shape = SubResource("Shape_cushion")
+
+[node name="SmallKey" type="Area3D" parent="."]
+transform = Transform3D(0.866, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866, -0.43, 0.556, -2.12)
+script = ExtResource("4_interactable")
+item_id = &"cabinet_key"
+display_name_key = "ITEM_CABINET_KEY_NAME"
+can_pickup = true
+description_key = "ITEM_CABINET_KEY_DESC"
+prompt_text_key = "PROMPT_PICK_KEY"
+interact_sfx = &"sfx_key_jingle"
+
+[node name="Bow" type="MeshInstance3D" parent="SmallKey"]
+mesh = SubResource("Mesh_key_bow")
+surface_material_override/0 = SubResource("Mat_Brass")
+
+[node name="Shaft" type="MeshInstance3D" parent="SmallKey"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.036, 0, 0)
+mesh = SubResource("Mesh_key_shaft")
+surface_material_override/0 = SubResource("Mat_Brass")
+
+[node name="Bit" type="MeshInstance3D" parent="SmallKey"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.05, 0, 0.008)
+mesh = SubResource("Mesh_key_bit")
+surface_material_override/0 = SubResource("Mat_Brass")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SmallKey"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.025, 0, 0)
+shape = SubResource("Shape_key")
+
+[node name="DeskDrawerBottom" parent="." instance=ExtResource("5_drawer")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 2.242, 0.13, -0.77)
+item_id = &"desk_drawer_bottom"
+
+[node name="DeskDrawerMiddle" parent="." instance=ExtResource("5_drawer")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 2.242, 0.35, -0.77)
+item_id = &"desk_drawer_middle"
+
+[node name="DeskDrawerLocked" parent="." instance=ExtResource("5_drawer")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 2.242, 0.57, -0.77)
+item_id = &"desk_drawer_locked"
+display_name_key = "OBJ_DRAWER_LOCKED_NAME"
+locked = true
+
+[node name="ExpenseBook" type="Area3D" parent="DeskDrawerLocked"]
+transform = Transform3D(0.9962, 0, 0.0872, 0, 1, 0, -0.0872, 0, 0.9962, 0, -0.058, -0.13)
+script = ExtResource("4_interactable")
+item_id = &"expense_book_1999"
+display_name_key = "ITEM_EXPENSE_BOOK_NAME"
+can_pickup = true
+description_key = "ITEM_EXPENSE_BOOK_DESC"
+document_id = &"expense_book_1999"
+prompt_text_key = "PROMPT_TAKE_BOOK"
+interact_sfx = &"sfx_paper"
+
+[node name="Cover" type="MeshInstance3D" parent="DeskDrawerLocked/ExpenseBook"]
+mesh = SubResource("Mesh_book_cover")
+surface_material_override/0 = SubResource("Mat_BookCover")
+
+[node name="Pages" type="MeshInstance3D" parent="DeskDrawerLocked/ExpenseBook"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.006, 0.001, 0)
+mesh = SubResource("Mesh_book_pages")
+surface_material_override/0 = SubResource("Mat_BookPages")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DeskDrawerLocked/ExpenseBook"]
+shape = SubResource("Shape_book")
+
+[node name="FocusMonologue" type="Node" parent="DeskDrawerLocked/ExpenseBook"]
+script = ExtResource("7_focus")
+monologue_key = "MORNING_MONO_BOOK_FOUND"
+
+[node name="Safe" parent="." instance=ExtResource("6_safe")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -2.48, 0, -1.05)
+
+[node name="SfxPlayer" type="Node3D" parent="."]
+script = ExtResource("8_sfx")
+
+[node name="LockInspectUI" parent="." instance=ExtResource("10_lock_ui")]
+
+[node name="ExpenseBookUI" parent="." instance=ExtResource("11_book_ui")]
+
+[node name="SafeKeypadUI" parent="." instance=ExtResource("12_keypad_ui")]
+
+[node name="CinematicOverlay" parent="." instance=ExtResource("9_overlay")]

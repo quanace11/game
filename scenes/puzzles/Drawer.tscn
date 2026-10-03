@@ -1,0 +1,118 @@
+[gd_scene load_steps=15 format=3]
+
+[ext_resource type="Script" path="res://scripts/puzzles/Drawer.gd" id="1_drawer"]
+
+[sub_resource type="BoxShape3D" id="Shape_front"]
+size = Vector3(0.39, 0.17, 0.05)
+
+[sub_resource type="StandardMaterial3D" id="Mat_Front"]
+albedo_color = Color(0.93, 0.9, 0.84, 1)
+roughness = 0.5
+
+[sub_resource type="StandardMaterial3D" id="Mat_Inner"]
+albedo_color = Color(0.72, 0.62, 0.48, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="Mat_Brass"]
+albedo_color = Color(0.85, 0.68, 0.38, 1)
+metallic = 0.95
+roughness = 0.28
+
+[sub_resource type="StandardMaterial3D" id="Mat_Hole"]
+albedo_color = Color(0.02, 0.02, 0.02, 1)
+roughness = 0.9
+
+[sub_resource type="BoxMesh" id="Mesh_front"]
+size = Vector3(0.38, 0.18, 0.015)
+
+[sub_resource type="BoxMesh" id="Mesh_pull"]
+size = Vector3(0.08, 0.015, 0.02)
+
+[sub_resource type="BoxMesh" id="Mesh_bottom"]
+size = Vector3(0.34, 0.01, 0.38)
+
+[sub_resource type="BoxMesh" id="Mesh_side"]
+size = Vector3(0.01, 0.13, 0.38)
+
+[sub_resource type="BoxMesh" id="Mesh_back"]
+size = Vector3(0.34, 0.13, 0.01)
+
+[sub_resource type="CylinderMesh" id="Mesh_escutcheon"]
+top_radius = 0.018
+bottom_radius = 0.018
+height = 0.004
+radial_segments = 20
+
+[sub_resource type="BoxMesh" id="Mesh_slot"]
+size = Vector3(0.005, 0.016, 0.004)
+
+[sub_resource type="BoxMesh" id="Mesh_key_bow"]
+size = Vector3(0.032, 0.008, 0.004)
+
+[sub_resource type="BoxMesh" id="Mesh_key_shaft"]
+size = Vector3(0.005, 0.005, 0.02)
+
+[node name="Drawer" type="Area3D"]
+script = ExtResource("1_drawer")
+item_id = &"drawer"
+display_name_key = "OBJ_DRAWER_NAME"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.005)
+shape = SubResource("Shape_front")
+
+[node name="Front" type="MeshInstance3D" parent="."]
+mesh = SubResource("Mesh_front")
+surface_material_override/0 = SubResource("Mat_Front")
+
+[node name="Pull" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04, 0.017)
+mesh = SubResource("Mesh_pull")
+surface_material_override/0 = SubResource("Mat_Brass")
+
+[node name="Tray" type="Node3D" parent="."]
+
+[node name="Bottom" type="MeshInstance3D" parent="Tray"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.075, -0.2)
+mesh = SubResource("Mesh_bottom")
+surface_material_override/0 = SubResource("Mat_Inner")
+
+[node name="SideL" type="MeshInstance3D" parent="Tray"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.165, -0.02, -0.2)
+mesh = SubResource("Mesh_side")
+surface_material_override/0 = SubResource("Mat_Inner")
+
+[node name="SideR" type="MeshInstance3D" parent="Tray"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.165, -0.02, -0.2)
+mesh = SubResource("Mesh_side")
+surface_material_override/0 = SubResource("Mat_Inner")
+
+[node name="Back" type="MeshInstance3D" parent="Tray"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.02, -0.385)
+mesh = SubResource("Mesh_back")
+surface_material_override/0 = SubResource("Mat_Inner")
+
+[node name="Keyhole" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.025, 0.008)
+
+[node name="Escutcheon" type="MeshInstance3D" parent="Keyhole"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0)
+mesh = SubResource("Mesh_escutcheon")
+surface_material_override/0 = SubResource("Mat_Brass")
+
+[node name="Slot" type="MeshInstance3D" parent="Keyhole"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.002)
+mesh = SubResource("Mesh_slot")
+surface_material_override/0 = SubResource("Mat_Hole")
+
+[node name="InsertedKey" type="Node3D" parent="Keyhole"]
+
+[node name="Shaft" type="MeshInstance3D" parent="Keyhole/InsertedKey"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.012)
+mesh = SubResource("Mesh_key_shaft")
+surface_material_override/0 = SubResource("Mat_Brass")
+
+[node name="Bow" type="MeshInstance3D" parent="Keyhole/InsertedKey"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.022)
+mesh = SubResource("Mesh_key_bow")
+surface_material_override/0 = SubResource("Mat_Brass")

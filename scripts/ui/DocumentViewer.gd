@@ -42,6 +42,7 @@ func close() -> void:
 		return
 	visible = false
 	EventBus.player_controls_locked.emit(false)
+	EventBus.document_closed.emit()
 
 
 func flip(step: int) -> void:

@@ -1,0 +1,181 @@
+[gd_scene load_steps=20 format=3]
+
+[ext_resource type="Script" path="res://scripts/puzzles/SafeBox.gd" id="1_safe"]
+[ext_resource type="Script" path="res://scripts/interaction/Interactable.gd" id="2_interactable"]
+
+[sub_resource type="BoxShape3D" id="Shape_front"]
+size = Vector3(0.52, 0.64, 0.14)
+
+[sub_resource type="StandardMaterial3D" id="Mat_Steel"]
+albedo_color = Color(0.07, 0.075, 0.08, 1)
+metallic = 0.6
+roughness = 0.38
+
+[sub_resource type="StandardMaterial3D" id="Mat_Interior"]
+albedo_color = Color(0.2, 0.19, 0.17, 1)
+metallic = 0.2
+roughness = 0.75
+
+[sub_resource type="StandardMaterial3D" id="Mat_Brass"]
+albedo_color = Color(0.85, 0.68, 0.38, 1)
+metallic = 0.95
+roughness = 0.28
+
+[sub_resource type="StandardMaterial3D" id="Mat_Keypad"]
+albedo_color = Color(0.03, 0.03, 0.03, 1)
+roughness = 0.3
+
+[sub_resource type="StandardMaterial3D" id="Mat_LCD"]
+albedo_color = Color(0.2, 0.35, 0.2, 1)
+emission_enabled = true
+emission = Color(0.35, 0.8, 0.35, 1)
+emission_energy_multiplier = 0.6
+
+[sub_resource type="StandardMaterial3D" id="Mat_Money"]
+albedo_color = Color(0.62, 0.6, 0.46, 1)
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="Mat_Band"]
+albedo_color = Color(0.45, 0.12, 0.1, 1)
+roughness = 0.8
+
+[sub_resource type="StandardMaterial3D" id="Mat_OldPaper"]
+albedo_color = Color(0.82, 0.71, 0.46, 1)
+roughness = 1.0
+
+[sub_resource type="BoxMesh" id="Mesh_door"]
+size = Vector3(0.4, 0.5, 0.025)
+
+[sub_resource type="BoxMesh" id="Mesh_keypad"]
+size = Vector3(0.09, 0.11, 0.01)
+
+[sub_resource type="BoxMesh" id="Mesh_lcd"]
+size = Vector3(0.06, 0.018, 0.004)
+
+[sub_resource type="CylinderMesh" id="Mesh_dial"]
+top_radius = 0.045
+bottom_radius = 0.045
+height = 0.02
+radial_segments = 24
+
+[sub_resource type="BoxMesh" id="Mesh_handle"]
+size = Vector3(0.12, 0.022, 0.03)
+
+[sub_resource type="BoxMesh" id="Mesh_money"]
+size = Vector3(0.15, 0.04, 0.07)
+
+[sub_resource type="BoxMesh" id="Mesh_band"]
+size = Vector3(0.02, 0.042, 0.072)
+
+[sub_resource type="BoxMesh" id="Mesh_note"]
+size = Vector3(0.11, 0.002, 0.08)
+
+[sub_resource type="BoxShape3D" id="Shape_money"]
+size = Vector3(0.17, 0.07, 0.1)
+
+[sub_resource type="BoxShape3D" id="Shape_note"]
+size = Vector3(0.14, 0.04, 0.11)
+
+[node name="Safe" type="Area3D" node_paths=PackedStringArray("door_hinge", "contents_root")]
+script = ExtResource("1_safe")
+door_hinge = NodePath("DoorHinge")
+contents_root = NodePath("Contents")
+item_id = &"bedroom_safe"
+display_name_key = "OBJ_SAFE_NAME"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0.21)
+shape = SubResource("Shape_front")
+
+[node name="Body" type="CSGCombiner3D" parent="."]
+use_collision = true
+
+[node name="Box" type="CSGBox3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+size = Vector3(0.48, 0.6, 0.46)
+material = SubResource("Mat_Steel")
+
+[node name="Cavity" type="CSGBox3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0.04)
+operation = 2
+size = Vector3(0.4, 0.48, 0.42)
+material = SubResource("Mat_Interior")
+
+[node name="Hinge1" type="CSGBox3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.215, 0.14, 0.24)
+size = Vector3(0.02, 0.06, 0.02)
+material = SubResource("Mat_Brass")
+
+[node name="Hinge2" type="CSGBox3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.215, 0.46, 0.24)
+size = Vector3(0.02, 0.06, 0.02)
+material = SubResource("Mat_Brass")
+
+[node name="DoorHinge" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 0.3, 0.245)
+
+[node name="Door" type="MeshInstance3D" parent="DoorHinge"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 0, 0)
+mesh = SubResource("Mesh_door")
+surface_material_override/0 = SubResource("Mat_Steel")
+
+[node name="Dial" type="MeshInstance3D" parent="DoorHinge"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0.29, 0.1, 0.02)
+mesh = SubResource("Mesh_dial")
+surface_material_override/0 = SubResource("Mat_Brass")
+
+[node name="Keypad" type="MeshInstance3D" parent="DoorHinge"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.29, -0.1, 0.017)
+mesh = SubResource("Mesh_keypad")
+surface_material_override/0 = SubResource("Mat_Keypad")
+
+[node name="LCD" type="MeshInstance3D" parent="DoorHinge"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.29, -0.065, 0.023)
+mesh = SubResource("Mesh_lcd")
+surface_material_override/0 = SubResource("Mat_LCD")
+
+[node name="Handle" type="MeshInstance3D" parent="DoorHinge"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12, 0, 0.026)
+mesh = SubResource("Mesh_handle")
+surface_material_override/0 = SubResource("Mat_Brass")
+
+[node name="Contents" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0)
+
+[node name="OldMoney" type="Area3D" parent="Contents"]
+transform = Transform3D(0.9848, 0, 0.1736, 0, 1, 0, -0.1736, 0, 0.9848, 0.08, 0.02, -0.02)
+script = ExtResource("2_interactable")
+item_id = &"old_money"
+display_name_key = "ITEM_OLD_MONEY_NAME"
+can_pickup = true
+description_key = "ITEM_OLD_MONEY_DESC"
+interact_sfx = &"sfx_paper"
+
+[node name="Stack" type="MeshInstance3D" parent="Contents/OldMoney"]
+mesh = SubResource("Mesh_money")
+surface_material_override/0 = SubResource("Mat_Money")
+
+[node name="Band" type="MeshInstance3D" parent="Contents/OldMoney"]
+mesh = SubResource("Mesh_band")
+surface_material_override/0 = SubResource("Mat_Band")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Contents/OldMoney"]
+shape = SubResource("Shape_money")
+
+[node name="AddressNote" type="Area3D" parent="Contents"]
+transform = Transform3D(0.9659, 0, -0.2588, 0, 1, 0, 0.2588, 0, 0.9659, -0.09, 0.002, 0.07)
+script = ExtResource("2_interactable")
+item_id = &"address_note"
+display_name_key = "ITEM_ADDRESS_NOTE_NAME"
+can_pickup = true
+description_key = "ITEM_ADDRESS_NOTE_DESC"
+pages = Array[String](["DOC_ADDRESS_NOTE"])
+prompt_text_key = "PROMPT_PICK_NOTE"
+interact_sfx = &"sfx_paper"
+
+[node name="Paper" type="MeshInstance3D" parent="Contents/AddressNote"]
+mesh = SubResource("Mesh_note")
+surface_material_override/0 = SubResource("Mat_OldPaper")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Contents/AddressNote"]
+shape = SubResource("Shape_note")

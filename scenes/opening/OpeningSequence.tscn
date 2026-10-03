@@ -10,6 +10,7 @@
 script = ExtResource("1_manager")
 nightmare_scene = ExtResource("2_nightmare")
 bedroom_scene = ExtResource("3_bedroom")
+next_scene_path = "res://scenes/morning/MorningBedroom.tscn"
 
 [node name="LevelRoot" type="Node3D" parent="."]
 
