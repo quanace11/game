@@ -35,7 +35,7 @@ const STANDING_HEAD_Y := 1.6
 @export var bus_door: Interactable
 ## Các vật chỉ xuất hiện và tương tác được khi xe đã hoang tàn.
 @export var derelict_interactables: Array[Interactable] = []
-## Bóng người hiện ngoài ô kính cửa xe trong khoảnh khắc mất điện.
+## Bóng người hiện ngoài ô kính cửa xe trong khoảnh khắc mất điện (GhostGirl hoặc node chứa nó).
 @export var apparition: Node3D
 @export var ticket_item_id: StringName = &"bus_ticket_1999"
 
@@ -103,8 +103,10 @@ func _ready() -> void:
 	_set_derelict_interactables(false)
 	if apparition:
 		apparition.visible = false
-		if apparition.has_method(&"set_talkable"):
-			apparition.call(&"set_talkable", false)
+		# Bóng ma chỉ để nhìn: tắt vùng [E] Hỏi thăm của GhostGirl.
+		for node: Node in [apparition] + apparition.get_children():
+			if node is GhostGirl:
+				(node as GhostGirl).set_talkable(false)
 	if bus_door:
 		bus_door.interacted.connect(_on_bus_door_interacted)
 	EventBus.item_picked_up.connect(_on_item_picked_up)

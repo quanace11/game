@@ -152,8 +152,10 @@ interact_sfx = &"sfx_bus_door_jammed"
 [node name="CollisionShape3D" type="CollisionShape3D" parent="BusDoor"]
 shape = SubResource("Shape_door")
 
-[node name="Apparition" parent="." instance=ExtResource("4_girl")]
+[node name="Apparition" type="Node3D" parent="."]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 1.7, 0.52, -4.22)
+
+[node name="Girl" parent="Apparition" instance=ExtResource("4_girl")]
 
 [node name="RimLight" type="OmniLight3D" parent="Apparition"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, -0.7)
