@@ -91,4 +91,6 @@ locale/test="vi"
 
 [rendering]
 
+limits/opengl/max_lights_per_object=16
+
 rendering_device/driver.windows="d3d12"
