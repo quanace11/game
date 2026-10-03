@@ -1,0 +1,18 @@
+keys,vi,en
+PROLOGUE_TITLE,Chương Mở Đầu,Prologue
+PROLOGUE_NIGHTMARE_01,Bóng tối đặc quánh. Bạn không thể cử động.,The darkness is thick. You cannot move.
+PROLOGUE_NIGHTMARE_02,Có thứ gì đó đang đứng ở cuối giường.,Something is standing at the foot of the bed.
+PROLOGUE_NIGHTMARE_03,Nó cúi xuống... gần hơn... gần hơn nữa...,It leans down... closer... closer still...
+PROLOGUE_NIGHTMARE_WAKE,Bạn bừng tỉnh. Mồ hôi lạnh ướt đẫm lưng áo.,You jolt awake. Cold sweat soaks your back.
+PROLOGUE_WHISPER_01,"...trả lại cho ta...","...give it back to me..."
+PROLOGUE_WHISPER_02,"...năm cái... đủ năm cái...","...five... all five..."
+PROLOGUE_WHISPER_03,"...đừng nhìn lại phía sau...","...don't look behind you..."
+PROLOGUE_WHISPER_HINT,Tiếng thì thầm vọng ra từ phía cánh cửa.,The whispering comes from the direction of the door.
+PROLOGUE_NAILS_PROMPT,Kiểm tra vết đinh,Inspect the nail mark
+PROLOGUE_NAIL_01,Vết đinh thứ nhất. Gỉ sét và còn rất mới.,The first nail mark. Rusty yet fresh.
+PROLOGUE_NAIL_02,Vết đinh thứ hai. Gỗ quanh nó bị cào xước.,The second nail mark. The wood around it is scratched.
+PROLOGUE_NAIL_03,Vết đinh thứ ba. Có vệt gì đó sẫm màu chảy xuống.,The third nail mark. Something dark has trickled down from it.
+PROLOGUE_NAIL_04,Vết đinh thứ tư. Nó bị đóng từ phía bên trong.,The fourth nail mark. It was hammered in from the inside.
+PROLOGUE_NAIL_05,Vết đinh thứ năm. Chiếc đinh đã biến mất.,The fifth nail mark. The nail is gone.
+PROLOGUE_NAILS_PROGRESS,Đã kiểm tra {count}/5 vết đinh.,Inspected {count}/5 nail marks.
+PROLOGUE_NAILS_DONE,Đủ năm vết. Tiếng thì thầm đột nhiên im bặt.,All five marks. The whispering suddenly stops.
