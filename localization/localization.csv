@@ -16,3 +16,10 @@ PROLOGUE_NAIL_04,Vết đinh thứ tư. Nó bị đóng từ phía bên trong.,T
 PROLOGUE_NAIL_05,Vết đinh thứ năm. Chiếc đinh đã biến mất.,The fifth nail mark. The nail is gone.
 PROLOGUE_NAILS_PROGRESS,Đã kiểm tra {count}/5 vết đinh.,Inspected {count}/5 nail marks.
 PROLOGUE_NAILS_DONE,Đủ năm vết. Tiếng thì thầm đột nhiên im bặt.,All five marks. The whispering suddenly stops.
+PROMPT_INTERACT,Tương tác,Interact
+PROMPT_EXAMINE,Xem xét,Examine
+PROMPT_PICK_UP,Nhặt lên,Pick up
+PROMPT_REMEMBER,Cố nhớ lại,Try to remember
+MONOLOGUE_PROLOGUE_NAILS,"Năm cái đinh... Mình đã từng thấy chúng ở đâu đó rồi.","Five nails... I've seen them somewhere before."
+MONOLOGUE_PROLOGUE_NIGHTMARE,"Không phải mơ. Cái bóng ấy... nó vẫn còn ở đây.","It wasn't a dream. That shadow... it's still here."
+MONOLOGUE_HAIRPIN,"Chiếc kẹp tóc này... của ai? Sao tay mình lại run thế này?","This hairpin... whose is it? Why are my hands shaking?"

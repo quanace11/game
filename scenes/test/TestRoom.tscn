@@ -1,0 +1,94 @@
+[gd_scene load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://scenes/test/TestRoomDebug.gd" id="1_debug"]
+[ext_resource type="PackedScene" path="res://scenes/player/Player.tscn" id="2_player"]
+[ext_resource type="Script" path="res://scripts/interaction/Interactable.gd" id="3_interactable"]
+
+[sub_resource type="Environment" id="Environment_dark"]
+background_mode = 1
+background_color = Color(0, 0, 0, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.35, 0.38, 0.5, 1)
+ambient_light_energy = 0.05
+tonemap_mode = 2
+fog_enabled = true
+fog_light_color = Color(0.05, 0.05, 0.07, 1)
+fog_density = 0.04
+
+[sub_resource type="StandardMaterial3D" id="Mat_wall"]
+albedo_color = Color(0.32, 0.3, 0.27, 1)
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="Mat_wood"]
+albedo_color = Color(0.28, 0.17, 0.1, 1)
+roughness = 0.8
+
+[sub_resource type="StandardMaterial3D" id="Mat_hairpin"]
+albedo_color = Color(0.75, 0.68, 0.45, 1)
+metallic = 0.9
+roughness = 0.3
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_table_reach"]
+size = Vector3(1.2, 0.9, 0.9)
+
+[node name="TestRoom" type="Node3D"]
+script = ExtResource("1_debug")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_dark")
+
+[node name="Room" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+flip_faces = true
+use_collision = true
+size = Vector3(5, 3, 6)
+material = SubResource("Mat_wall")
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 2)
+
+[node name="Table" type="CSGCombiner3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.8)
+use_collision = true
+
+[node name="Top" type="CSGBox3D" parent="Table"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.74, 0)
+size = Vector3(1, 0.06, 0.6)
+material = SubResource("Mat_wood")
+
+[node name="LegFL" type="CSGBox3D" parent="Table"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.44, 0.355, 0.24)
+size = Vector3(0.06, 0.71, 0.06)
+material = SubResource("Mat_wood")
+
+[node name="LegFR" type="CSGBox3D" parent="Table"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.44, 0.355, 0.24)
+size = Vector3(0.06, 0.71, 0.06)
+material = SubResource("Mat_wood")
+
+[node name="LegBL" type="CSGBox3D" parent="Table"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.44, 0.355, -0.24)
+size = Vector3(0.06, 0.71, 0.06)
+material = SubResource("Mat_wood")
+
+[node name="LegBR" type="CSGBox3D" parent="Table"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.44, 0.355, -0.24)
+size = Vector3(0.06, 0.71, 0.06)
+material = SubResource("Mat_wood")
+
+[node name="Hairpin" type="CSGBox3D" parent="."]
+transform = Transform3D(0.866, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866, 0.1, 0.78, -1.75)
+size = Vector3(0.12, 0.01, 0.015)
+material = SubResource("Mat_hairpin")
+
+[node name="HairpinTrigger" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, -1.8)
+script = ExtResource("3_interactable")
+item_id = &"hairpin"
+prompt_text_key = "PROMPT_EXAMINE"
+interaction_type = 1
+monologue_key = "MONOLOGUE_HAIRPIN"
+one_shot = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HairpinTrigger"]
+shape = SubResource("BoxShape3D_table_reach")
