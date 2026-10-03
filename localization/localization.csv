@@ -52,3 +52,4 @@ If anyone reads this, don't let it reach five."
 UI_DOC_PAGE,Trang {current}/{total},Page {current}/{total}
 UI_DOC_HINT,[A/D] Lật trang    [E/Esc] Gập sổ,[A/D] Turn page    [E/Esc] Close
 UI_INSPECT_HINT,[1-5] Đổi vật phẩm    [E/Esc] Đóng,[1-5] Switch item    [E/Esc] Close
+OBJ_SAFE_NAME,Két sắt,Safe
