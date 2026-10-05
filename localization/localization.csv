@@ -624,13 +624,13 @@ BUS2_MONO_SEAT08,"Ghế 08, ngay sau lưng ghế mình... có một chiếc dép
 BUS2_MONO_SEAT08_COUNTED,Chiếc dép nhựa trẻ con. Ghế 08 không có cuống vé nào.,A child's sandal. There's no ticket stub for seat 08.
 UI_INCENSE_TITLE,Thắp hương hỏi,Ask with incense
 UI_INCENSE_LEVEL,(Nén hương thứ {n}),(Incense stick {n})
-HINT_LAMP_1,"Khói hương bay về cuối xe, quấn quanh chiếc đèn bão treo ở vách sau.",The smoke drifts to the back of the bus and curls around the lantern hanging there.
+HINT_LAMP_1,"Xe mất điện từ lâu. Ngày trước, người ta thắp sáng xe bằng gì?","The bus lost power long ago. Back then, what did people light a bus with?"
 HINT_LAMP_2,"Đến cuối xe, gỡ lá bùa quấn quanh đèn bão và đọc mặt sau.","Go to the back of the bus, unwrap the talisman on the lantern and read the back."
-HINT_OIL_1,Thủy tinh thì không mục. Xem đồ của bà cụ dưới sàn.,Glass doesn't rot. Look at the old woman's things on the floor.
+HINT_OIL_1,"Bảy năm ngâm nước, gỗ với vải mục hết. Chỉ thủy tinh là còn nguyên.",Seven years under water rot wood and cloth. Only glass survives.
 HINT_OIL_2,"Chai dầu hỏa nằm trong chiếc giỏ đổ dưới ghế bà cụ, bên kia lối đi, ngang ghế 07.","The kerosene is in the tipped basket under the old woman's seat, across the aisle from seat 07."
 HINT_WICK_1,"Bà cụ làm hàng mã, ắt có kim chỉ.",The old woman made paper offerings. She'd have had thread.
 HINT_WICK_2,"Cuộn chỉ bông kẹt trong khe ghế bà cụ, chỗ mặt ghế giáp lưng ghế.",The cotton thread is stuck in the gap at the back of the old woman's seat.
-HINT_BOX_1,"Bác tài cất diêm trong hộp tôn trên taplô. Nắp khắc ""Số xe"". Số xe dán ở đâu, nhìn từ phía nào?","The driver kept his matches in the tin box on the dashboard. The lid says ""Bus no."" Where is the number, and which side is it meant to be read from?"
+HINT_BOX_1,"Ổ khóa đòi số xe. Số xe dán ở đâu, và mình đang nhìn nó từ phía nào?","The lock wants the bus number. Where is it stuck, and which side am I seeing it from?"
 HINT_BOX_2,"Decal dán ngoài kính lái, đứng trong nhìn ra thì chữ bị lật như soi gương. Mã đúng: 3 - 8 - 5.","The decal is stuck outside the windscreen, so from inside it reads mirrored. The code is 3 - 8 - 5."
 HINT_LIGHT_1,"Đủ dầu, bấc, lửa rồi. Quay lại chỗ chiếc đèn.","Oil, wick, flame: you have them all. Go back to the lantern."
 HINT_LIGHT_2,Bấm E vào đèn bão ở vách sau để lắp và thắp.,Press E on the lantern at the back to fix and light it.
@@ -646,9 +646,9 @@ HINT_GIVE_CLOGS_1,"Hóa ở dương, nhận ở âm. Thổi tắt đèn rồi xe
 HINT_GIVE_CLOGS_2,"Ở Đêm 1999, nhặt đôi guốc mã mờ sáng ở cuối xe, đưa cho bà cụ.","In the night of 1999, pick up the glowing paper clogs at the back and give them to the old woman."
 HINT_TAPE_1,"Muốn quấn lại băng cần một cây bút, muốn nối chỗ đứt cần băng dính. Bút của Hùng đang ở trong tay người khác.","To rewind the tape you need a pencil; to mend the break, sticky tape. Hùng's pencil is in someone else's hands."
 HINT_TAPE_2,Bút chì: chú Bảy trả lại khi được giải thoát. Băng dính: trong giỏ của bà cụ ở Đêm 1999. Mang cả hai đến chiếc đài.,The pencil: the conductor gives it back once he's freed. The tape: in the old woman's basket in the Night of 1999. Bring both to the cassette player.
-HINT_ROUTE_1,Treo biển theo đúng thứ tự tiếng động trong băng. Vở của Hùng ở xác xe vẽ hình từng bến.,Hang the signs in the order of the sounds on the tape. Hùng's notebook in the wreck shows each stop's picture.
+HINT_ROUTE_1,Treo biển theo đúng thứ tự tiếng động trong băng. Mỗi biển có một hình nhỏ.,Hang the signs in the order of the sounds on the tape. Each sign has a little picture.
 HINT_ROUTE_2,"Thứ tự: Chùa Đoài, Chợ Huyện, Đường Tàu, Bến Đò.","Order: Đoài Pagoda, District Market, Railway Crossing, Ferry Landing."
-HINT_SEATS_1,Sổ phụ xe trong hộp tôn của bác tài ghi ai ngồi ghế nào. Số ghế dán trên vách.,The conductor's ledger in the driver's tin box says who sat where. Seat numbers are on the wall.
+HINT_SEATS_1,"Ai ngồi ghế nào, người soát vé đều ghi lại.","Whoever sat where, the conductor wrote it down."
 HINT_SEATS_2,Ghế 03: mũ cối. Ghế 05: gói thuốc bắc. Ghế 04: điếu cày.,Seat 03: pith helmet. Seat 05: herbal medicine. Seat 04: water pipe.
 HINT_PUNCH_1,"So các cuống vé mẫu: hàng trên là số ghế, hàng giữa là loại vé, hàng dưới là bến khách lên.","Compare the sample stubs: top row is the seat, middle row the fare type, bottom row where the passenger got on."
 HINT_PUNCH_2,Hàng trên lỗ thứ 8 (ghế 08). Hàng giữa bên phải (trẻ em). Hàng dưới lỗ thứ 5 (Bến Đò). Kìm ở trong túi chú Bảy.,Top row hole 8 (seat 08). Middle row right (child). Bottom row hole 5 (Ferry Landing). The punch is in the conductor's satchel.
@@ -656,7 +656,7 @@ HINT_WAKE_1,"Đoạn cuối băng của Hùng có giọng bác Tư: ba việc c�
 HINT_WAKE_2,"Xoa dầu gió cho bác Tư, lắp cuộn băng cải lương vào đài trên taplô, rồi giật ba hồi chuông.","Rub the oil on the driver, put the opera tape into the dashboard player, then ring three bells."
 BUS2_CAPTION_NOKIA,"(Chiếc Nokia trong túi An đổ chuông. Đầu dây bên kia rè rè, như gọi từ rất xa)","(The Nokia in An's pocket rings. The line crackles, as if from very far away)"
 BUS2_CAPTION_NOKIA_END,(tút... tút... tút...),(beep... beep... beep...)
-NOKIA_BOX,"Diêm à... bác cất trong hộp, khóa bằng số xe... nhìn từ ngoài vào ấy...","Matches... I keep them in the box, locked with the bus number... the way you'd read it from outside..."
+NOKIA_BOX,Số xe nhà mình ấy à... phải nhìn từ ngoài vào mới đúng...,Our bus number... you have to read it from the outside...
 NOKIA_TIN,Nước lên đến đâu... thì mất đến đấy cháu ạ...,"Wherever the water reached... everything was lost, child..."
 NOKIA_CLOGS,Không có dép... sao bà qua cầu được hả cháu...,"Without shoes... how can I cross the bridge, child..."
 NOKIA_TAPE,Mẹ ơi... tiếng đầu tiên con thu là tiếng chuông chùa đấy...,Mum... the first sound I recorded was the temple bell...
@@ -711,7 +711,7 @@ BUS2_MONO_LEDGER_HAND,Nét chữ này... giống hệt dòng chữ sau vé xe c�
 ITEM_CAI_LUONG_TAPE_NAME,Cuộn băng cải lương,Cải lương opera tape
 ITEM_CAI_LUONG_TAPE_DESC,"Băng của bác Tư. Mặt A là cải lương, mặt B là tiếng đường Hùng thu cho mẹ.","The driver's tape. Side A is cải lương opera; side B, the road sounds Hùng recorded for his mum."
 UI_PUNCH_STOP,Hàng dưới,Bottom row
-HINT_FOOTPRINTS_1,Chú Bảy đếm thừa một người. Xem kỹ sàn xe từ cửa trước đến ghế 08.,The conductor counts one too many. Look closely at the floor from the front door to seat 08.
+HINT_FOOTPRINTS_1,"Thừa một người. Người ấy lên xe từ đâu, rồi đi đến đâu?","One passenger too many. Where did they get on, and where did they go?"
 HINT_FOOTPRINTS_2,Dấu chân ướt dính bèo tây. Vở của Hùng ở xác xe ghi Bến Đò bèo tây kín mặt nước: khách thừa lên ở Bến Đò.,Wet footprints with water hyacinth. Hùng's notebook in the wreck says the ferry landing is covered in it: the extra passenger got on at the Ferry Landing.
 HINT_NAM_BELL_1,Bà Năm lỡ bến. Đọc tờ quy ước dán cạnh đầu dây chuông.,Mrs Năm missed her stop. Read the rules stuck beside the bell rope.
 HINT_NAM_BELL_2,Giật dây chuông đúng 1 hồi: có khách xuống bến. Dây chuông chỉ dùng được sau khi chú Bảy buông tay.,Ring the bell exactly once: a passenger getting off. The rope is only free once the conductor lets go.
