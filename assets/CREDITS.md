@@ -24,8 +24,18 @@ Tải lại: `python3 tools/fetch_cc0_assets.py` (texture) và `python3 tools/fe
 | `tile_terracotta` | [terracotta_floor_tiles](https://polyhaven.com/a/terracotta_floor_tiles) 2k | 2.08 m | Dimitrios Savva |
 | `wood_dark` | [wood_table_001](https://polyhaven.com/a/wood_table_001) 1k | 1.5 m | Dimitrios Savva, Rico Cilliers |
 | `wood_weathered` | [weathered_brown_planks](https://polyhaven.com/a/weathered_brown_planks) 1k | 1.8 m | Dimitrios Savva, Rico Cilliers |
+| `curtain_damask` | [floral_jacquard](https://polyhaven.com/a/floral_jacquard) 1k (chuyển xám) | 0.384 m | Rico Cilliers, colormass |
+| `moss` | [concrete_moss](https://polyhaven.com/a/concrete_moss) 1k | 3.0 m | Rob Tuytel |
+| `paint_clean` | [blue_metal_plate](https://polyhaven.com/a/blue_metal_plate) 1k (chuyển xám) | 2.5 m | Rob Tuytel |
+| `paint_flaking` | [rusty_metal_sheet](https://polyhaven.com/a/rusty_metal_sheet) 1k | 2.0 m | Amal Kumar |
+| `paint_worn` | [green_metal_rust](https://polyhaven.com/a/green_metal_rust) 1k | 1.0 m | Rob Tuytel |
+| `rubber_mat` | [rubber_tiles](https://polyhaven.com/a/rubber_tiles) 1k | 2.0 m | Amal Kumar |
+| `rust_heavy` | [rust_coarse_01](https://polyhaven.com/a/rust_coarse_01) 1k | 2.2 m | Dimitrios Savva, Rico Cilliers |
+| `vinyl` | [leather_red_03](https://polyhaven.com/a/leather_red_03) 1k (chuyển xám) | 0.3 m | Rob Tuytel |
 
 Các bộ `rug_dream`, `newspaper`, `reed_mat` và toàn bộ `decals/` vẫn là ảnh tự sinh bằng `tools/bake_textures.gd` (hình vẽ riêng của game).
+
+Ảnh trong `assets/textures/bus/` (nhiễu xác xe, kính bẩn, giấy hàng mã, mặt hình nhân, đồng hồ taplô, bùa, vé, hộp bánh, vòng số khóa...) tự vẽ bằng `tools/bake_bus_textures.py`. Mesh xe khách, hành khách, hình nhân và đồ vật câu đố trong `assets/models/bus/` sinh thủ tục bằng `tools/bus_models.py`, `tools/people_models.py`, `tools/prop_models.py` (chạy qua `tools/bus_blockout.py` / `tools/bus_puzzles_blockout.py`).
 
 ## Model (`assets/models/`)
 

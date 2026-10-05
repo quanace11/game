@@ -49,6 +49,15 @@ SETS = {
     "rust_metal": ("rusty_metal_02", "1k", {"mean": 70}),
     "fabric": ("cotton_jersey", "1k", {"gray": True, "mean": 204}),
     "bamboo_weave": ("bamboo_wall_02", "1k", {}),
+    # Chương 2, xe khách: nệm giả da, sơn tôn (sạch / cũ / bong tróc), gỉ nặng, thảm cao su, rèm, rêu.
+    "vinyl": ("leather_red_03", "1k", {"gray": True, "mean": 150}),
+    "paint_clean": ("blue_metal_plate", "1k", {"gray": True, "mean": 190}),
+    "paint_worn": ("green_metal_rust", "1k", {}),
+    "paint_flaking": ("rusty_metal_sheet", "1k", {}),
+    "rust_heavy": ("rust_coarse_01", "1k", {}),
+    "rubber_mat": ("rubber_tiles", "1k", {}),
+    "curtain_damask": ("floral_jacquard", "1k", {"gray": True, "mean": 170}),
+    "moss": ("concrete_moss", "1k", {}),
 }
 
 # Model CC0 (glTF 1k) cho đồ trang trí nhỏ, lưu ở assets/models/<asset>/.
@@ -119,6 +128,8 @@ def main():
         files = json.loads(get("%s/files/%s" % (API, asset)))
         info = json.loads(get("%s/info/%s" % (API, asset)))
         for suffix, key in MAPS.items():
+            if key not in files and key == "Diffuse":
+                key = "coll1"  # vài bộ (da thuộc...) đặt tên ảnh màu là bản phối màu thứ nhất
             url = files[key][res]["jpg"]["url"]
             albedo = suffix == "albedo"
             save_jpg(get(url), os.path.join(OUT, "%s_%s.jpg" % (name, suffix)),

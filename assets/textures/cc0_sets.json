@@ -29,6 +29,17 @@
     "size_m": 3.0,
     "source": "https://polyhaven.com/a/dirty_concrete"
   },
+  "curtain_damask": {
+    "asset": "floral_jacquard",
+    "authors": [
+      "Rico Cilliers",
+      "colormass"
+    ],
+    "license": "CC0 1.0",
+    "resolution": "1k",
+    "size_m": 0.384,
+    "source": "https://polyhaven.com/a/floral_jacquard"
+  },
   "earth": {
     "asset": "dirt_floor",
     "authors": [
@@ -81,6 +92,16 @@
     "size_m": 2.0,
     "source": "https://polyhaven.com/a/white_plaster_02"
   },
+  "moss": {
+    "asset": "concrete_moss",
+    "authors": [
+      "Rob Tuytel"
+    ],
+    "license": "CC0 1.0",
+    "resolution": "1k",
+    "size_m": 3.0,
+    "source": "https://polyhaven.com/a/concrete_moss"
+  },
   "oak_floor": {
     "asset": "laminate_floor_02",
     "authors": [
@@ -91,6 +112,36 @@
     "resolution": "2k",
     "size_m": 1.7,
     "source": "https://polyhaven.com/a/laminate_floor_02"
+  },
+  "paint_clean": {
+    "asset": "blue_metal_plate",
+    "authors": [
+      "Rob Tuytel"
+    ],
+    "license": "CC0 1.0",
+    "resolution": "1k",
+    "size_m": 2.5,
+    "source": "https://polyhaven.com/a/blue_metal_plate"
+  },
+  "paint_flaking": {
+    "asset": "rusty_metal_sheet",
+    "authors": [
+      "Amal Kumar"
+    ],
+    "license": "CC0 1.0",
+    "resolution": "1k",
+    "size_m": 2.0,
+    "source": "https://polyhaven.com/a/rusty_metal_sheet"
+  },
+  "paint_worn": {
+    "asset": "green_metal_rust",
+    "authors": [
+      "Rob Tuytel"
+    ],
+    "license": "CC0 1.0",
+    "resolution": "1k",
+    "size_m": 1.0,
+    "source": "https://polyhaven.com/a/green_metal_rust"
   },
   "painted_wood": {
     "asset": "blue_painted_planks",
@@ -122,6 +173,27 @@
     "size_m": 2.5,
     "source": "https://polyhaven.com/a/clay_roof_tiles_02"
   },
+  "rubber_mat": {
+    "asset": "rubber_tiles",
+    "authors": [
+      "Amal Kumar"
+    ],
+    "license": "CC0 1.0",
+    "resolution": "1k",
+    "size_m": 2.0,
+    "source": "https://polyhaven.com/a/rubber_tiles"
+  },
+  "rust_heavy": {
+    "asset": "rust_coarse_01",
+    "authors": [
+      "Dimitrios Savva",
+      "Rico Cilliers"
+    ],
+    "license": "CC0 1.0",
+    "resolution": "1k",
+    "size_m": 2.2,
+    "source": "https://polyhaven.com/a/rust_coarse_01"
+  },
   "rust_metal": {
     "asset": "rusty_metal_02",
     "authors": [
@@ -141,6 +213,16 @@
     "resolution": "2k",
     "size_m": 2.08,
     "source": "https://polyhaven.com/a/terracotta_floor_tiles"
+  },
+  "vinyl": {
+    "asset": "leather_red_03",
+    "authors": [
+      "Rob Tuytel"
+    ],
+    "license": "CC0 1.0",
+    "resolution": "1k",
+    "size_m": 0.3,
+    "source": "https://polyhaven.com/a/leather_red_03"
   },
   "wood_dark": {
     "asset": "wood_table_001",

@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://dkbe6lkcsqy53"
+path="res://.godot/imported/p_arms_seated.obj-747a090306ab0153e9bf0b1b067a66ee.mesh"
+
+[deps]
+
+files=["res://.godot/imported/p_arms_seated.obj-747a090306ab0153e9bf0b1b067a66ee.mesh"]
+
+source_file="res://assets/models/bus/p_arms_seated.obj"
+dest_files=["res://.godot/imported/p_arms_seated.obj-747a090306ab0153e9bf0b1b067a66ee.mesh", "res://.godot/imported/p_arms_seated.obj-747a090306ab0153e9bf0b1b067a66ee.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

@@ -1,16 +1,20 @@
 #!/usr/bin/env python3
-"""Sinh bối cảnh xe khách nông thôn thập niên 199x: scenes/levels/Bus.tscn
+"""Sinh bối cảnh xe khách liên tỉnh thập niên 199x: scenes/levels/Bus.tscn
 
-Chạy:  python3 tools/bus_blockout.py
+Chạy:  python3 -m pip install pillow && python3 tools/bus_blockout.py
+(script tự sinh lại texture vẽ tay ở assets/textures/bus/ và mesh ở assets/models/bus/,
+sau đó mở Godot một lần - hoặc chạy `godot --headless --import` - để nhập file mới.)
 
-Một scene, hai trạng thái (BusLevel.gd bật/tắt):
-- Day: chiều muộn, xe đông khách đang chạy trên đường làng (cảnh ngoài cửa sổ trôi
-  qua nhờ ScrollingScenery.gd), nắng vàng xiên qua cửa kính.
-- Derelict: cùng chiếc xe nhưng mục nát, vắng tanh, đỗ im trong sương đêm, đèn tuýp
-  chập chờn, ghế rách, kính vỡ, vàng mã rải trên sàn.
+Một scene, ba lớp nhìn (BusLevel.gd bật/tắt):
+- Day: chiếc xe thật năm 2006, chiều muộn, đông khách, cảnh ngoài cửa sổ trôi qua
+  (ScrollingScenery.gd), nắng vàng xiên qua kính.
+- Derelict: xác chiếc xe năm 1999 nằm bãi sông: gỉ sét, vệt nước ngập ngang giá hành lý,
+  rêu, kính vỡ, nệm rách, đèn tuýp chập chờn.
+- Night1999: đêm 14/04/1999 ngay trước tai nạn: xe nguyên vẹn nhưng cũ, mất điện, mưa
+  đứng yên ngoài kính, chỉ có đèn bão của phụ xe và đèn pha rọi vào màn mưa.
 
-Phần dùng chung cho cả hai trạng thái (vỏ xe, khung ghế, tay vịn, buồng lái) có va chạm;
-đồ riêng của từng trạng thái chỉ là mesh trang trí để bật/tắt không ảnh hưởng va chạm.
+Hình học chi tiết (vỏ xe, ghế, buồng lái...) sinh bằng tools/bus_models.py; ba lớp dùng chung
+mesh, chỉ khác vật liệu. Va chạm là các hộp đơn giản trong node Collision (dùng chung).
 
 Hệ tọa độ: đầu xe hướng -Z, cửa lên xuống bên phải (+X), sàn xe ở y = 0.
 LƯU Ý: chạy lại script sẽ GHI ĐÈ scenes/levels/Bus.tscn.
@@ -19,12 +23,12 @@ LƯU Ý: chạy lại script sẽ GHI ĐÈ scenes/levels/Bus.tscn.
 import math
 import random
 
-from level_blockout import (Scene, basis_mul, basis_x, basis_y, basis_z, bulb, color, dust, f, vec3,
-                            xform, DECAL)
+from level_blockout import (CC0, Scene, basis_mul, basis_scale, basis_x, basis_y, basis_z, color, dust, f,
+                            vec3, xform)
 
 # --- Kích thước lòng xe (mét) ---
 HALF_W = 1.25          # nửa bề ngang lòng xe
-H = 2.15               # chiều cao lòng xe
+H = 2.15               # chiều cao lòng xe (giữa trần)
 Z_FRONT = -5.0         # kính chắn gió
 Z_BACK = 4.6           # vách sau
 WALL = 0.08
@@ -42,87 +46,6 @@ AN_ROW = 3
 OLD_WOMAN_ROW = 3
 
 random.seed(1999)
-
-
-def env_resource(sc, rid, top, horizon, ground, ambient, ambient_energy, fog_color, fog_density,
-                 exposure=1.0, sky_energy=1.0):
-    sc.sub_res("ProceduralSkyMaterial", "SkyMat_" + rid, [
-        ("sky_top_color", color(top)), ("sky_horizon_color", color(horizon)),
-        ("ground_bottom_color", color(ground)), ("ground_horizon_color", color(horizon)),
-        ("sky_energy_multiplier", f(sky_energy)),
-    ])
-    sc.sub_res("Sky", "Sky_" + rid, [("sky_material", 'SubResource("SkyMat_%s")' % rid)])
-    return sc.sub_res("Environment", "Env_" + rid, [
-        ("background_mode", "2"), ("sky", 'SubResource("Sky_%s")' % rid),
-        ("ambient_light_source", "3"), ("ambient_light_color", color(ambient)),
-        ("ambient_light_sky_contribution", "0.25"), ("ambient_light_energy", f(ambient_energy)),
-        ("tonemap_mode", "3"), ("tonemap_exposure", f(exposure)),
-        ("ssao_enabled", "true"), ("ssao_radius", "0.8"), ("ssao_intensity", "2.0"),
-        ("glow_enabled", "true"), ("glow_intensity", "0.5"), ("glow_bloom", "0.04"),
-        ("fog_enabled", "true"), ("fog_light_color", color(fog_color)), ("fog_density", f(fog_density)),
-        ("fog_sky_affect", "0.6"),
-    ])
-
-
-def directional(sc, name, parent, pitch, yaw, light_color, energy, shadow=True):
-    b = basis_mul(basis_y(yaw), basis_x(pitch))
-    sc.node(name, "DirectionalLight3D", parent, [
-        ("transform", xform((0, 6, 0), basis=b)),
-        ("light_color", color(light_color)), ("light_energy", f(energy)),
-        ("shadow_enabled", "true" if shadow else "false"),
-        ("directional_shadow_max_distance", "30.0"),
-    ])
-
-
-# ---------------------------------------------------------------------------
-# Người ngồi / đứng kiểu low-poly, không mặt (giống hình nộm giấy). Mặt trước -Z.
-# ---------------------------------------------------------------------------
-
-def seated_person(sc, name, parent, pos, shirt, pants, skin, hair, hat=None, hat_mat=None, lean=0.0,
-                  head_tilt=0.0, rot_y=0.0):
-    g = sc.empty(name, parent, pos, rot_y)
-    sc.mesh("Thighs", g, "box", (0.36, 0.14, 0.4), (0, 0.52, -0.1), pants)
-    sc.mesh("Shins", g, "box", (0.32, 0.44, 0.13), (0, 0.24, -0.33), pants)
-    sc.mesh("Feet", g, "box", (0.3, 0.07, 0.2), (0, 0.035, -0.4), hair)
-    body = sc.empty("Upper", g, (0, 0.58, 0.06), basis=basis_x(lean))
-    sc.mesh("Torso", body, "box", (0.38, 0.55, 0.22), (0, 0.28, 0), shirt)
-    for sx in (-1, 1):
-        sc.mesh("Arm", body, "box", (0.09, 0.36, 0.1), (sx * 0.235, 0.33, 0), shirt)
-        sc.mesh("Forearm", body, "box", (0.085, 0.085, 0.3), (sx * 0.2, 0.06, -0.16), shirt)
-        sc.mesh("Hand", body, "box", (0.07, 0.05, 0.08), (sx * 0.17, 0.05, -0.33), skin)
-    sc.mesh("Neck", body, "cyl", (0.05, 0.05, 0.08, 8), (0, 0.6, 0), skin)
-    head = sc.empty("Head", body, (0, 0.72, 0), basis=basis_z(head_tilt))
-    sc.mesh("Face", head, "sphere", (0.105, 0.24), (0, 0, 0), skin)
-    sc.mesh("Hair", head, "sphere", (0.112, 0.2), (0, 0.04, 0.02), hair)
-    if hat == "non_la":
-        sc.mesh("NonLa", head, "cyl", (0.005, 0.24, 0.15, 18), (0, 0.15, 0), hat_mat)
-    elif hat == "mu_coi":
-        sc.mesh("MuCoi", head, "sphere", (0.15, 0.17), (0, 0.07, 0), hat_mat)
-        sc.mesh("Brim", head, "cyl", (0.17, 0.17, 0.012, 18), (0, 0.03, 0), hat_mat)
-    elif hat == "khan":
-        sc.mesh("Khan", head, "sphere", (0.118, 0.2), (0, 0.035, 0.015), hat_mat)
-    return g
-
-
-def standing_person(sc, name, parent, pos, rot_y, shirt, pants, skin, hair, arm_up=True, bag=None):
-    g = sc.empty(name, parent, pos, rot_y)
-    for sx in (-1, 1):
-        sc.mesh("Leg", g, "box", (0.14, 0.82, 0.15), (sx * 0.09, 0.41, 0), pants)
-        sc.mesh("Foot", g, "box", (0.12, 0.06, 0.24), (sx * 0.09, 0.03, -0.04), hair)
-    sc.mesh("Torso", g, "box", (0.4, 0.6, 0.22), (0, 1.12, 0), shirt)
-    sc.mesh("ArmL", g, "box", (0.09, 0.62, 0.1), (-0.25, 1.1, 0), shirt)
-    if arm_up:
-        sc.mesh("ArmR", g, "box", (0.09, 0.62, 0.1), (0.25, 1.68, 0), shirt)
-    else:
-        sc.mesh("ArmR", g, "box", (0.09, 0.62, 0.1), (0.25, 1.1, 0), shirt)
-    sc.mesh("Neck", g, "cyl", (0.05, 0.05, 0.08, 8), (0, 1.46, 0), skin)
-    sc.mesh("Face", g, "sphere", (0.105, 0.24), (0, 1.6, 0), skin)
-    sc.mesh("Hair", g, "sphere", (0.112, 0.2), (0, 1.64, 0.02), hair)
-    if bag:
-        sc.mesh("Bag", g, "box", (0.24, 0.2, 0.08), (-0.22, 0.9, -0.08), bag)
-        sc.mesh("Strap", g, "box", (0.03, 0.75, 0.02), (0.02, 1.2, -0.12), bag, basis=basis_z(35))
-    return g
-
 
 # ---------------------------------------------------------------------------
 # Chương 2: chỗ ngồi của các hồn trên chuyến xe đêm 14/04/1999.
@@ -146,108 +69,510 @@ def seat_xz(seat):
     return side * SEAT_X[1 if outer else 0], ROWS[row]
 
 
+# Người ngồi / đứng (hành khách xe 2006, thân xác An) và hình nhân giấy dựng chung một bộ khung:
+# xem tools/people_models.py.
+def seated_person(*args, **kw):
+    import people_models
+    return people_models.seated_person(*args, **kw)
+
+
+def standing_person(*args, **kw):
+    import people_models
+    return people_models.standing_person(*args, **kw)
+
+
 def storm_lamp(sc, name, parent, pos, metal, glass_mat, flame=None, rot_y=0.0):
-    """Đèn bão có quai xách. Gốc tọa độ ở đáy đèn."""
-    g = sc.empty(name, parent, pos, rot_y)
-    sc.mesh("Tank", g, "cyl", (0.07, 0.08, 0.05, 14), (0, 0.025, 0), metal)
-    sc.mesh("Collar", g, "cyl", (0.05, 0.065, 0.02, 14), (0, 0.06, 0), metal)
-    sc.mesh("Globe", g, "cyl", (0.045, 0.055, 0.13, 14), (0, 0.135, 0), glass_mat, shadow=False)
-    sc.mesh("Cap", g, "cyl", (0.025, 0.065, 0.04, 14), (0, 0.22, 0), metal)
-    sc.mesh("Chimney", g, "cyl", (0.018, 0.02, 0.03, 8), (0, 0.255, 0), metal)
-    for sx in (-1, 1):
-        sc.mesh("Guard", g, "cyl", (0.004, 0.004, 0.17, 6), (sx * 0.07, 0.14, 0), metal)
-    sc.mesh("Handle", g, "torus", (0.075, 0.085), (0, 0.27, 0), metal, basis=basis_x(90))
-    if flame:
-        sc.mesh("Flame", g, "sphere", (0.012, 0.045), (0, 0.11, 0), flame, shadow=False)
-    return g
+    """Đèn bão có quai xách (mesh tiện tròn ở tools/people_models.py). Gốc tọa độ ở đáy đèn."""
+    import people_models
+    return people_models.storm_lamp(sc, name, parent, pos, metal, glass_mat, flame, rot_y)
 
 
 def windshield_number(sc, parent):
     """Decal số xe dán phía NGOÀI kính lái: đứng trong xe nhìn ra thì chữ bị ngược như soi gương."""
     for txt, y, size, pix in (("385", 1.16, 96, 0.0016), ("BUS_DECAL_ROUTE", 1.07, 40, 0.0012)):
         sc.node("NumberDecal", "Label3D", parent, [
-            ("transform", xform((0.62, y, Z_FRONT - WALL / 2 - 0.012), 180)),
+            ("transform", xform((0.62, y, Z_FRONT - 0.035), 180)),
             ("pixel_size", f(pix)), ("modulate", color((0.95, 0.86, 0.55))), ("outline_size", "0"),
             ("alpha_cut", "1"), ("text", '"%s"' % txt), ("font_size", str(size)),
         ])
 
 
-def build_wreck_traces(sc, der, rng, rust, rubber, chrome, basket, wood_sign):
-    """Xác xe: vệt nước ngập, decal số xe, đồ của Hùng mục nát, dây chuông đứt."""
-    mud = sc.mat("Waterline", (0.16, 0.12, 0.08), 1.0)
-    silt = sc.mat("Silt", (0.32, 0.27, 0.19), 1.0, alpha=0.55)
-    length = Z_BACK - Z_FRONT - 1.4
-    zc = (Z_BACK + Z_FRONT + 1.4) / 2
+# ---------------------------------------------------------------------------
+# Vật liệu
+# ---------------------------------------------------------------------------
+
+def uvmat(sc, name, tex, tint=(1, 1, 1), rough=1.0, metallic=0.0, normal=1.0, scale=1.0):
+    """Vật liệu PBR CC0 cho mesh có UV tính bằng mét (mesh sinh ở tools/bus_models.py)."""
+    k = 1.0 / (CC0[tex]["size_m"] * scale)
+    return sc.pbr(name, tex, tint, rough=rough, normal=normal, metallic=metallic, triplanar=False, uv_scale=(k, k))
+
+
+def texmat(sc, name, png, tint=(1, 1, 1, 1), rough=0.8, alpha=False, uv=(1, 1), emission=None, energy=1.0,
+           metallic=0.0, normal_png=None, normal=1.0, cull=True, unshaded=False):
+    """Vật liệu dùng ảnh vẽ tay ở assets/textures/bus/."""
+    if name in sc.materials:
+        return sc.materials[name]
+    t = sc.ext_res("Texture2D", "res://assets/textures/bus/" + png)
+    props = []
+    if alpha:
+        props += [("transparency", "1")]
+    if not cull:
+        props.append(("cull_mode", "2"))
+    if unshaded:
+        props.append(("shading_mode", "0"))
+    props += [("albedo_color", color(tint)), ("albedo_texture", 'ExtResource("%s")' % t)]
+    if metallic:
+        props.append(("metallic", f(metallic)))
+    props.append(("roughness", f(rough)))
+    if emission:
+        props += [("emission_enabled", "true"), ("emission", color(emission)),
+                  ("emission_energy_multiplier", f(energy)), ("emission_operator", "1"),
+                  ("emission_texture", 'ExtResource("%s")' % t)]
+    if normal_png:
+        n = sc.ext_res("Texture2D", "res://assets/textures/bus/" + normal_png)
+        props += [("normal_enabled", "true"), ("normal_scale", f(normal)), ("normal_texture", 'ExtResource("%s")' % n)]
+    props += [("uv1_scale", vec3((uv[0], uv[1], 1))), ("texture_filter", "5")]
+    rid = sc.sub_res("StandardMaterial3D", "Mat_" + name, props)
+    sc.materials[name] = rid
+    return rid
+
+
+def glass_mat(sc, name, tint, alpha, rough=0.05, png=None, uv=(1.6, 1.6), metallic=0.0):
+    if name in sc.materials:
+        return sc.materials[name]
+    props = [("transparency", "1"), ("cull_mode", "2"), ("depth_draw_mode", "0"),
+             ("albedo_color", color(tuple(tint) + (alpha,)))]
+    if png:
+        t = sc.ext_res("Texture2D", "res://assets/textures/bus/" + png)
+        props.append(("albedo_texture", 'ExtResource("%s")' % t))
+    props += [("metallic", f(metallic)), ("metallic_specular", "0.8"), ("roughness", f(rough)),
+              ("uv1_scale", vec3((uv[0], uv[1], 1))), ("texture_filter", "5")]
+    rid = sc.sub_res("StandardMaterial3D", "Mat_" + name, props)
+    sc.materials[name] = rid
+    return rid
+
+
+_WRECK = {}
+
+
+def wreck_mat(sc, name, tex, tint=(1, 1, 1), rust=0.35, moss=0.4, silt=0.65, mildew=0.35, metallic=0.0,
+              rough=0.0, world_uv=False, scale=1.0):
+    """Vật liệu xác xe (shaders/bus_wreck.gdshader): texture gốc + gỉ + vệt nước ngập + rêu."""
+    if name in sc.materials:
+        return sc.materials[name]
+    if not _WRECK.get(id(sc)):
+        _WRECK[id(sc)] = {
+            "shader": sc.ext_res("Shader", "res://shaders/bus_wreck.gdshader"),
+            "noise": sc.ext_res("Texture2D", "res://assets/textures/bus/wreck_noise.png"),
+            "rust_a": sc.ext_res("Texture2D", "res://assets/textures/rust_heavy_albedo.jpg"),
+            "rust_n": sc.ext_res("Texture2D", "res://assets/textures/rust_heavy_normal.jpg"),
+            "moss_a": sc.ext_res("Texture2D", "res://assets/textures/moss_albedo.jpg"),
+        }
+    w = _WRECK[id(sc)]
+    k = 1.0 / (CC0[tex]["size_m"] * scale)
+    a = sc.ext_res("Texture2D", "res://assets/textures/%s_albedo.jpg" % tex)
+    n = sc.ext_res("Texture2D", "res://assets/textures/%s_normal.jpg" % tex)
+    o = sc.ext_res("Texture2D", "res://assets/textures/%s_orm.jpg" % tex)
+    props = [
+        ("render_priority", "0"), ("shader", 'ExtResource("%s")' % w["shader"]),
+        ("shader_parameter/base_albedo", 'ExtResource("%s")' % a),
+        ("shader_parameter/base_normal", 'ExtResource("%s")' % n),
+        ("shader_parameter/base_orm", 'ExtResource("%s")' % o),
+        ("shader_parameter/tint", color(tint)),
+        ("shader_parameter/uv_scale", f(k)),
+        ("shader_parameter/world_uv", "true" if world_uv else "false"),
+        ("shader_parameter/metallic_amount", f(metallic)),
+        ("shader_parameter/roughness_offset", f(rough)),
+        ("shader_parameter/noise_tex", 'ExtResource("%s")' % w["noise"]),
+        ("shader_parameter/rust_albedo", 'ExtResource("%s")' % w["rust_a"]),
+        ("shader_parameter/rust_normal", 'ExtResource("%s")' % w["rust_n"]),
+        ("shader_parameter/rust_amount", f(rust)),
+        ("shader_parameter/moss_albedo", 'ExtResource("%s")' % w["moss_a"]),
+        ("shader_parameter/moss_amount", f(moss)),
+        ("shader_parameter/waterline_y", f(WATERLINE_Y)),
+        ("shader_parameter/silt_amount", f(silt)),
+        ("shader_parameter/mildew_amount", f(mildew)),
+    ]
+    rid = sc.sub_res("ShaderMaterial", "Mat_" + name, props)
+    sc.materials[name] = rid
+    return rid
+
+
+def layer_materials(sc, layer):
+    """Bảng vật liệu theo slot của mesh bus_models cho từng lớp xe."""
+    M = {}
+    if layer == "day":
+        # Xe 2006: sơn kem / xanh còn mới, ghế giả da xanh, khăn trùm trắng viền xanh, sàn cao su.
+        chrome = sc.mat("DayChrome", (0.82, 0.82, 0.8), 0.16, metallic=1.0)
+        alu = sc.mat("DayAlu", (0.72, 0.73, 0.74), 0.32, metallic=0.9)
+        paint_up = uvmat(sc, "DayWallUp", "paint_clean", (0.93, 0.9, 0.82), rough=0.75)
+        M.update({
+            "wall_low": uvmat(sc, "DayWallLow", "paint_clean", (0.3, 0.42, 0.55), rough=0.7),
+            "wall_up": paint_up, "reveal": paint_up, "door": paint_up,
+            "ceiling": uvmat(sc, "DayCeiling", "paint_clean", (0.95, 0.94, 0.9), rough=0.85),
+            "rib": sc.mat("DayRib", (0.86, 0.86, 0.84), 0.5),
+            "floor": uvmat(sc, "DayFloor", "rubber_mat", (0.62, 0.6, 0.58), rough=1.0),
+            "runner": uvmat(sc, "DayRunner", "rubber_mat", (0.32, 0.32, 0.34), rough=1.0, scale=0.5),
+            "trim": alu, "alu": alu, "arch": uvmat(sc, "DayArch", "paint_clean", (0.3, 0.42, 0.55), rough=0.7),
+            "step": uvmat(sc, "DayStep", "rubber_mat", (0.3, 0.3, 0.3), scale=0.4),
+            "rubber": sc.mat("DayRubber", (0.04, 0.04, 0.045), 0.7),
+            "glass": glass_mat(sc, "DayGlass", (0.75, 0.86, 0.86), 0.1),
+            "glass_front": glass_mat(sc, "DayGlassFront", (0.85, 0.88, 0.84), 0.08),
+            "rod": chrome, "cloth": uvmat(sc, "DayCurtain", "curtain_damask", (0.62, 0.17, 0.15), rough=0.95),
+            "frame": sc.mat("DaySeatFrame", (0.18, 0.19, 0.2), 0.4, metallic=0.7),
+            "vinyl": uvmat(sc, "DayVinyl", "vinyl", (0.2, 0.3, 0.55), rough=0.55),
+            "shell": sc.mat("DaySeatShell", (0.74, 0.74, 0.72), 0.45),
+            "chrome": chrome,
+            "seat_cloth_R:cloth": texmat(sc, "DaySeatCloth", "seat_cloth.png", rough=0.95, cull=False),
+            "housing": sc.mat("DayLampHousing", (0.85, 0.85, 0.82), 0.4),
+            "diffuser": sc.mat("DayDiffuser", (0.92, 0.94, 0.96), 0.3, emission=(0.85, 0.9, 1.0), energy=0.25),
+            "grille": sc.mat("DayGrille", (0.12, 0.12, 0.13), 0.6),
+            "dash": uvmat(sc, "DayDash", "paint_clean", (0.16, 0.17, 0.19), rough=0.85),
+            "panel": sc.mat("DayPanel", (0.08, 0.08, 0.09), 0.6),
+            "gauge": texmat(sc, "DayGauge", "gauge_face.png", rough=0.2, emission=(0.4, 0.6, 0.5), energy=0.2),
+            "grip": sc.mat("Bakelite", (0.05, 0.045, 0.04), 0.35),
+            "spoke": sc.mat("SteeringSpoke", (0.1, 0.1, 0.11), 0.4, metallic=0.4),
+            "column": sc.mat("DaySteerCol", (0.12, 0.12, 0.13), 0.5),
+            "knob": sc.mat("Bakelite", (0.05, 0.045, 0.04), 0.35),
+            "panel_paint": uvmat(sc, "DayWallLow", "paint_clean", (0.3, 0.42, 0.55), rough=0.7),
+            "mirror": sc.mat("Mirror", (0.9, 0.92, 0.92), 0.02, metallic=1.0),
+            "visor": sc.mat("DayVisor", (0.4, 0.38, 0.34), 0.7),
+            "board": uvmat(sc, "SignWoodUV", "wood_weathered", (0.7, 0.62, 0.55)),
+        })
+        M["driver_seat:vinyl"] = uvmat(sc, "DayDriverVinyl", "vinyl", (0.12, 0.12, 0.13), rough=0.5)
+        M["cab_misc:vinyl"] = uvmat(sc, "DayEngineVinyl", "vinyl", (0.14, 0.13, 0.13), rough=0.55)
+        for k in ("seat_cloth_L", "bench_cloth"):
+            M[k + ":cloth"] = M["seat_cloth_R:cloth"]
+    elif layer == "night":
+        # Xe 1999 nguyên vẹn nhưng cũ: tôn sơn xanh lá bong gỉ lấm tấm, vách trên sơn kem ố,
+        # ghế giả da đỏ nâu, khăn trùm vải trắng ngả vàng, sàn ván gỗ, rèm vàng đất.
+        chrome = sc.mat("NightChrome", (0.72, 0.71, 0.68), 0.26, metallic=1.0)
+        alu = sc.mat("NightAlu", (0.6, 0.6, 0.58), 0.42, metallic=0.85)
+        paint_up = uvmat(sc, "NightWallUp", "paint_clean", (0.78, 0.74, 0.6), rough=0.8)
+        green = uvmat(sc, "NightWallLow", "paint_worn", (0.9, 1.0, 0.95), rough=0.9)
+        M.update({
+            "wall_low": green, "wall_up": paint_up, "reveal": paint_up, "door": green, "arch": green,
+            "panel_paint": green,
+            "ceiling": uvmat(sc, "NightCeiling", "paint_clean", (0.74, 0.7, 0.6), rough=0.9),
+            "rib": sc.mat("NightRib", (0.62, 0.6, 0.55), 0.5, metallic=0.5),
+            "floor": uvmat(sc, "NightFloor", "wood_weathered", (0.6, 0.55, 0.5), rough=1.0),
+            "runner": uvmat(sc, "NightRunner", "rubber_mat", (0.24, 0.22, 0.2), rough=1.0, scale=0.5),
+            "trim": alu, "alu": alu, "step": uvmat(sc, "NightStep", "rubber_mat", (0.25, 0.24, 0.22), scale=0.4),
+            "rubber": sc.mat("NightRubber", (0.03, 0.03, 0.03), 0.8),
+            "glass": glass_mat(sc, "NightGlass", (0.75, 0.82, 0.85), 0.55, png="glass_rain.png", rough=0.1),
+            "glass_front": glass_mat(sc, "NightGlassFront", (0.75, 0.82, 0.85), 0.5, png="glass_rain.png", rough=0.1),
+            "rod": chrome, "cloth": uvmat(sc, "NightCurtain", "curtain_damask", (0.55, 0.4, 0.2), rough=0.95),
+            "frame": sc.mat("NightSeatFrame", (0.2, 0.22, 0.2), 0.55, metallic=0.6),
+            "vinyl": uvmat(sc, "NightVinyl", "vinyl", (0.42, 0.12, 0.08), rough=0.6),
+            "shell": uvmat(sc, "NightSeatShell", "paint_worn", (0.85, 0.95, 0.9), rough=0.8),
+            "chrome": chrome,
+            "seat_cloth_R:cloth": uvmat(sc, "NightSeatCloth", "fabric", (0.62, 0.57, 0.45), rough=1.0, scale=0.5),
+            "housing": sc.mat("NightLampHousing", (0.6, 0.58, 0.52), 0.5),
+            "diffuser": sc.mat("NightDiffuser", (0.5, 0.5, 0.48), 0.4),
+            "grille": sc.mat("NightGrille", (0.1, 0.1, 0.1), 0.6),
+            "dash": uvmat(sc, "NightDash", "paint_worn", (0.35, 0.4, 0.38), rough=0.9),
+            "panel": sc.mat("NightPanel", (0.06, 0.06, 0.06), 0.6),
+            "gauge": texmat(sc, "NightGauge", "gauge_face.png", rough=0.25, emission=(0.35, 1.0, 0.55), energy=0.9),
+            "grip": sc.mat("Bakelite", (0.05, 0.045, 0.04), 0.35),
+            "spoke": sc.mat("SteeringSpoke", (0.1, 0.1, 0.11), 0.4, metallic=0.4),
+            "column": sc.mat("NightSteerCol", (0.1, 0.1, 0.1), 0.6),
+            "knob": sc.mat("Bakelite", (0.05, 0.045, 0.04), 0.35),
+            "mirror": sc.mat("Mirror", (0.9, 0.92, 0.92), 0.02, metallic=1.0),
+            "visor": sc.mat("NightVisor", (0.3, 0.28, 0.24), 0.8),
+            "board": uvmat(sc, "SignWoodUV", "wood_weathered", (0.7, 0.62, 0.55)),
+        })
+        M["driver_seat:vinyl"] = uvmat(sc, "NightDriverVinyl", "vinyl", (0.2, 0.14, 0.1), rough=0.6)
+        M["cab_misc:vinyl"] = uvmat(sc, "NightEngineVinyl", "vinyl", (0.3, 0.1, 0.07), rough=0.65)
+        for k in ("seat_cloth_L", "bench_cloth"):
+            M[k + ":cloth"] = M["seat_cloth_R:cloth"]
+    else:
+        # Xác xe: mọi bề mặt qua shader gỉ / ngập nước / rêu.
+        rust_metal = wreck_mat(sc, "WreckMetal", "paint_flaking", (0.7, 0.7, 0.68), rust=0.55, moss=0.2,
+                               metallic=0.6, world_uv=True)
+        paint_low = wreck_mat(sc, "WreckWallLow", "paint_clean", (0.36, 0.5, 0.42), rust=0.32, moss=0.45)
+        paint_up = wreck_mat(sc, "WreckWallUp", "paint_clean", (0.78, 0.74, 0.6), rust=0.2, moss=0.25)
+        M.update({
+            "wall_low": paint_low, "wall_up": paint_up, "reveal": paint_up, "door": paint_low, "arch": paint_low,
+            "panel_paint": paint_low,
+            "ceiling": wreck_mat(sc, "WreckCeiling", "paint_clean", (0.62, 0.6, 0.52), rust=0.12, moss=0.0,
+                                 mildew=0.9),
+            "rib": rust_metal,
+            "floor": wreck_mat(sc, "WreckFloor", "wood_weathered", (0.5, 0.45, 0.4), rust=0.0, moss=0.75, silt=0.9),
+            "runner": wreck_mat(sc, "WreckRunner", "rubber_mat", (0.3, 0.28, 0.25), rust=0.0, moss=0.6, silt=0.9),
+            "trim": rust_metal, "alu": wreck_mat(sc, "WreckAlu", "paint_clean", (0.5, 0.5, 0.48), rust=0.3, moss=0.1,
+                                                 metallic=0.7, world_uv=True),
+            "step": rust_metal,
+            "rubber": sc.mat("WreckRubber", (0.05, 0.05, 0.045), 0.9),
+            "glass": glass_mat(sc, "WreckGlass", (0.55, 0.5, 0.4), 0.85, png="glass_grime.png", rough=0.5),
+            "glass_front": glass_mat(sc, "WreckGlassFront", (0.55, 0.5, 0.4), 0.85, png="glass_grime.png", rough=0.5),
+            "rod": rust_metal, "cloth": uvmat(sc, "WreckCurtain", "curtain_damask", (0.22, 0.18, 0.13), rough=1.0),
+            "frame": rust_metal,
+            "vinyl": wreck_mat(sc, "WreckVinyl", "vinyl", (0.4, 0.13, 0.1), rust=0.0, moss=0.35, silt=0.45),
+            "shell": wreck_mat(sc, "WreckSeatShell", "paint_clean", (0.4, 0.52, 0.44), rust=0.28, moss=0.3),
+            "chrome": rust_metal,
+            "seat_cloth_R:cloth": wreck_mat(sc, "WreckSeatCloth", "fabric", (0.5, 0.45, 0.36), rust=0.0, moss=0.3,
+                                            silt=0.9, scale=0.5),
+            "housing": rust_metal,
+            "diffuser": sc.mat("WreckDiffuser", (0.3, 0.3, 0.28), 0.6),
+            "grille": sc.mat("WreckGrille", (0.08, 0.07, 0.06), 0.8),
+            "dash": wreck_mat(sc, "WreckDash", "paint_clean", (0.3, 0.36, 0.32), rust=0.4, moss=0.12),
+            "panel": sc.mat("WreckPanel", (0.06, 0.055, 0.05), 0.8),
+            "gauge": texmat(sc, "WreckGauge", "gauge_face.png", (0.45, 0.4, 0.32, 1), rough=0.6),
+            "grip": sc.mat("WreckGrip", (0.06, 0.05, 0.04), 0.7),
+            "spoke": rust_metal, "column": rust_metal,
+            "knob": sc.mat("WreckGrip", (0.06, 0.05, 0.04), 0.7),
+            "mirror": sc.mat("WreckMirror", (0.3, 0.3, 0.28), 0.4, metallic=0.8),
+            "visor": sc.mat("WreckVisor", (0.18, 0.16, 0.13), 0.9),
+            "board": uvmat(sc, "SignWoodUV", "wood_weathered", (0.7, 0.62, 0.55)),
+        })
+        M["driver_seat:vinyl"] = wreck_mat(sc, "WreckDriverVinyl", "vinyl", (0.2, 0.15, 0.12), rust=0.0, moss=0.3)
+        M["cab_misc:vinyl"] = M["vinyl"]
+        for k in ("seat_cloth_L", "bench_cloth"):
+            M[k + ":cloth"] = M["seat_cloth_R:cloth"]
+    # Đồ dùng chung mọi lớp
+    M.update({
+        "lens": sc.mat("HeadlightLensOff", (0.8, 0.82, 0.8), 0.1, metallic=0.2),
+        "sack": uvmat(sc, "SackUV", "fabric", (0.8, 0.72, 0.55), scale=0.6),
+        "rope": sc.mat("Rope", (0.62, 0.55, 0.4), 0.9),
+        "carton": uvmat(sc, "CartonUV", "painted_wood", (0.62, 0.48, 0.32)),
+        "case": uvmat(sc, "SuitcaseUV", "vinyl", (0.3, 0.2, 0.12), rough=0.6),
+        "metal": sc.mat("CaseMetal", (0.6, 0.58, 0.55), 0.35, metallic=0.9),
+        "wood": uvmat(sc, "AltarWood", "lacquer_red", (1, 1, 1), rough=0.5),
+        "gold": sc.mat("Gold", (0.85, 0.62, 0.26), 0.3, metallic=1.0),
+        "ceramic": sc.mat("Ceramic", (0.9, 0.88, 0.82), 0.15),
+        "incense": sc.mat("Incense", (0.7, 0.12, 0.08), 0.8),
+        "leaf": sc.mat("PlasticLeaf", (0.15, 0.48, 0.2), 0.45),
+        "flower": sc.mat("PlasticFlower", (0.92, 0.2, 0.38), 0.45),
+        "flower2": sc.mat("PlasticFlowerYellow", (0.95, 0.75, 0.15), 0.45),
+        "tassel": sc.mat("TasselRed", (0.75, 0.05, 0.06), 0.7),
+    })
+    return M
+
+
+# ---------------------------------------------------------------------------
+# Đặt mesh bus_models vào scene
+# ---------------------------------------------------------------------------
+
+def place(sc, name, parent, model, M, pos=(0, 0, 0), basis=None, rot_y=0.0, shadow=1):
+    import bus_models
+    slots = bus_models.MODELS[model]
+    rid = sc.ext_res("ArrayMesh", bus_models.RES + model + ".obj")
+    props = [("transform", xform(pos, rot_y, basis))]
+    if shadow != 1:
+        props.append(("cast_shadow", str(shadow)))
+    props.append(("mesh", 'ExtResource("%s")' % rid))
+    for i, s in enumerate(slots):
+        m = M.get(model + ":" + s) or M.get(s)
+        if m is None:
+            raise KeyError("thiếu vật liệu cho %s:%s" % (model, s))
+        props.append(("surface_material_override/%d" % i, 'SubResource("%s")' % m))
+    return sc.node(name, "MeshInstance3D", parent, props)
+
+
+def pivot_basis(deg, pivot):
+    """Xoay quanh trục X qua điểm pivot: trả về (vị trí gốc mới, basis)."""
+    b = basis_x(deg)
+    px, py, pz = pivot
+    ny = b[4] * py + b[5] * pz
+    nz = b[7] * py + b[8] * pz
+    return (0.0, py - ny, pz - nz), b
+
+
+def build_seats(sc, parent, M, layer, rng):
+    """Ghế đôi hai bên + băng ghế cuối + ghế lái."""
+    seats = sc.empty("Seats", parent)
+    broken = {}
+    if layer == "wreck":
+        broken = {"L1": "torn", "R2": "snapped", "L3": "torn", "R5": "torn", "L6": "snapped", "R7": "missing",
+                  "L8": "torn", "R9": "snapped"}
+    foam = sc.mat("Foam", (0.62, 0.52, 0.28), 1.0)
     for side in (-1, 1):
-        x = side * (HALF_W - 0.006)
-        sc.mesh("Waterline", der, "box", (0.006, 0.025, length), (x, WATERLINE_Y, zc), mud, shadow=False)
-        sc.mesh("SiltBand", der, "box", (0.005, 0.05, length), (x, WATERLINE_Y - 0.04, zc), silt, shadow=False)
-    sc.mesh("WaterlineFront", der, "box", (0.95, 0.025, 0.006), (-0.72, WATERLINE_Y, -3.6), mud, shadow=False)
+        sl = "L" if side < 0 else "R"
+        cx = side * (SEAT_X[0] + SEAT_X[1]) / 2
+        for r, z in enumerate(ROWS):
+            nm = "%s%d" % (sl, r + 1)
+            kind = broken.get(nm)
+            g = sc.empty("Seat" + nm, seats, (cx, 0, z))
+            place(sc, "Frame", g, "seat_frame_" + sl, M)
+            if kind == "missing":
+                continue
+            place(sc, "Cushion", g, "seat_cushion_" + sl, M)
+            back_pos, back_b = (0, 0, 0), None
+            if kind == "snapped":
+                back_pos, back_b = pivot_basis(38, (0, 0.5, 0.17))
+            place(sc, "Back", g, "seat_back_" + sl, M, back_pos, back_b)
+            if layer != "wreck" or (r % 3 == 0 and kind != "snapped"):
+                place(sc, "Cloth", g, "seat_cloth_" + sl, M, back_pos, back_b)
+            if kind in ("torn", "snapped"):
+                # Nệm rách lòi mút vàng
+                for k in range(2):
+                    sc.mesh("Foam", g, "sphere", (rng.uniform(0.07, 0.11), rng.uniform(0.04, 0.07)),
+                            (rng.uniform(-0.3, 0.3), 0.515, rng.uniform(-0.12, 0.1)), foam,
+                            basis=basis_scale(1.0, 0.6, 1.0))
+    g = sc.empty("Bench", seats, (0, 0, BENCH_Z))
+    place(sc, "Base", g, "bench_base", M)
+    place(sc, "Cushion", g, "bench_cushion", M)
+    place(sc, "Back", g, "bench_back", M)
+    if layer != "wreck":
+        place(sc, "Cloth", g, "bench_cloth", M)
+    place(sc, "DriverSeat", seats, "driver_seat", M, (-0.7, 0, -4.02))
+
+
+def build_interior(sc, parent, M, layer, rng):
+    """Toàn bộ lòng xe cho một lớp (cùng hình học, khác vật liệu)."""
+    variant = {"day": "day", "night": "night", "wreck": "wreck"}[layer]
+    g = sc.empty("Interior", parent)
+    place(sc, "Shell", g, "bus_shell", M, shadow=2)
+    place(sc, "Floor", g, "bus_floor", M)
+    place(sc, "WindowFrames", g, "bus_window_frames", M)
+    place(sc, "Glass", g, "bus_glass_" + variant, M, shadow=0)
+    place(sc, "Curtains", g, "bus_curtains_" + variant, M)
+    place(sc, "Racks", g, "bus_racks", M)
+    place(sc, "CeilingLights", g, "bus_ceiling_lights", M)
+    place(sc, "Dashboard", g, "dashboard", M)
+    place(sc, "SteeringWheel", g, "steering_wheel", M, (-0.7, 1.16, Z_FRONT + 0.76), basis_x(38))
+    place(sc, "CabMisc", g, "cab_misc", M)
+    build_seats(sc, g, M, layer, rng)
+    return g
+
+
+def env_resource(sc, rid, top, horizon, ground, ambient, ambient_energy, fog_color, fog_density,
+                 exposure=1.0, sky_energy=1.0, vol=None, adjust=(1.0, 1.05, 1.0), glow=0.5, ssao=1.6,
+                 fog_sky=0.6, fog_height=None):
+    """Môi trường từng lớp. vol = (mật độ, màu albedo, độ dài, bơm ánh sáng nền): sương khối (Forward+)."""
+    sc.sub_res("ProceduralSkyMaterial", "SkyMat_" + rid, [
+        ("sky_top_color", color(top)), ("sky_horizon_color", color(horizon)),
+        ("ground_bottom_color", color(ground)), ("ground_horizon_color", color(horizon)),
+        ("sky_energy_multiplier", f(sky_energy)),
+    ])
+    sc.sub_res("Sky", "Sky_" + rid, [("sky_material", 'SubResource("SkyMat_%s")' % rid)])
+    props = [
+        ("background_mode", "2"), ("sky", 'SubResource("Sky_%s")' % rid),
+        ("ambient_light_source", "3"), ("ambient_light_color", color(ambient)),
+        ("ambient_light_sky_contribution", "0.25"), ("ambient_light_energy", f(ambient_energy)),
+        ("tonemap_mode", "3"), ("tonemap_exposure", f(exposure)), ("tonemap_white", "6.0"),
+        ("ssao_enabled", "true"), ("ssao_radius", "0.6"), ("ssao_intensity", f(ssao)), ("ssao_power", "1.4"),
+        ("ssao_detail", "0.6"), ("ssao_light_affect", "0.15"),
+        ("glow_enabled", "true"), ("glow_intensity", f(glow)), ("glow_strength", "0.9"), ("glow_bloom", "0.05"),
+        ("glow_hdr_threshold", "0.9"), ("glow_blend_mode", "1"),
+        ("fog_enabled", "true"), ("fog_light_color", color(fog_color)), ("fog_density", f(fog_density)),
+        ("fog_sky_affect", f(fog_sky)),
+    ]
+    if fog_height is not None:
+        props += [("fog_height", f(fog_height[0])), ("fog_height_density", f(fog_height[1]))]
+    if vol:
+        props += [
+            ("volumetric_fog_enabled", "true"), ("volumetric_fog_density", f(vol[0])),
+            ("volumetric_fog_albedo", color(vol[1])), ("volumetric_fog_length", f(vol[2])),
+            ("volumetric_fog_ambient_inject", f(vol[3])), ("volumetric_fog_anisotropy", "0.45"),
+            ("volumetric_fog_detail_spread", "1.5"),
+        ]
+    props += [("adjustment_enabled", "true"), ("adjustment_brightness", f(adjust[0])),
+              ("adjustment_contrast", f(adjust[1])), ("adjustment_saturation", f(adjust[2]))]
+    return sc.sub_res("Environment", "Env_" + rid, props)
+
+
+def directional(sc, name, parent, pitch, yaw, light_color, energy, shadow=True, fog=1.0):
+    b = basis_mul(basis_y(yaw), basis_x(pitch))
+    sc.node(name, "DirectionalLight3D", parent, [
+        ("transform", xform((0, 6, 0), basis=b)),
+        ("light_color", color(light_color)), ("light_energy", f(energy)),
+        ("light_volumetric_fog_energy", f(fog)),
+        ("shadow_enabled", "true" if shadow else "false"), ("shadow_blur", "1.5"),
+        ("directional_shadow_max_distance", "24.0"),
+    ])
+
+
+def reflection_probe(sc, parent, intensity=1.0):
+    sc.node("ReflectionProbe", "ReflectionProbe", parent, [
+        ("transform", xform((0, 1.3, -0.2))),
+        ("size", vec3((2 * HALF_W + 0.2, 2.4, Z_BACK - Z_FRONT + 0.2))),
+        ("origin_offset", vec3((0, -0.2, 0))),
+        ("box_projection", "true"), ("interior", "true"), ("intensity", f(intensity)),
+    ])
+
+
+# ---------------------------------------------------------------------------
+# Chương 2: dấu vết đêm 1999 trên xác xe, lớp "Đêm 1999" và cảnh xe 2006 đông cứng
+# ---------------------------------------------------------------------------
+
+def build_wreck_traces(sc, der, rng, rust, chrome, wood_sign):
+    """Xác xe: decal số xe, đồ của Hùng mục nát, dây chuông đứt (vệt nước ngập nằm trong shader)."""
     windshield_number(sc, der)
     # Đồ của Hùng: khung đài cát-sét gỉ trên ghế, cặp sách mục dưới chân.
     hx, hz = seat_xz(HUNG_SEAT)
-    sc.mesh("DeckRusted", der, "box", (0.32, 0.12, 0.09), (hx, 0.54, hz - 0.02), rust, rot_y=8)
-    sc.mesh("DeckHandle", der, "torus", (0.05, 0.06), (hx, 0.62, hz - 0.02), rust, basis=basis_x(90))
-    sc.mesh("SchoolbagRotten", der, "box", (0.3, 0.24, 0.1), (hx + 0.12, 0.12, hz - 0.3),
-            sc.mat("BagRotten", (0.16, 0.18, 0.15), 1.0), basis=basis_mul(basis_y(20), basis_x(-12)))
+    deck_rust = wreck_mat(sc, "DeckRust", "paint_flaking", (0.75, 0.66, 0.6), rust=0.5, moss=0.2, metallic=0.4)
+    deck_dark = wreck_mat(sc, "DeckRustDark", "rust_heavy", (0.5, 0.45, 0.4), rust=0.2, moss=0.1)
+    place(sc, "DeckRusted", der, "pz_boombox", {"body": deck_rust, "chrome": deck_rust, "grille": deck_dark,
+                                                "window": deck_dark, "tape": deck_dark},
+          (hx, 0.58, hz - 0.02), rot_y=8)
+    bag_rot = wreck_mat(sc, "BagRotten", "fabric", (0.22, 0.26, 0.2), rust=0.0, moss=0.5, world_uv=True, scale=0.5)
+    place(sc, "SchoolbagRotten", der, "pz_schoolbag", {"canvas": bag_rot, "leather": bag_rot, "metal": deck_rust},
+          (hx + 0.12, 0.12, hz - 0.3), basis=basis_mul(basis_y(20), basis_x(-12)))
     # Dây chuông mục đứt, một đoạn rủ xuống lối đi.
     rope = sc.mat("RopeRotten", (0.3, 0.26, 0.2), 1.0)
-    sc.mesh("BellRope", der, "cyl", (0.006, 0.006, 3.4, 5), (0.3, 2.08, -2.5), rope, basis=basis_x(90))
-    sc.mesh("BellRopeEnd", der, "cyl", (0.006, 0.006, 0.6, 5), (0.3, 1.8, -0.8), rope, basis=basis_z(12))
+    sc.mesh("BellRope", der, "cyl", (0.006, 0.006, 3.4, 5), (0.3, 2.1, -2.5), rope, basis=basis_x(90))
+    sc.mesh("BellRopeEnd", der, "cyl", (0.006, 0.006, 0.6, 5), (0.3, 1.82, -0.8), rope, basis=basis_z(12))
     sc.mesh("Bell", der, "cyl", (0.03, 0.05, 0.06, 10), (0.3, 2.1, -4.3), rust)
 
 
-def build_night_1999(sc, cushions, rng, glass, vinyl, vinyl_blue, tube_dead, rubber, rust, chrome, wood_sign,
-                     d_talisman, trunk):
+def build_night_1999(sc, rng, M, rust, chrome, wood_sign, d_talisman, trunk):
     """Đêm 14/04/1999: xe nguyên vẹn, mất điện, mưa đứng yên ngoài cửa kính, cầu ngay trước mũi xe."""
     night = sc.empty("Night1999", ".", props=[("visible", "false")])
-    cushions(sc.empty("Cushions", night), [vinyl, vinyl, vinyl_blue])
-    door_zc = (DOOR_Z[0] + DOOR_Z[1]) / 2
-    for side in (-1, 1):
-        for z in ROWS + [BENCH_Z]:
-            sc.mesh("Glass", night, "box", (0.008, WIN_Y[1] - WIN_Y[0], WIN_W),
-                    (side * (HALF_W + WALL / 2), (WIN_Y[0] + WIN_Y[1]) / 2, z), glass, shadow=False)
-    sc.mesh("GlassDoor", night, "box", (0.008, 0.8, 0.7), (HALF_W + WALL / 2, 1.35, door_zc), glass, shadow=False)
-    sc.mesh("GlassFront", night, "box", (2 * HALF_W - 0.2, 0.85, 0.008), (0, 1.45, Z_FRONT - WALL / 2), glass,
-            shadow=False)
-    sc.mesh("GlassRear", night, "box", (1.6, 0.6, 0.008), (0, 1.4, Z_BACK + WALL / 2), glass, shadow=False)
+    build_interior(sc, night, M, "night", rng)
     for z in (-2.5, 0.5, 3.0):
-        sc.mesh("TubeDead", night, "cyl", (0.018, 0.018, 1.1, 8), (0, H - 0.06, z), tube_dead, basis=basis_x(90),
-                shadow=False)
-    sc.decal("Talisman", night, (0, 1.75, Z_FRONT + 0.1), "+z", (0.12, 0.3), d_talisman, offset=0.0)
+        sc.mesh("TubeDead", night, "cyl", (0.016, 0.016, 1.1, 8), (0, H - 0.06, z), sc.mat("TubeDead", (0.3, 0.3, 0.28), 0.6),
+                basis=basis_x(90), shadow=False)
+    sc.decal("Talisman", night, (0, 1.75, Z_FRONT + 0.06), "+z", (0.12, 0.3), d_talisman, offset=0.0)
     windshield_number(sc, night)
+    # Bàn thờ nhỏ của bác Tư trên taplô (không hương khói, đêm ấy chưa ai thắp).
+    import bus_models  # noqa: F401
+    place(sc, "DashAltar", night, "dash_altar", M, (0.42, 1.1, Z_FRONT + 0.26), rot_y=0)
 
-    # Đèn bão của phụ xe treo ở vách sau: nguồn sáng duy nhất trong xe.
-    tin = sc.mat("LampTin", (0.42, 0.4, 0.34), 0.5, metallic=0.7)
-    lamp_glass = sc.mat("LampGlass", (1.0, 0.9, 0.7), 0.1, alpha=0.35)
-    flame = sc.mat("LampFlame", (1.0, 0.7, 0.3), 0.5, emission=(1.0, 0.62, 0.25), energy=6.0, unshaded=True)
+    # Đèn bão của phụ xe treo ở vách sau: nguồn sáng chính trong xe.
+    tin = sc.mat("LampTin", (0.42, 0.4, 0.34), 0.45, metallic=0.8)
+    lamp_glass = sc.mat("LampGlass", (1.0, 0.9, 0.7), 0.05, alpha=0.3)
+    flame = sc.mat("LampFlame", (1.0, 0.7, 0.3), 0.5, emission=(1.0, 0.62, 0.25), energy=8.0, unshaded=True)
     storm_lamp(sc, "ConductorLamp", night, LAMP_POS, tin, lamp_glass, flame)
     sc.node("LampLight", "OmniLight3D", night, [
         ("transform", xform((LAMP_POS[0] - 0.05, LAMP_POS[1] + 0.12, LAMP_POS[2] - 0.15))),
-        ("light_color", color((1.0, 0.68, 0.38))), ("light_energy", "1.6"), ("omni_range", "8.5"),
-        ("omni_attenuation", "1.3"), ("shadow_enabled", "true"), ("shadow_blur", "2.0"),
+        ("light_color", color((1.0, 0.6, 0.3))), ("light_energy", "1.3"), ("omni_range", "9.0"),
+        ("omni_attenuation", "1.6"), ("shadow_enabled", "true"), ("shadow_blur", "2.5"),
+        ("light_volumetric_fog_energy", "2.0"),
     ])
     sc.node("Fill", "OmniLight3D", night, [
         ("transform", xform((0, 1.9, -1.5))),
-        ("light_color", color((0.42, 0.55, 0.6))), ("light_energy", "0.3"), ("omni_range", "7.0"),
+        ("light_color", color((0.4, 0.55, 0.62))), ("light_energy", "0.22"), ("omni_range", "7.0"),
+        ("light_volumetric_fog_energy", "0.0"),
     ])
     sc.node("DashGlow", "OmniLight3D", night, [
-        ("transform", xform((-0.5, 1.3, Z_FRONT + 0.5))),
-        ("light_color", color((0.4, 0.9, 0.5))), ("light_energy", "0.15"), ("omni_range", "1.6"),
+        ("transform", xform((-0.7, 1.3, Z_FRONT + 0.6))),
+        ("light_color", color((0.4, 0.95, 0.55))), ("light_energy", "0.35"), ("omni_range", "1.4"),
+    ])
+    # Ánh đèn pha hắt lại từ màn mưa phía trước, lạnh và nhạt, rọi ngược vào khoang xe.
+    sc.node("RainBounce", "SpotLight3D", night, [
+        ("transform", xform((0, 1.75, Z_FRONT + 0.12), basis=basis_mul(basis_y(180), basis_x(-10)))),
+        ("light_color", color((0.55, 0.68, 0.82))), ("light_energy", "0.6"), ("spot_range", "11.0"),
+        ("spot_angle", "55.0"), ("spot_attenuation", "1.4"), ("shadow_enabled", "true"),
+        ("light_volumetric_fog_energy", "0.3"),
     ])
     # Đèn pha rọi vào màn mưa đứng yên.
-    beam = sc.mat("HeadlightLens", (1, 0.95, 0.8), 0.2, emission=(1, 0.95, 0.8), energy=4.0)
+    beam = sc.mat("HeadlightLens", (1, 0.95, 0.8), 0.2, emission=(1, 0.95, 0.8), energy=6.0)
+    hl = dict(M)
+    hl["lens"] = beam
     for sx in (-1, 1):
-        sc.mesh("HeadlightLens", night, "cyl", (0.09, 0.09, 0.03, 14), (sx * 0.85, 0.35, Z_FRONT - WALL - 0.02),
-                beam, basis=basis_x(90), shadow=False)
+        place(sc, "HeadlightLens", night, "headlight", hl, (sx * 0.85, 0.35, Z_FRONT - WALL - 0.03), shadow=0)
         sc.node("Headlight", "SpotLight3D", night, [
-            ("transform", xform((sx * 0.85, 0.35, Z_FRONT - WALL - 0.1), basis=basis_x(-4))),
-            ("light_color", color((1.0, 0.94, 0.8))), ("light_energy", "7.0"), ("spot_range", "32.0"),
-            ("spot_angle", "24.0"), ("spot_attenuation", "0.8"), ("shadow_enabled", "true"),
+            ("transform", xform((sx * 0.85, 0.35, Z_FRONT - WALL - 0.12), basis=basis_x(-3))),
+            ("light_color", color((1.0, 0.93, 0.78))), ("light_energy", "9.0"), ("spot_range", "34.0"),
+            ("spot_angle", "22.0"), ("spot_attenuation", "0.7"), ("shadow_enabled", "true"),
+            ("light_volumetric_fog_energy", "3.0"),
         ])
+    reflection_probe(sc, night, 0.6)
 
     # Bảng lộ trình trên vách trái (bốn tấm biển bến đã rơi xuống sàn).
-    sc.mesh("RouteBoard", night, "box", (0.02, 0.5, 0.36), BOARD_POS, wood_sign)
+    place(sc, "RouteBoard", night, "route_board", dict(M, frame=sc.mat("BoardFrame", (0.22, 0.14, 0.08), 0.6)),
+          BOARD_POS)
     sc.node("RouteTitle", "Label3D", night, [
         ("transform", xform((BOARD_POS[0] + 0.012, BOARD_POS[1] + 0.2, BOARD_POS[2]), 90)),
         ("pixel_size", "0.0012"), ("modulate", color((0.15, 0.1, 0.06))), ("outline_size", "0"),
@@ -259,17 +584,16 @@ def build_night_1999(sc, cushions, rng, glass, vinyl, vinyl_blue, tube_dead, rub
     # Dây chuông chạy dọc trần, chuông đồng trên đầu bác tài.
     rope = sc.mat("Rope", (0.62, 0.55, 0.4), 0.9)
     brass = sc.mat("Brass", (0.75, 0.6, 0.3), 0.3, metallic=0.9)
-    sc.mesh("BellRope", night, "cyl", (0.006, 0.006, 7.6, 5), (0.3, 2.08, -0.4), rope, basis=basis_x(90))
+    sc.mesh("BellRope", night, "cyl", (0.006, 0.006, 7.6, 5), (0.3, 2.1, -0.4), rope, basis=basis_x(90))
     sc.mesh("Bell", night, "cyl", (0.03, 0.05, 0.06, 10), (0.3, 2.1, -4.3), brass)
-    sack = sc.mat("NightSack", (0.55, 0.5, 0.4), 1.0)
-    for z in (ROWS[1], ROWS[6]):
-        sc.mesh("Luggage", night, "box", (0.4, 0.22, 0.5), (1.02, 1.95, z), sack)
+    for k, (z, model) in enumerate([(ROWS[1], "luggage_sack"), (ROWS[6], "luggage_case"), (ROWS[3] + 0.6, "luggage_box")]):
+        place(sc, "Luggage", night, model, M, (1.0 if k != 2 else -1.0, 1.93, z), rot_y=rng.uniform(-8, 8))
 
     # Ngoài trời: mặt cầu, lan can, thành cầu ngay trước mũi xe, sông tối bên dưới.
     out = sc.empty("Outside", night)
-    concrete = sc.mat("BridgeConcrete", (0.36, 0.36, 0.34), 0.6)
-    wet = sc.mat("WetAsphalt", (0.08, 0.08, 0.09), 0.15, metallic=0.2)
-    water = sc.mat("RiverNight", (0.02, 0.04, 0.05), 0.05, metallic=0.4)
+    concrete = sc.pbr("BridgeConcrete", "concrete_damp", (0.62, 0.62, 0.6))
+    wet = sc.pbr("WetAsphalt", "concrete_damp", (0.22, 0.22, 0.24), rough=0.35, triplanar=False, uv_scale=(3, 30))
+    water = sc.mat("RiverNight", (0.02, 0.035, 0.045), 0.03, metallic=0.5)
     sc.node("Deck", "MeshInstance3D", out, [
         ("transform", xform((0.4, -0.95, -30))), ("cast_shadow", "0"),
         ("mesh", 'SubResource("%s")' % sc.sub_res("PlaneMesh", "Mesh_BridgeDeck", [("size", "Vector2(7.5, 80)")])),
@@ -306,15 +630,15 @@ def build_night_1999(sc, cushions, rng, glass, vinyl, vinyl_blue, tube_dead, rub
     sc.empty("Rain", night)
 
 
-def build_day_glimpse(sc, rng, shirts, pants, skin, hair, gold, basket):
+def build_day_glimpse(sc, rng, shirts, pants, skin, hair, basket):
     """Xe 2006 đông cứng (cảnh nhìn thấy một lần) và giỏ hàng mã của bà cụ."""
     props = "Day/Props"
     # Giỏ hàng mã của bà cụ đặt trên ghế cạnh bà.
     bx, bz = seat_xz((L_SIDE, OLD_WOMAN_ROW, True))
-    sc.mesh("PaperBasket", props, "cyl", (0.17, 0.13, 0.18, 14), (bx, 0.57, bz), basket)
+    sc.mesh("PaperBasket", props, "cyl", (0.17, 0.13, 0.18, 14), (bx, 0.61, bz), basket)
     for k, (c, dx, dz, h) in enumerate([((0.85, 0.12, 0.1), -0.05, 0.03, 0.16), ((0.9, 0.7, 0.2), 0.06, -0.02, 0.2),
                                          ((0.3, 0.5, 0.85), 0.0, 0.07, 0.12)]):
-        sc.mesh("PaperGoods", props, "box", (0.08, h, 0.07), (bx + dx, 0.6 + h / 2, bz + dz),
+        sc.mesh("PaperGoods", props, "box", (0.08, h, 0.07), (bx + dx, 0.64 + h / 2, bz + dz),
                 sc.mat("PaperGoods%d" % k, c, 0.9), rot_y=k * 25)
 
     g = sc.empty("Glimpse", "Day", props=[("visible", "false")])
@@ -327,7 +651,7 @@ def build_day_glimpse(sc, rng, shirts, pants, skin, hair, gold, basket):
     ember = sc.mat("PaperAshEdge", (0.5, 0.45, 0.4), 1.0)
     for k in range(9):
         sc.mesh("Ash", g, "cyl", (0.03, 0.035, 0.004, 7),
-                (nx + rng.uniform(-0.15, 0.15), SEAT_Y + 0.07, nz + rng.uniform(-0.12, 0.12)),
+                (nx + rng.uniform(-0.15, 0.15), SEAT_Y + 0.08, nz + rng.uniform(-0.12, 0.12)),
                 ash if k % 3 else ember, rot_y=rng.uniform(0, 360), shadow=False)
     # Cốc nước trên taplô đổ dở, nước treo lơ lửng.
     water = sc.mat("FrozenWater", (0.7, 0.85, 0.95), 0.05, alpha=0.5)
@@ -340,7 +664,7 @@ def build_day_glimpse(sc, rng, shirts, pants, skin, hair, gold, basket):
                 (cx + 0.07 + t * 0.12, cy + 0.06 - t * t * 0.18, cz + rng.uniform(-0.01, 0.01)), water,
                 shadow=False)
     # Qua kính lái: đầu cây cầu ngay trước mặt.
-    concrete = sc.mat("BridgeConcrete", (0.36, 0.36, 0.34), 0.6)
+    concrete = sc.pbr("BridgeConcrete", "concrete_damp", (0.62, 0.62, 0.6))
     for sx in (-1, 1):
         sc.mesh("BridgeBeam", g, "box", (0.15, 0.12, 40), (0.3 + sx * 3.75, -0.05, -32), concrete)
         for k in range(20):
@@ -360,65 +684,95 @@ def seat_numbers(sc):
 
 
 # ---------------------------------------------------------------------------
+# Va chạm dùng chung (giữ đúng khối của bản dựng hộp cũ để tia tương tác không đổi)
+# ---------------------------------------------------------------------------
+
+def build_collision(sc):
+    body = sc.node("Collision", "StaticBody3D", ".", [])
+    shapes = {}
+
+    def box(name, center, size, basis=None):
+        key = tuple(round(s, 4) for s in size)
+        if key not in shapes:
+            shapes[key] = sc.sub_res("BoxShape3D", "Col_%d" % (len(shapes) + 1), [("size", vec3(size))])
+        sc.node(name, "CollisionShape3D", body, [("transform", xform(center, basis=basis)),
+                                                 ("shape", 'SubResource("%s")' % shapes[key])])
+
+    length = Z_BACK - Z_FRONT
+    zc = (Z_BACK + Z_FRONT) / 2
+    box("Floor", (0, -0.05, zc), (2 * HALF_W + 2 * WALL, 0.1, length + 2 * WALL))
+    box("Ceiling", (0, H + 0.05, zc), (2 * HALF_W + 2 * WALL, 0.1, length + 2 * WALL))
+    for sx in (-1, 1):
+        box("Wall", (sx * (HALF_W + WALL / 2), H / 2, zc), (WALL, H + 0.2, length + 2 * WALL))
+    box("Front", (0, H / 2, Z_FRONT - WALL / 2), (2 * HALF_W, H + 0.2, WALL))
+    box("Back", (0, H / 2, Z_BACK + WALL / 2), (2 * HALF_W, H + 0.2, WALL))
+    for side in (-1, 1):
+        cx = side * (SEAT_X[0] + SEAT_X[1]) / 2
+        pw = SEAT_X[1] - SEAT_X[0] + SEAT_W
+        for r, z in enumerate(ROWS):
+            nm = "%s%d" % ("L" if side < 0 else "R", r + 1)
+            box("Pan" + nm, (cx, SEAT_Y - 0.04, z), (pw, 0.05, SEAT_W))
+            box("Leg" + nm, (side * SEAT_X[0], (SEAT_Y - 0.06) / 2, z - 0.1), (0.04, SEAT_Y - 0.06, 0.04))
+            box("Strut" + nm, (cx, 0.2, z + 0.15), (pw, 0.03, 0.03))
+            box("BackFrame" + nm, (cx, 0.78, z + SEAT_W / 2), (pw, 0.62, 0.035), basis_x(8))
+            box("Grab" + nm, (side * SEAT_X[0], 1.13, z + SEAT_W / 2 + 0.04), (0.18, 0.03, 0.03))
+    box("BenchPan", (0, SEAT_Y - 0.04, BENCH_Z), (2 * HALF_W, 0.05, SEAT_W))
+    box("BenchBase", (0, 0.2, BENCH_Z), (2 * HALF_W, 0.4, SEAT_W - 0.05))
+    box("BenchBack", (0, 0.8, BENCH_Z + SEAT_W / 2 + 0.02), (2 * HALF_W, 0.7, 0.04))
+    door_zc = (DOOR_Z[0] + DOOR_Z[1]) / 2
+    box("DashBase", (0, 0.55, Z_FRONT + 0.35), (2 * HALF_W, 1.1, 0.6))
+    box("EngineHump", (-0.05, 0.3, Z_FRONT + 0.95), (0.7, 0.6, 0.8))
+    box("DriverSeatBase", (-0.7, 0.25, -4.05), (0.5, 0.5, 0.5))
+    box("DriverSeatBack", (-0.7, 0.85, -3.8), (0.5, 0.7, 0.08))
+    box("DriverPartition", (-0.72, 0.55, -3.62), (0.95, 1.1, 0.04))
+    box("Step", (0.95, 0.1, door_zc), (0.6, 0.2, 0.9))
+
+
+# ---------------------------------------------------------------------------
 
 def build_bus():
+    import bake_bus_textures
+    import bus_models
+    bake_bus_textures.main()
+    bus_models.build_all()
+    import people_models
+    people_models.build_all()
+    import prop_models
+    prop_models.build_all()
+
     sc = Scene("Bus")
     p_rid = sc.ext_res("PackedScene", "res://scenes/player/Player.tscn")
     level_script = sc.ext_res("Script", "res://scripts/bus/BusLevel.gd")
     scroll_script = sc.ext_res("Script", "res://scripts/bus/ScrollingScenery.gd")
+    rng_seats = random.Random(77)
 
     # --- Vật liệu dùng chung ---
-    paint_in = sc.pbr("BusPaintInterior", "painted_wood", (0.62, 0.8, 0.74), normal=0.6)  # xanh ngọc cũ
-    paint_out = sc.pbr("BusPaintExterior", "painted_wood", (0.45, 0.62, 0.85), normal=0.8)
-    floor_wood = sc.pbr("BusFloor", "wood_weathered", (0.75, 0.68, 0.6), normal=1.0)
-    ceiling = sc.pbr("BusCeiling", "plaster_white", (0.86, 0.84, 0.76), normal=0.6)
     rust = sc.pbr("Rust", "rust_metal", (1, 1, 1), metallic=0.5)
     chrome = sc.mat("BusChrome", (0.66, 0.66, 0.64), 0.3, metallic=0.9)
-    rubber = sc.mat("Rubber", (0.06, 0.06, 0.06), 0.85)
-    dash = sc.mat("Dashboard", (0.12, 0.12, 0.13), 0.7)
-    seat_frame = sc.mat("SeatFrame", (0.25, 0.27, 0.28), 0.5, metallic=0.6)
-    tube_off = sc.mat("TubeOff", (0.82, 0.84, 0.86), 0.3)
-
-    # --- Vật liệu ban ngày ---
-    vinyl = sc.mat("VinylRed", (0.55, 0.12, 0.09), 0.45)
-    vinyl_blue = sc.mat("VinylBlue", (0.16, 0.26, 0.5), 0.45)
-    glass = sc.mat("BusGlass", (0.75, 0.85, 0.85), 0.05, alpha=0.18)
-    curtain = sc.pbr("Curtain", "fabric", (0.85, 0.62, 0.4), normal=0.8)
-    flower = sc.mat("PlasticFlower", (0.9, 0.2, 0.35), 0.5)
-    leaf = sc.mat("PlasticLeaf", (0.2, 0.55, 0.25), 0.5)
-    gold = sc.mat("Gold", (0.75, 0.56, 0.24), 0.35, metallic=0.85)
-    tube_on = sc.mat("TubeDay", (0.9, 0.92, 0.95), 0.3, emission=(0.8, 0.85, 0.9), energy=0.3)
-    skin = sc.mat("Skin", (0.62, 0.46, 0.36), 0.8)
-    skin_old = sc.mat("SkinOld", (0.55, 0.42, 0.34), 0.85)
-    hair = sc.mat("Hair", (0.05, 0.045, 0.04), 0.9)
-    hair_grey = sc.mat("HairGrey", (0.55, 0.53, 0.5), 0.9)
-    non_la = sc.mat("NonLa", (0.78, 0.7, 0.5), 0.9, cull=True)
-    mu_coi = sc.mat("MuCoi", (0.3, 0.36, 0.22), 0.7)
+    wood_sign = sc.pbr("SignWood", "wood_weathered", (0.7, 0.62, 0.55), normal=1.4)
+    skin = sc.mat("Skin", (0.62, 0.46, 0.36), 0.7)
+    skin_old = sc.mat("SkinOld", (0.56, 0.42, 0.34), 0.75)
+    hair = sc.mat("Hair", (0.04, 0.035, 0.03), 0.55)
+    hair_grey = sc.mat("HairGrey", (0.55, 0.53, 0.5), 0.7)
+    non_la = sc.pbr("NonLa", "bamboo_weave", (1.0, 0.92, 0.72), triplanar=True)
+    mu_coi = sc.mat("MuCoi", (0.3, 0.36, 0.22), 0.6)
     khan = sc.mat("KhanRan", (0.2, 0.18, 0.16), 0.95)
-    shirts = [sc.mat("Shirt%d" % i, c, 0.95) for i, c in enumerate([
+    cloth = lambda name, c: uvmat(sc, name, "fabric", c, rough=1.0, scale=0.6)
+    shirts = [cloth("Shirt%d" % i, c) for i, c in enumerate([
         (0.85, 0.83, 0.78), (0.35, 0.4, 0.3), (0.5, 0.32, 0.22), (0.3, 0.38, 0.55), (0.78, 0.7, 0.55),
-        (0.62, 0.25, 0.22), (0.86, 0.86, 0.9), (0.4, 0.3, 0.38)])]
-    pants = [sc.mat("Pants%d" % i, c, 0.95) for i, c in enumerate([
-        (0.08, 0.08, 0.09), (0.25, 0.28, 0.22), (0.18, 0.2, 0.28), (0.3, 0.26, 0.2)])]
-    ao_nau = sc.mat("AoNau", (0.38, 0.24, 0.15), 0.95)  # áo nâu bà cụ
+        (0.62, 0.25, 0.22), (0.9, 0.9, 0.92), (0.4, 0.3, 0.38)])]
+    pants = [cloth("Pants%d" % i, c) for i, c in enumerate([
+        (0.08, 0.08, 0.09), (0.25, 0.28, 0.22), (0.16, 0.18, 0.26), (0.3, 0.26, 0.2)])]
+    ao_nau = cloth("AoNau", (0.38, 0.24, 0.15))  # áo nâu bà cụ
     sack = sc.pbr("Sack", "fabric", (0.8, 0.72, 0.55), normal=1.2)
     basket = sc.pbr("Basket", "bamboo_weave", (1, 0.9, 0.75), normal=1.0)
     chicken = sc.mat("Chicken", (0.62, 0.38, 0.18), 0.9)
     comb = sc.mat("Comb", (0.75, 0.1, 0.08), 0.7)
-
-    # --- Vật liệu hoang tàn ---
-    vinyl_rot = sc.mat("VinylRotten", (0.24, 0.1, 0.08), 0.8)
-    vinyl_rot_blue = sc.mat("VinylRottenBlue", (0.1, 0.13, 0.2), 0.8)
-    foam = sc.mat("Foam", (0.58, 0.5, 0.3), 1.0)
-    glass_dirty = sc.mat("GlassDirty", (0.22, 0.22, 0.2), 0.4, alpha=0.38)
-    curtain_rot = sc.pbr("CurtainRotten", "fabric", (0.32, 0.26, 0.2), normal=1.4)
-    tube_dead = sc.mat("TubeDead", (0.3, 0.3, 0.28), 0.6)
-    tube_cold = sc.mat("TubeCold", (0.85, 0.95, 1.0), 0.3, emission=(0.7, 0.85, 1.0), energy=2.5)
-    hat_rot = sc.mat("NonLaRotten", (0.3, 0.26, 0.18), 1.0, cull=True)
     leaf_dry = sc.mat("LeafDry", (0.32, 0.24, 0.12), 1.0, cull=True)
     shard = sc.mat("GlassShard", (0.7, 0.75, 0.75), 0.05, metallic=0.4, alpha=0.6)
     stain = sc.mat("DarkStain", (0.08, 0.02, 0.02), 0.6)
-    wood_sign = sc.pbr("SignWood", "wood_weathered", (0.7, 0.62, 0.55), normal=1.4)
+    foam = sc.mat("Foam", (0.62, 0.52, 0.28), 1.0)
+    trunk = sc.pbr("Trunk", "wood_dark", (0.5, 0.42, 0.36))
 
     d_mold = sc.decal_mat("DecalMold", "mold.png", (0.6, 0.65, 0.5, 0.9))
     d_soot = sc.decal_mat("DecalSoot", "soot.png", (1, 1, 1, 0.85))
@@ -429,16 +783,23 @@ def build_bus():
     d_web = sc.decal_mat("DecalWeb", "cobweb.png", (1, 1, 1, 0.85))
     d_joss = sc.decal_mat("DecalJoss", "joss_paper.png", (1, 1, 1, 1))
     d_talisman = sc.decal_mat("DecalTalisman", "talisman.png", (1, 1, 1, 1))
+    d_moss = texmat(sc, "DecalMoss", "moss_patch.png", alpha=True, rough=1.0)
 
     # --- Môi trường ---
+    # Ban ngày: nắng chiều vàng, sương khối mỏng cho tia nắng xiên qua cửa kính.
     env_day = env_resource(sc, "Day", (0.32, 0.48, 0.72), (0.95, 0.72, 0.45), (0.2, 0.18, 0.12),
-                           (1.0, 0.86, 0.68), 0.55, (0.95, 0.78, 0.55), 0.004, exposure=1.0)
+                           (1.0, 0.86, 0.68), 0.5, (0.95, 0.78, 0.55), 0.004, exposure=1.0,
+                           vol=(0.012, (1.0, 0.92, 0.8), 24.0, 0.15), adjust=(1.0, 1.08, 1.05), glow=0.55)
+    # Xác xe: đêm sương lạnh, hơi nước đặc trong lòng xe.
     env_derelict = env_resource(sc, "Derelict", (0.02, 0.025, 0.04), (0.08, 0.1, 0.12), (0.02, 0.02, 0.02),
-                                (0.3, 0.38, 0.48), 0.22, (0.12, 0.15, 0.18), 0.09, exposure=1.1,
-                                sky_energy=0.3)
-
+                                (0.32, 0.4, 0.5), 0.2, (0.12, 0.15, 0.18), 0.06, exposure=1.15,
+                                sky_energy=0.3, vol=(0.035, (0.7, 0.78, 0.85), 18.0, 0.4),
+                                adjust=(1.0, 1.12, 0.8), glow=0.6, ssao=2.0)
+    # Đêm 1999: mưa đen, đèn bão vàng cam trong xe, đèn pha xé màn mưa.
     env_night = env_resource(sc, "Night1999", (0.01, 0.018, 0.022), (0.03, 0.05, 0.05), (0.01, 0.01, 0.012),
-                             (0.3, 0.45, 0.42), 0.16, (0.05, 0.08, 0.08), 0.045, exposure=1.15, sky_energy=0.2)
+                             (0.3, 0.42, 0.45), 0.14, (0.05, 0.08, 0.08), 0.035, exposure=1.2, sky_energy=0.2,
+                             vol=(0.03, (0.75, 0.82, 0.88), 32.0, 0.2), adjust=(1.0, 1.1, 0.85), glow=0.7,
+                             ssao=2.0)
 
     sc.nodes[0] = ('[node name="Bus" type="Node3D"]\nscript = ExtResource("%s")\n'
                    'day_environment = SubResource("%s")\nderelict_environment = SubResource("%s")\n'
@@ -446,158 +807,27 @@ def build_bus():
                    % (level_script, env_day, env_derelict, env_night))
     sc.node("WorldEnvironment", "WorldEnvironment", ".", [("environment", 'SubResource("%s")' % env_day)])
 
-    length = Z_BACK - Z_FRONT
-    zc = (Z_BACK + Z_FRONT) / 2
+    build_collision(sc)
+    sc.empty("Fixtures")
+
+    M_day = layer_materials(sc, "day")
+    M_wreck = layer_materials(sc, "wreck")
+    M_night = layer_materials(sc, "night")
 
     # =======================================================================
-    # VỎ XE (dùng chung, có va chạm)
-    # =======================================================================
-    body = sc.group("Shell")
-    sc.box("Outer", body, (0, H / 2 - 0.1, zc), (2 * HALF_W + 2 * WALL, H + 0.2 + WALL, length + 2 * WALL),
-           paint_out)
-    sc.box("Inner", body, (0, H / 2, zc), (2 * HALF_W, H, length), paint_in, subtract=True)
-    for side in (-1, 1):
-        for i, z in enumerate(ROWS + [BENCH_Z]):
-            sc.box("Window", body, (side * (HALF_W + WALL / 2), (WIN_Y[0] + WIN_Y[1]) / 2, z),
-                   (WALL * 3, WIN_Y[1] - WIN_Y[0], WIN_W), rubber, subtract=True)
-    # Ô kính trên cánh cửa lên xuống, kính chắn gió, kính sau.
-    door_zc = (DOOR_Z[0] + DOOR_Z[1]) / 2
-    sc.box("DoorWindow", body, (HALF_W + WALL / 2, 1.35, door_zc), (WALL * 3, 0.8, 0.7), rubber, subtract=True)
-    sc.box("Windshield", body, (0, 1.45, Z_FRONT - WALL / 2), (2 * HALF_W - 0.2, 0.85, WALL * 3), rubber,
-           subtract=True)
-    sc.box("RearWindow", body, (0, 1.4, Z_BACK + WALL / 2), (1.6, 0.6, WALL * 3), rubber, subtract=True)
-
-    fx = sc.empty("Fixtures")
-    sc.mesh("Floor", fx, "box", (2 * HALF_W, 0.01, length), (0, 0.005, zc), floor_wood)
-    sc.mesh("CeilingPanel", fx, "box", (2 * HALF_W, 0.01, length), (0, H - 0.005, zc), ceiling)
-    lower = sc.pbr("BusPaintLower", "painted_wood", (0.34, 0.46, 0.42), normal=0.8)
-    sc.mesh("Wainscot_L", fx, "box", (0.01, 0.9, length), (-HALF_W + 0.005, 0.45, zc), lower)
-    sc.mesh("Wainscot_R", fx, "box", (0.01, 0.9, length), (HALF_W - 0.005, 0.45, zc), lower)
-    for side in (-1, 1):
-        # Tay vịn trần dọc lối đi + giá hành lý trên đầu ghế.
-        sc.mesh("Rail", fx, "cyl", (0.016, 0.016, length - 1.2, 10), (side * 0.42, 1.95, zc + 0.4), chrome,
-                basis=basis_x(90))
-        sc.mesh("RackBar", fx, "cyl", (0.012, 0.012, length - 1.2, 8), (side * 0.85, 1.82, zc + 0.4), chrome,
-                basis=basis_x(90))
-        sc.mesh("RackBar", fx, "cyl", (0.012, 0.012, length - 1.2, 8), (side * 1.18, 1.82, zc + 0.4), chrome,
-                basis=basis_x(90))
-        for z in ROWS[::2]:
-            sc.mesh("RackBracket", fx, "box", (0.36, 0.02, 0.02), (side * 1.02, 1.82, z), chrome)
-            sc.mesh("RailHanger", fx, "cyl", (0.008, 0.008, 0.2, 6), (side * 0.42, 2.05, z), chrome)
-        for i, z in enumerate(ROWS + [BENCH_Z]):
-            # Khung cửa sổ: thanh trượt nhôm giữa ô kính.
-            sc.mesh("WinTrack", fx, "box", (0.03, 0.025, WIN_W), (side * (HALF_W - 0.01), WIN_Y[0] + 0.01, z), chrome)
-    # Đèn tuýp trên trần (ban ngày tắt, mesh dùng chung).
-    for z in (-2.5, 0.5, 3.0):
-        sc.mesh("TubeHousing", fx, "box", (0.12, 0.04, 1.2), (0, H - 0.03, z), seat_frame)
-    # Buồng lái.
-    cab = sc.group("Cab", ".", (0, 0, 0))
-    sc.box("DashBase", cab, (0, 0.55, Z_FRONT + 0.35), (2 * HALF_W, 1.1, 0.6), dash)
-    sc.box("EngineHump", cab, (-0.05, 0.3, Z_FRONT + 0.95), (0.7, 0.6, 0.8), rust)
-    sc.box("DriverSeatBase", cab, (-0.7, 0.25, -4.05), (0.5, 0.5, 0.5), seat_frame)
-    sc.box("DriverSeatBack", cab, (-0.7, 0.85, -3.8), (0.5, 0.7, 0.08), vinyl_rot_blue)
-    sc.box("DriverPartition", cab, (-0.72, 0.55, -3.62), (0.95, 1.1, 0.04), paint_in)
-    sc.box("Step", cab, (0.95, 0.1, door_zc), (0.6, 0.2, 0.9), rubber)
-    sc.mesh("SteeringColumn", fx, "cyl", (0.03, 0.03, 0.5, 8), (-0.7, 1.0, Z_FRONT + 0.55), dash,
-            basis=basis_x(-55))
-    sc.mesh("SteeringWheel", fx, "torus", (0.19, 0.22), (-0.7, 1.15, Z_FRONT + 0.75), dash,
-            basis=basis_x(35))
-    sc.mesh("GearStick", fx, "cyl", (0.012, 0.012, 0.5, 6), (-0.2, 0.75, -4.2), chrome, basis=basis_x(15))
-    sc.mesh("GearKnob", fx, "sphere", (0.035, 0.07), (-0.2, 1.0, -4.27), dash)
-    sc.mesh("Mirror", fx, "box", (0.32, 0.1, 0.02), (0, 1.95, Z_FRONT + 0.15), chrome)
-    # Cánh cửa: tấm dưới đặc, phần trên là khung bao quanh ô kính (DoorWindow).
-    dx = HALF_W - 0.012
-    sc.mesh("DoorPanel", fx, "box", (0.02, 0.95, 0.85), (dx, 0.475, door_zc), paint_out)
-    sc.mesh("DoorFrameTop", fx, "box", (0.02, 0.15, 0.85), (dx, 1.825, door_zc), paint_out)
-    sc.mesh("DoorFrameFront", fx, "box", (0.02, 0.8, 0.075), (dx, 1.35, door_zc - 0.3875), paint_out)
-    sc.mesh("DoorFrameBack", fx, "box", (0.02, 0.8, 0.075), (dx, 1.35, door_zc + 0.3875), paint_out)
-    sc.mesh("DoorHandle", fx, "box", (0.04, 0.03, 0.18), (HALF_W - 0.04, 1.0, door_zc + 0.25), chrome)
-    sc.mesh("DoorPole", fx, "cyl", (0.018, 0.018, H, 10), (0.55, H / 2, -3.62), chrome)
-    sc.mesh("WindshieldBar", fx, "box", (0.05, 0.85, 0.05), (0, 1.45, Z_FRONT - 0.02), rubber)
-
-    # =======================================================================
-    # KHUNG GHẾ (dùng chung, có va chạm): mặt ngồi + chân ghế + khung lưng.
-    # =======================================================================
-    seats = sc.group("Seats")
-    seat_rows = []  # (tên, tâm x, z) mỗi cặp ghế, dùng lại cho nệm ở hai trạng thái
-    for side in (-1, 1):
-        cx = side * (SEAT_X[0] + SEAT_X[1]) / 2
-        pw = SEAT_X[1] - SEAT_X[0] + SEAT_W
-        for r, z in enumerate(ROWS):
-            nm = "%s%d" % ("L" if side < 0 else "R", r + 1)
-            seat_rows.append((nm, cx, z, pw))
-            sc.box("Pan" + nm, seats, (cx, SEAT_Y - 0.04, z), (pw, 0.05, SEAT_W), seat_frame)
-            sc.box("Leg" + nm, seats, (side * SEAT_X[0], (SEAT_Y - 0.06) / 2, z - 0.1), (0.04, SEAT_Y - 0.06, 0.04),
-                   seat_frame)
-            sc.box("Strut" + nm, seats, (cx, 0.2, z + 0.15), (pw, 0.03, 0.03), seat_frame)
-            sc.box("BackFrame" + nm, seats, (cx, 0.78, z + SEAT_W / 2), (pw, 0.62, 0.035), seat_frame,
-                   basis=basis_x(8))
-            sc.box("Grab" + nm, seats, (side * SEAT_X[0], 1.13, z + SEAT_W / 2 + 0.04), (0.18, 0.03, 0.03), chrome)
-    sc.box("BenchPan", seats, (0, SEAT_Y - 0.04, BENCH_Z), (2 * HALF_W, 0.05, SEAT_W), seat_frame)
-    sc.box("BenchBase", seats, (0, 0.2, BENCH_Z), (2 * HALF_W, 0.4, SEAT_W - 0.05), seat_frame)
-    sc.box("BenchBack", seats, (0, 0.8, BENCH_Z + SEAT_W / 2 + 0.02), (2 * HALF_W, 0.7, 0.04), seat_frame)
-
-    def cushions(parent, mats, broken=()):
-        """Nệm ngồi + nệm lưng mỗi cặp ghế. broken: {tên: kiểu hỏng}."""
-        broken = dict(broken)
-        for i, (nm, cx, z, pw) in enumerate(seat_rows):
-            m = mats[i % len(mats)]
-            kind = broken.get(nm)
-            if kind == "missing":
-                continue
-            seat_pos = (cx, SEAT_Y + 0.03, z - 0.01)
-            back_basis = basis_x(8)
-            back_pos = (cx, 0.8, z + SEAT_W / 2 - 0.035)
-            if kind == "snapped":
-                back_basis = basis_x(48)
-                back_pos = (cx, 0.62, z + SEAT_W / 2 + 0.18)
-            sc.mesh("Cushion" + nm, parent, "box", (pw - 0.04, 0.07, SEAT_W - 0.03), seat_pos, m)
-            sc.mesh("Backrest" + nm, parent, "box", (pw - 0.04, 0.56, 0.06), back_pos, m, basis=back_basis)
-            if kind in ("torn", "snapped"):
-                # Nệm rách lòi mút vàng.
-                sc.mesh("FoamSeat" + nm, parent, "box", (0.22, 0.02, 0.18),
-                        (cx + random.uniform(-0.15, 0.15), SEAT_Y + 0.066, z), foam)
-                sc.mesh("FoamBack" + nm, parent, "box", (0.18, 0.2, 0.02),
-                        (back_pos[0] - 0.1, back_pos[1] + 0.05, back_pos[2] - 0.035), foam, basis=back_basis)
-        sc.mesh("BenchCushion", parent, "box", (2 * HALF_W - 0.04, 0.07, SEAT_W - 0.03),
-                (0, SEAT_Y + 0.03, BENCH_Z), mats[0])
-        sc.mesh("BenchBackrest", parent, "box", (2 * HALF_W - 0.04, 0.6, 0.06),
-                (0, 0.82, BENCH_Z + SEAT_W / 2 - 0.02), mats[0])
-
-    # =======================================================================
-    # TRẠNG THÁI 1: CHIỀU MUỘN, XE ĐÔNG KHÁCH ĐANG CHẠY
+    # TRẠNG THÁI 1: CHIỀU MUỘN, XE 2006 ĐÔNG KHÁCH ĐANG CHẠY
     # =======================================================================
     day = sc.empty("Day")
-    cushions(sc.empty("Cushions", day), [vinyl, vinyl, vinyl_blue])
-    for side in (-1, 1):
-        for i, z in enumerate(ROWS + [BENCH_Z]):
-            sc.mesh("Glass", day, "box", (0.008, WIN_Y[1] - WIN_Y[0], WIN_W),
-                    (side * (HALF_W + WALL / 2), (WIN_Y[0] + WIN_Y[1]) / 2, z), glass, shadow=False)
-            if i % 3 == 1:
-                # Rèm vải cột gọn một bên ô cửa.
-                sc.mesh("Curtain", day, "box", (0.03, 0.62, 0.12),
-                        (side * (HALF_W - 0.03), 1.38, z - WIN_W / 2 + 0.06), curtain)
-    sc.mesh("GlassDoor", day, "box", (0.008, 0.8, 0.7), (HALF_W + WALL / 2, 1.35, door_zc), glass, shadow=False)
-    sc.mesh("GlassFront", day, "box", (2 * HALF_W - 0.2, 0.85, 0.008), (0, 1.45, Z_FRONT - WALL / 2), glass,
-            shadow=False)
-    sc.mesh("GlassRear", day, "box", (1.6, 0.6, 0.008), (0, 1.4, Z_BACK + WALL / 2), glass, shadow=False)
+    build_interior(sc, day, M_day, "day", rng_seats)
     for z in (-2.5, 0.5, 3.0):
-        sc.mesh("Tube", day, "cyl", (0.018, 0.018, 1.1, 8), (0, H - 0.06, z), tube_on, basis=basis_x(90),
-                shadow=False)
-
-    # Bàn thờ nhỏ trên taplô: tượng Phật, lọ hoa nhựa, dây hoa treo kính.
-    altar = sc.empty("DashAltar", day, (0.45, 1.1, Z_FRONT + 0.3))
-    sc.mesh("Buddha", altar, "sphere", (0.05, 0.14), (0, 0.07, 0), gold)
-    sc.mesh("BuddhaBase", altar, "cyl", (0.05, 0.06, 0.03, 12), (0, 0.015, 0), gold)
-    sc.mesh("Vase", altar, "cyl", (0.025, 0.02, 0.1, 10), (0.15, 0.05, 0), gold)
-    for k in range(4):
-        sc.mesh("Flower", altar, "sphere", (0.03, 0.05), (0.15 + (k - 1.5) * 0.03, 0.14 + (k % 2) * 0.03, 0),
-                flower)
-    for k in range(9):
-        x = -1.0 + k * 0.25
-        sc.mesh("Garland", day, "sphere", (0.035, 0.06), (x, 1.92 - 0.06 * math.sin(k / 8 * math.pi),
-                                                          Z_FRONT + 0.08), flower if k % 2 else leaf, shadow=False)
-    sc.decal("Talisman", day, (0, 1.75, Z_FRONT + 0.1), "+z", (0.12, 0.3), d_talisman, offset=0.0)
+        sc.mesh("Tube", day, "cyl", (0.016, 0.016, 1.1, 8), (0, H - 0.06, z),
+                sc.mat("TubeDay", (0.9, 0.92, 0.95), 0.3, emission=(0.8, 0.85, 0.9), energy=0.3),
+                basis=basis_x(90), shadow=False)
+    # Bàn thờ nhỏ trên taplô: tượng Phật, bát hương, lọ hoa nhựa; dây hoa vắt ngang kính lái.
+    place(sc, "DashAltar", day, "dash_altar", M_day, (0.42, 1.1, Z_FRONT + 0.26))
+    place(sc, "Garland", day, "garland", M_day, shadow=0)
+    sc.decal("Talisman", day, (0, 1.75, Z_FRONT + 0.06), "+z", (0.12, 0.3), d_talisman, offset=0.0)
+    reflection_probe(sc, day, 0.8)
 
     # Hành khách.
     pas = sc.empty("Passengers", day)
@@ -624,24 +854,29 @@ def build_bus():
     seated_person(sc, "Soldier", pas, seat_pos(R, 6, False), shirts[1], pants[1], skin, hair, "mu_coi", mu_coi)
     seated_person(sc, "Woman2", pas, seat_pos(L, 7, True), shirts[7], pants[0], skin, hair, "non_la", non_la)
 
-    # Giỏ gà dưới chân bà cụ, bao tải gạo và quang gánh ở cuối xe.
+    # Giỏ gà dưới chân bà cụ, bao tải gạo ở cuối xe, hành lý trên giá.
     props = sc.empty("Props", day)
     bx, bz = -SEAT_X[1] + 0.02, ROWS[OLD_WOMAN_ROW] - 0.42
     sc.mesh("Basket", props, "cyl", (0.2, 0.15, 0.24, 14), (bx, 0.12, bz), basket)
     sc.mesh("ChickenBody", props, "sphere", (0.11, 0.18), (bx, 0.3, bz), chicken)
     sc.mesh("ChickenHead", props, "sphere", (0.045, 0.09), (bx, 0.42, bz - 0.08), chicken)
     sc.mesh("ChickenComb", props, "box", (0.012, 0.04, 0.05), (bx, 0.47, bz - 0.08), comb)
-    sc.mesh("NonLaLap", props, "cyl", (0.005, 0.24, 0.12, 18), (-SEAT_X[0], 0.68, ROWS[OLD_WOMAN_ROW] - 0.2),
-            non_la, basis=basis_x(-70))
-    for k, (x, y, rz) in enumerate([(-0.8, 0.62, 0), (-0.35, 0.62, 10), (0.15, 0.62, -6), (0.7, 0.62, 4),
-                                     (0.35, 0.95, 80)]):
-        sc.mesh("RiceSack", props, "box", (0.42, 0.32, 0.3), (x, y, BENCH_Z), sack, basis=basis_z(rz))
-    for z in (ROWS[1] - 0.05, ROWS[5]):
-        sc.mesh("Luggage", props, "box", (0.4, 0.22, 0.5), (1.02, 1.95, z), sack)
-        sc.mesh("Luggage", props, "box", (0.36, 0.2, 0.42), (-1.02, 1.94, z + 0.4), basket)
+    import people_models
+    people_models.place_hat(sc, "NonLaLap", props, "non_la", non_la, (-SEAT_X[0], 0.66, ROWS[OLD_WOMAN_ROW] - 0.2),
+                            basis_x(-70))
+    for k, (x, y, rz) in enumerate([(-0.8, 0.66, 0), (-0.35, 0.66, 10), (0.15, 0.66, -6), (0.7, 0.66, 4),
+                                     (0.35, 0.98, 80)]):
+        place(sc, "RiceSack", props, "luggage_sack", M_day, (x, y, BENCH_Z - 0.02),
+              basis_mul(basis_z(rz), basis_y(90)))
+    lug = [("luggage_sack", 1.0, ROWS[1] - 0.05), ("luggage_box", -1.0, ROWS[1] + 0.35),
+           ("luggage_case", 1.0, ROWS[3] + 0.3), ("luggage_sack", -1.0, ROWS[5] + 0.4),
+           ("luggage_box", 1.0, ROWS[5]), ("luggage_case", -1.0, ROWS[7]), ("luggage_sack", 1.0, ROWS[7] + 0.2)]
+    for model, x, z in lug:
+        y = 1.93 if model != "luggage_case" else 1.92
+        place(sc, "Luggage", props, model, M_day, (x, y, z), rot_y=rng_seats.uniform(-10, 10))
 
     # Nắng chiều xiên từ bên phải xe.
-    directional(sc, "Sun", day, -16, 65, (1.0, 0.78, 0.5), 2.2)
+    directional(sc, "Sun", day, -16, 65, (1.0, 0.78, 0.5), 2.4, fog=1.5)
     dust(sc, "SunDust", day, (0.4, 1.3, 0.0), (0.9, 0.6, 3.5), amount=90, col=(1, 0.9, 0.7, 0.45))
 
     # Ngoài cửa sổ: mặt đất + đường (texture trôi) và cây cối, cột điện (trôi theo +Z).
@@ -656,140 +891,94 @@ def build_bus():
         ("transform", xform((0.3, -0.94, 0))), ("cast_shadow", "0"),
         ("mesh", 'SubResource("%s")' % sc.sub_res("PlaneMesh", "Mesh_Road", [("size", "Vector2(6.5, 200)")])),
         ("material_override", 'SubResource("%s")' % road_mat)])
-    trunk = sc.mat("Trunk", (0.3, 0.24, 0.18), 0.9)
-    foliage = sc.mat("Foliage", (0.22, 0.38, 0.14), 0.8)
-    bamboo = sc.mat("Bamboo", (0.42, 0.52, 0.22), 0.7)
-    pole = sc.mat("ConcretePole", (0.62, 0.6, 0.56), 0.9)
-    straw = sc.mat("Haystack", (0.72, 0.6, 0.32), 1.0)
-    wall_house = sc.mat("HouseWall", (0.82, 0.72, 0.5), 0.9)
-    roof = sc.mat("HouseRoof", (0.55, 0.25, 0.15), 0.9)
-    sc_node = sc.node("Scenery", "Node3D", out, [
-        ("script", 'ExtResource("%s")' % scroll_script),
-        ("scrolling_materials", 'Array[BaseMaterial3D]([SubResource("%s"), SubResource("%s")])'
-         % (ground_mat, road_mat)),
-    ])
-    # Lũy tre làng xa xa: dải cây liền dọc hai bên đường, đủ xa để không cần trôi.
-    for side in (-1, 1):
-        for k, (x, h) in enumerate([(32, 6.0), (55, 9.0)]):
-            sc.mesh("TreeLine", out, "box", (6.0, h, 200.0), (side * x + random.uniform(-2, 2), -0.95 + h / 2, 0),
-                    foliage if k == 0 else sc.mat("TreeLineFar", (0.3, 0.42, 0.28), 1.0), shadow=False)
-            for b in range(14):
-                z = -95 + b * 14 + random.uniform(-4, 4)
-                sc.mesh("TreeTop", out, "sphere", (4.0, 5.5), (side * x, -0.95 + h + 0.5, z), foliage, shadow=False)
-        # Bờ ruộng chạy song song với đường.
-        for x in (8.0, 14.0, 21.0):
-            sc.mesh("Dike", out, "box", (0.5, 0.18, 200.0), (side * x, -0.88, 0), road_mat, shadow=False)
-    span = 120.0
-    for k in range(26):
-        side = 1 if k % 2 == 0 else -1
-        z = -span / 2 + k * span / 26 + random.uniform(-1.5, 1.5)
-        x = side * random.uniform(5.0, 16.0)
-        kind = random.choice(["tree", "tree", "bamboo", "bamboo", "hay", "house"])
-        g = sc.empty("Prop%d" % k, sc_node, (x, -0.95, z), random.uniform(0, 360))
-        if kind == "tree":
-            sc.mesh("Trunk", g, "cyl", (0.12, 0.18, 2.6, 8), (0, 1.3, 0), trunk)
-            sc.mesh("Crown", g, "sphere", (1.6, 2.4), (0, 3.2, 0), foliage)
-        elif kind == "bamboo":
-            for b in range(5):
-                sc.mesh("Cane", g, "cyl", (0.05, 0.06, 5.5, 6), (b * 0.25 - 0.5, 2.6, (b % 2) * 0.3), bamboo,
-                        basis=basis_z(-6 + b * 3))
-            sc.mesh("Leaves", g, "sphere", (1.4, 2.0), (0, 5.0, 0), foliage)
-        elif kind == "hay":
-            sc.mesh("Hay", g, "cyl", (0.3, 1.1, 1.8, 12), (0, 0.9, 0), straw)
-        else:
-            sc.mesh("Walls", g, "box", (4.0, 2.4, 3.0), (0, 1.2, 0), wall_house)
-            sc.mesh("Roof", g, "prism", (4.6, 1.3, 3.4), (0, 3.05, 0), roof, basis=basis_y(90))
-    for k in range(6):
-        g = sc.empty("Pole%d" % k, sc_node, (3.6, -0.95, -span / 2 + k * span / 6))
-        sc.mesh("Post", g, "box", (0.2, 7.0, 0.2), (0, 3.5, 0), pole)
-        sc.mesh("Arm", g, "box", (1.4, 0.1, 0.1), (0, 6.6, 0), pole)
+    people_models.build_day_scenery(sc, out, scroll_script, ground_mat, road_mat)
 
     # =======================================================================
-    # TRẠNG THÁI 2: XE BỎ HOANG, ĐỖ IM TRONG SƯƠNG ĐÊM
+    # TRẠNG THÁI 2: XÁC XE NẰM BÃI SÔNG
     # =======================================================================
     der = sc.empty("Derelict", ".", props=[("visible", "false")])
-    cushions(sc.empty("Cushions", der), [vinyl_rot, vinyl_rot, vinyl_rot_blue], broken={
-        "L1": "torn", "R2": "snapped", "L3": "torn", "R5": "torn", "L6": "snapped", "R7": "missing",
-        "L8": "torn", "R9": "snapped",
-    })
-    broken_windows = {("R", 1), ("L", 4), ("R", 7), ("L", 8)}
+    build_interior(sc, der, M_wreck, "wreck", rng_seats)
+    windows = WIN_Y
     for side in (-1, 1):
-        sname = "L" if side < 0 else "R"
         for i, z in enumerate(ROWS + [BENCH_Z]):
-            gx = side * (HALF_W + WALL / 2)
-            if (sname, i) in broken_windows:
-                sc.mesh("GlassShardEdge", der, "prism", (0.008, 0.22, WIN_W * 0.6),
-                        (gx, WIN_Y[0] + 0.11, z), shard, shadow=False)
-                continue
-            sc.mesh("Glass", der, "box", (0.008, WIN_Y[1] - WIN_Y[0], WIN_W), (gx, (WIN_Y[0] + WIN_Y[1]) / 2, z),
-                    glass_dirty, shadow=False)
             if i % 3 == 2:
-                sc.decal("Crack", der, (side * (HALF_W - 0.01), 1.3, z), "-x" if side > 0 else "+x", (0.5, 0.5),
+                sc.decal("Crack", der, (side * (HALF_W + 0.025), 1.3, z), "-x" if side > 0 else "+x", (0.5, 0.5),
                          d_crack, roll=random.uniform(0, 360), offset=0.0)
-            if i % 3 == 0:
-                sc.mesh("CurtainRag", der, "box", (0.02, 0.85, 0.2),
-                        (side * (HALF_W - 0.03), 1.25, z + WIN_W / 2 - 0.1), curtain_rot, basis=basis_x(4))
-    sc.mesh("GlassDoor", der, "box", (0.008, 0.8, 0.7), (HALF_W + WALL / 2, 1.35, door_zc), glass_dirty,
-            shadow=False)
-    sc.mesh("GlassFront", der, "box", (2 * HALF_W - 0.2, 0.85, 0.008), (0, 1.45, Z_FRONT - WALL / 2), glass_dirty,
-            shadow=False)
-    sc.decal("CrackFront", der, (-0.6, 1.5, Z_FRONT + 0.0), "+z", (0.9, 0.9), d_crack, roll=40, offset=0.01)
-    sc.mesh("GlassRear", der, "box", (1.6, 0.6, 0.008), (0, 1.4, Z_BACK + WALL / 2), glass_dirty, shadow=False)
+    sc.decal("CrackFront", der, (-0.6, 1.5, Z_FRONT - 0.015), "+z", (0.9, 0.9), d_crack, roll=40, offset=0.0)
     # Bàn tay in trên kính cửa xe và một ô kính bên phải, như ai đó ở ngoài áp vào.
-    sc.decal("HandDoor", der, (HALF_W - 0.005, 1.45, door_zc + 0.1), "-x", (0.2, 0.24), d_hand, roll=-8,
+    door_zc = (DOOR_Z[0] + DOOR_Z[1]) / 2
+    sc.decal("HandDoor", der, (HALF_W + 0.012, 1.45, door_zc + 0.1), "-x", (0.2, 0.24), d_hand, roll=-8,
              offset=0.0)
-    sc.decal("HandWindow", der, (HALF_W - 0.005, 1.35, ROWS[AN_ROW] + 0.12), "-x", (0.2, 0.24), d_hand, roll=12,
+    sc.decal("HandWindow", der, (HALF_W + 0.022, 1.35, ROWS[AN_ROW] + 0.12), "-x", (0.2, 0.24), d_hand, roll=12,
              offset=0.0)
-    sc.decal("HandWindow", der, (HALF_W - 0.005, 1.2, ROWS[AN_ROW] - 0.15), "-x", (0.2, 0.24), d_hand, roll=-20,
+    sc.decal("HandWindow", der, (HALF_W + 0.022, 1.2, ROWS[AN_ROW] - 0.15), "-x", (0.2, 0.24), d_hand, roll=-20,
              offset=0.0)
 
-    # Đèn tuýp: một bóng còn chập chờn, hai bóng chết.
-    for z in (-2.5, 3.0):
-        sc.mesh("TubeDead", der, "cyl", (0.018, 0.018, 1.1, 8), (0, H - 0.06, z), tube_dead, basis=basis_x(90),
-                shadow=False)
-    sc.mesh("TubeHanging", der, "cyl", (0.018, 0.018, 1.1, 8), (0.1, H - 0.35, 3.0), tube_dead,
+    # Đèn tuýp: một bóng còn chập chờn, hai bóng chết, một bóng rơi lủng lẳng.
+    tube_dead = sc.mat("TubeDead", (0.3, 0.3, 0.28), 0.6)
+    tube_cold = sc.mat("TubeCold", (0.85, 0.95, 1.0), 0.3, emission=(0.7, 0.85, 1.0), energy=3.0)
+    sc.mesh("TubeDead", der, "cyl", (0.016, 0.016, 1.1, 8), (0, H - 0.06, -2.5), tube_dead, basis=basis_x(90),
+            shadow=False)
+    sc.mesh("TubeHanging", der, "cyl", (0.016, 0.016, 1.1, 8), (0.1, H - 0.35, 3.0), tube_dead,
             basis=basis_mul(basis_x(90), basis_z(-30)), shadow=False)
     tube_light = sc.node("TubeLight", "OmniLight3D", der, [
         ("transform", xform((0, H - 0.12, 0.5))),
-        ("light_color", color((0.72, 0.86, 1.0))), ("light_energy", "1.1"), ("omni_range", "6.0"),
+        ("light_color", color((0.72, 0.86, 1.0))), ("light_energy", "1.2"), ("omni_range", "6.5"),
         ("omni_attenuation", "1.2"), ("shadow_enabled", "true"), ("shadow_blur", "1.5"),
+        ("light_volumetric_fog_energy", "1.5"),
         ("script", 'ExtResource("%s")' % sc.ext_res("Script", "res://scripts/levels/LightFlicker.gd")),
         ("hum", "0.12"), ("calm_range", "Vector2(1.5, 5)"), ("burst_count", "Vector2i(3, 9)"), ("dip", "0.02"),
         ("emissive_mesh", 'NodePath("Tube")'),
     ])
-    sc.mesh("Tube", tube_light, "cyl", (0.018, 0.018, 1.1, 8), (0, 0.06, 0), tube_cold, basis=basis_x(90),
+    sc.mesh("Tube", tube_light, "cyl", (0.016, 0.016, 1.1, 8), (0, 0.06, 0), tube_cold, basis=basis_x(90),
             shadow=False)
     sc.node("DashGlow", "OmniLight3D", der, [
         ("transform", xform((0.45, 1.3, Z_FRONT + 0.4))),
         ("light_color", color((0.9, 0.2, 0.12))), ("light_energy", "0.35"), ("omni_range", "1.8"),
     ])
-    directional(sc, "Moon", der, -24, 160, (0.42, 0.52, 0.72), 0.25)
+    directional(sc, "Moon", der, -24, 160, (0.42, 0.52, 0.72), 0.3, fog=2.0)
+    reflection_probe(sc, der, 0.5)
 
-    # Vết mục: mốc, muội, ố, cào xước trên vách, trần và sàn.
+    # Vết mục: mốc, muội, ố, cào xước trên vách, trần và sàn; rêu bám chân vách và sàn.
     for k in range(14):
         side = random.choice((-1, 1))
         z = random.uniform(Z_FRONT + 1.5, Z_BACK - 0.3)
-        y = random.choice((random.uniform(0.25, 0.8), random.uniform(1.75, 2.0)))
+        y = random.choice((random.uniform(0.25, 0.8), random.uniform(1.75, 1.84)))
         mat = random.choice((d_mold, d_soot, d_stain, d_stain))
         sc.decal("WallRot", der, (side * (HALF_W - 0.01), y, z), "-x" if side > 0 else "+x",
                  (random.uniform(0.5, 1.1),) * 2, mat, roll=random.uniform(0, 360), offset=0.002)
     for k in range(7):
-        sc.decal("CeilRot", der, (random.uniform(-1.0, 1.0), H - 0.012, random.uniform(-3.5, 4.0)), "-y",
-                 (random.uniform(0.6, 1.3),) * 2, random.choice((d_mold, d_stain, d_soot)),
+        sc.decal("CeilRot", der, (random.uniform(-0.55, 0.55), H - 0.003, random.uniform(-3.5, 4.0)), "-y",
+                 (random.uniform(0.6, 1.1),) * 2, random.choice((d_mold, d_stain, d_soot)),
                  roll=random.uniform(0, 360), offset=0.0)
     for k in range(6):
         sc.decal("FloorGrime", der, (random.uniform(-0.4, 0.4), 0.012, random.uniform(-3.5, 4.0)), "+y",
                  (random.uniform(0.6, 1.1),) * 2, random.choice((d_stain, d_soot)), roll=random.uniform(0, 360),
                  offset=0.0)
+    mrng = random.Random(31)
+    for k in range(16):
+        side = mrng.choice((-1, 1))
+        if k < 10:
+            sc.decal("Moss", der, (side * mrng.uniform(0.6, 1.15), 0.015, mrng.uniform(-3.3, 4.3)), "+y",
+                     (mrng.uniform(0.4, 0.9),) * 2, d_moss, roll=mrng.uniform(0, 360), offset=0.0)
+        else:
+            sc.decal("Moss", der, (side * (HALF_W - 0.012), mrng.uniform(0.05, 0.3), mrng.uniform(-3.0, 4.2)),
+                     "-x" if side > 0 else "+x", (mrng.uniform(0.4, 0.8),) * 2, d_moss, roll=mrng.uniform(0, 360),
+                     offset=0.0)
+    # Vũng nước đọng phản chiếu trên sàn.
+    puddle = sc.mat("Puddle", (0.04, 0.045, 0.04), 0.02, metallic=0.3, alpha=0.82)
+    for k, (x, z, s) in enumerate([(0.05, -1.9, 0.6), (-0.1, 1.2, 0.8), (0.15, 3.4, 0.5)]):
+        sc.mesh("Puddle", der, "cyl", (s * 0.5, s * 0.5, 0.002, 18), (x, 0.012, z), puddle,
+                basis=basis_scale(1.0, 1.0, 1.6), shadow=False)
     sc.decal("Scratch", der, (-HALF_W + 0.01, 1.2, ROWS[2] + 0.4), "+x", (0.5, 0.4), d_scratch, offset=0.003)
     sc.decal("Scratch", der, (0.28, 0.85, ROWS[AN_ROW] + SEAT_W / 2 + 0.07), "+z", (0.3, 0.3), d_scratch,
              roll=90, offset=0.0)
-    for x, y, z, facing in [(-HALF_W + 0.01, 1.95, Z_BACK - 0.2, "+x"), (HALF_W - 0.01, 1.95, Z_FRONT + 1.4, "-x"),
-                            (-HALF_W + 0.01, 1.9, ROWS[4], "+x"), (0.9, H - 0.012, ROWS[1], "-y")]:
+    for x, y, z, facing in [(-HALF_W + 0.01, 1.82, Z_BACK - 0.2, "+x"), (HALF_W - 0.01, 1.82, Z_FRONT + 1.4, "-x"),
+                            (-HALF_W + 0.01, 1.8, ROWS[4], "+x"), (0.5, H - 0.003, ROWS[1], "-y")]:
         sc.decal("Cobweb", der, (x, y, z), facing, (0.7, 0.7), d_web, offset=0.0)
-    sc.decal("TalismanTorn", der, (0, 1.75, Z_FRONT + 0.1), "+z", (0.12, 0.3), d_talisman, roll=14, offset=0.0)
+    sc.decal("TalismanTorn", der, (0, 1.75, Z_FRONT + 0.06), "+z", (0.12, 0.3), d_talisman, roll=14, offset=0.0)
 
-    # Rác trên sàn: vàng mã, lá khô, mảnh kính, nệm rơi, giỏ gà đổ, nón mục của bà cụ.
+    # Rác trên sàn: vàng mã, lá khô, mảnh kính, nệm rơi, giỏ gà đổ.
     deb = sc.empty("Debris", der)
     for k in range(26):
         x = random.uniform(-1.1, 1.1)
@@ -804,24 +993,30 @@ def build_bus():
         z = (ROWS + [BENCH_Z])[wi]
         for k in range(6):
             sc.mesh("Shard", deb, "prism", (0.06, 0.004, 0.05),
-                    (wx * random.uniform(0.25, 1.0), 0.47 if k < 2 else 0.015, z + random.uniform(-0.3, 0.3)),
+                    (wx * random.uniform(0.25, 1.0), 0.53 if k < 2 else 0.015, z + random.uniform(-0.3, 0.3)),
                     shard, rot_y=random.uniform(0, 360), shadow=False)
-    sc.mesh("FallenCushion", deb, "box", (0.82, 0.07, 0.39), (0.15, 0.05, ROWS[6] - 0.3), vinyl_rot,
-            basis=basis_mul(basis_y(24), basis_z(6)))
-    sc.mesh("FallenFoam", deb, "box", (0.25, 0.02, 0.2), (0.25, 0.09, ROWS[6] - 0.25), foam, rot_y=24)
+    place(sc, "FallenCushion", deb, "seat_cushion_R", M_wreck, (0.62, -0.42, ROWS[6] - 0.3),
+          basis_mul(basis_y(24), basis_z(6)))
+    sc.mesh("FallenFoam", deb, "box", (0.25, 0.02, 0.2), (0.25, 0.11, ROWS[6] - 0.25), foam, rot_y=24)
     bx, bz = -SEAT_X[1] + 0.05, ROWS[OLD_WOMAN_ROW] - 0.42
-    sc.mesh("BasketTipped", deb, "cyl", (0.2, 0.15, 0.24, 14), (bx, 0.17, bz), basket,
+    basket_rot = wreck_mat(sc, "BasketRotten", "bamboo_weave", (0.6, 0.5, 0.4), rust=0.0, moss=0.5, world_uv=True)
+    sc.mesh("BasketTipped", deb, "cyl", (0.2, 0.15, 0.24, 14), (bx, 0.17, bz), basket_rot,
             basis=basis_mul(basis_y(30), basis_z(80)))
     for k in range(5):
         sc.mesh("Feather", deb, "box", (0.05, 0.003, 0.015), (bx + random.uniform(0.1, 0.5), 0.016,
                                                               bz + random.uniform(-0.2, 0.3)),
                 sc.mat("Feather", (0.45, 0.32, 0.2), 1.0), rot_y=random.uniform(0, 360), shadow=False)
-    sc.mesh("Bag", deb, "box", (0.4, 0.22, 0.5), (1.02, 1.95, ROWS[1] - 0.05), sack, rot_y=8)
+    place(sc, "Bag", deb, "luggage_sack", dict(M_wreck, sack=wreck_mat(sc, "SackRotten", "fabric", (0.5, 0.45, 0.35),
+                                                                     rust=0.0, moss=0.5, scale=0.6),
+                                             rope=sc.mat("RopeRotten", (0.3, 0.26, 0.2), 1.0)),
+          (1.0, 1.92, ROWS[1] - 0.05), rot_y=8)
     # Năm vết thâm đen trên lưng ghế An vừa tựa (khớp 5 vết đinh trên người An).
-    back_z = ROWS[AN_ROW] + SEAT_W / 2 - 0.075
+    back_z = ROWS[AN_ROW] + 0.2 - 0.075 / 2 - 0.03
     for k, (dx, dy) in enumerate([(0.0, 0.25), (-0.1, 0.12), (0.1, 0.12), (-0.07, -0.02), (0.07, -0.02)]):
+        y = 0.84 + dy
+        z = back_z + (y - 0.5) * math.tan(math.radians(10)) - 0.004
         sc.mesh("Stain%d" % (k + 1), deb, "cyl", (0.022, 0.026, 0.004, 10),
-                (SEAT_X[1] + dx, 0.82 + dy, back_z), stain, basis=basis_x(98), shadow=False)
+                (SEAT_X[1] + dx, y, z), stain, basis=basis_x(100), shadow=False)
     dust(sc, "Dust", der, (0, 1.2, 0.0), (1.1, 0.8, 4.3), amount=140, col=(0.8, 0.88, 1.0, 0.4))
 
     # Bên ngoài: bãi đất trống, cột biển báo bến xe mục, cây chết trong sương.
@@ -851,10 +1046,9 @@ def build_bus():
     # Dùng bộ sinh số riêng để phần trên không đổi khi sửa phần này.
     # =======================================================================
     rng = random.Random(1404)
-    build_wreck_traces(sc, der, rng, rust, rubber, chrome, basket, wood_sign)
-    build_night_1999(sc, cushions, rng, glass, vinyl, vinyl_blue, tube_dead, rubber, rust, chrome, wood_sign,
-                     d_talisman, trunk)
-    build_day_glimpse(sc, rng, shirts, pants, skin, hair, gold, basket)
+    build_wreck_traces(sc, der, rng, rust, chrome, wood_sign)
+    build_night_1999(sc, rng, M_night, rust, chrome, wood_sign, d_talisman, trunk)
+    build_day_glimpse(sc, rng, shirts, pants, skin, hair, basket)
     seat_numbers(sc)
 
     # Người chơi đứng ở chân cửa xe, nhìn dọc lối đi về phía sau.
