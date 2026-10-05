@@ -32,6 +32,7 @@ const PICKUP_ORIGINS := {
 	&"kerosene": "Wreck/Kerosene", &"cotton_thread": "Wreck/Thread",
 	&"non_coi": "Night/NonCoi", &"goi_thuoc_bac": "Night/ThuocBac", &"dieu_cay": "Night/DieuCay",
 	&"biscuit_tin": "Night/Tin", &"paper_clogs": "Night/GlowClogs", &"wind_oil": "Night/WindOil",
+	&"pencil": "Night/BayPencil", &"cai_luong_tape": "Night/HungTape",
 }
 ## Sổ phụ xe: ai ngồi ghế nào.
 const SEAT_ANSWER := {"03": &"non_coi", "04": &"dieu_cay", "05": &"goi_thuoc_bac"}
@@ -41,8 +42,11 @@ const LOCK_CODE: Array[int] = [3, 8, 5]
 ## Bảng lộ trình: các lựa chọn hiển thị và thứ tự đúng theo băng (chùa -> chợ -> tàu -> đò).
 const ROUTE_OPTIONS: Array[StringName] = [&"ROUTE_FERRY", &"ROUTE_MARKET", &"ROUTE_PAGODA", &"ROUTE_TRAIN"]
 const ROUTE_ANSWER: Array[int] = [2, 1, 3, 0]
-## Vé bấm: hàng trên lỗ thứ 8 (ghế 08), hàng dưới bên phải (trẻ em).
-const PUNCH_ANSWER: Array[int] = [7, 1]
+## Vé bù: hàng trên lỗ thứ 8 (ghế 08), hàng giữa bên phải (trẻ em),
+## hàng dưới lỗ thứ 5 (Bến Đò, nơi bác Tư dừng đón bé gái; lỗ đầu là bến xe huyện).
+const PUNCH_ANSWER: Array[int] = [7, 1, 4]
+## Quy ước chuông của nhà xe: 1 hồi có khách xuống, 2 hồi cho xe chạy, 3 hồi dừng gấp.
+const BELL_OPTIONS: Array[StringName] = [&"UI_BELL_1", &"UI_BELL_2", &"UI_BELL_3"]
 const CLOG_SIZES: Array[StringName] = [&"UI_CLOG_SIZE_CHILD", &"UI_CLOG_SIZE_WOMAN", &"UI_CLOG_SIZE_MAN"]
 const NAME_KEYS := {&"tu": &"NAME_TRAN_VAN_TU", &"nam": &"NAME_NAM_CHO_DOAI", &"hung": &"NAME_HUNG"}
 
@@ -84,13 +88,15 @@ var _glimpse_done := false
 var _clog_seen := false
 var _names: Array[StringName] = []
 var _clogs_burned := false
+var _nam_shod := false         # bà Năm đã xỏ guốc mã, chờ chuông xin xuống bến
 var _nam_freed := false
 var _tape_fixed := false
 var _hung_freed := false
 var _seats_done: Dictionary[String, bool] = {}
 var _counted := false
+var _footprints_seen := false
 var _bay_freed := false
-var _tu_step := 0
+var _tu_step := 0              # 0 đang ngủ, 1 đã xoa dầu gió, 2 đã bật cải lương
 var _tick := 0
 var _finished := false
 ## Đồ đang chờ người chơi chọn để trả cho hình nhân hành khách.
@@ -279,6 +285,8 @@ func _open_tin_box() -> void:
 	_take_matches()
 	_learn_name(&"tu")
 	_read(&"OBJ_DRIVER_TIN_BOX_NAME", [&"DOC_DRIVER_LICENSE", &"DOC_CONDUCTOR_LEDGER"])
+	await EventBus.document_closed
+	_monologue(&"BUS2_MONO_LEDGER_HAND")
 
 
 func _take_matches() -> void:
@@ -529,13 +537,31 @@ func _burn_clogs(correct: bool) -> void:
 
 
 func _on_nam() -> void:
+	if _nam_shod:
+		_monologue(&"BUS2_MONO_NAM_WAITING")
+		return
 	if not Inventory.has_item(&"paper_clogs"):
 		_monologue(&"BUS2_MONO_NAM_BAREFOOT")
 		return
 	_remove_item(&"paper_clogs")
-	_free_nam()
+	_shoe_nam()
 
 
+## Bà Năm xỏ guốc mã, nhưng còn một nút nữa: bà lỡ bến vì chú Bảy quên giật chuông.
+func _shoe_nam() -> void:
+	_busy = true
+	_nam_shod = true
+	_progress()
+	var effigy := _night.get_node_or_null(^"BaNam") as Node3D
+	_add_glow_clogs(effigy)
+	_caption(&"BUS2_CAPTION_NAM_MOVES", 3.0)
+	_look_at_player(effigy, 2.5)
+	await _wait(2.6)
+	await _say(&"SPEAKER_NAM", &"BUS2_NAM_MISSED_STOP")
+	_busy = false
+
+
+## Một hồi chuông xin xuống bến: bà Năm đứng dậy xuống xe, để lại lọ dầu gió cho bác Tư.
 func _free_nam() -> void:
 	_busy = true
 	_nam_freed = true
@@ -543,8 +569,7 @@ func _free_nam() -> void:
 	_set_on(_area("Night/Nam"), false)
 	_set_on(_area("Night/Hat"), false)
 	var effigy := _night.get_node_or_null(^"BaNam") as Node3D
-	_add_glow_clogs(effigy)
-	_caption(&"BUS2_CAPTION_NAM_MOVES", 3.0)
+	_caption(&"BUS2_CAPTION_NAM_GETS_OFF", 3.0)
 	_look_at_player(effigy, 2.5)
 	await _wait(2.6)
 	await _say(&"SPEAKER_NAM", &"BUS2_NAM_THANKS")
@@ -649,9 +674,15 @@ func _free_hung() -> void:
 	EventBus.camera_shake_requested.emit(0.02, 0.6)
 	await _wait(2.8)
 	var effigy := _night.get_node_or_null(^"Hung") as Node3D
+	EventBus.sfx_requested.emit(&"sfx_tape_eject", at)
+	_caption(&"BUS2_CAPTION_EJECT", 2.5)
 	_look_at_player(effigy, 2.0)
-	await _wait(1.6)
+	await _wait(2.6)
+	await _say(&"SPEAKER_HUNG", &"BUS2_HUNG_RETURN")
 	await _burn_effigy(effigy)
+	_set_on(_area("Night/HungTape"), true)
+	_monologue(&"BUS2_MONO_TAPE_LEFT")
+	await _wait(3.0)
 	await _say_monologue(&"BUS2_MONO_THREE_STEPS")
 	_update_free_objective(false)
 	_busy = false
@@ -728,24 +759,26 @@ func _on_bay() -> void:
 
 
 func _on_satchel() -> void:
-	if not _tape_fixed and not Inventory.has_item(&"sticky_tape"):
-		if _give(&"sticky_tape", &"ITEM_STICKY_TAPE_NAME", &"ITEM_STICKY_TAPE_DESC"):
-			_monologue(&"BUS2_MONO_TAPE_FOUND")
-		return
 	if not _counted:
 		_monologue(&"BUS2_MONO_SATCHEL")
 		return
-	var top: Array[String] = []
-	for i in 9:
-		var holes := PackedStringArray()
-		for j in 9:
-			holes.append("●" if j == i else "○")
-		top.append(" ".join(holes))
 	var rows: Array = [
-		{"label": tr(&"UI_PUNCH_TOP"), "options": top},
+		{"label": tr(&"UI_PUNCH_TOP"), "options": _hole_rows(9)},
 		{"label": tr(&"UI_PUNCH_BOTTOM"), "options": ["●   ○", "○   ●"]},
+		{"label": tr(&"UI_PUNCH_STOP"), "options": _hole_rows(5)},
 	]
 	EventBus.selector_requested.emit(&"punch", tr(&"UI_PUNCH_TITLE"), rows, PUNCH_ANSWER.duplicate(), false)
+
+
+## Các lựa chọn một hàng lỗ bấm: lỗ thứ i được bấm (●), còn lại để trống (○).
+func _hole_rows(count: int) -> Array[String]:
+	var options: Array[String] = []
+	for i in count:
+		var holes := PackedStringArray()
+		for j in count:
+			holes.append("●" if j == i else "○")
+		options.append(" ".join(holes))
+	return options
 
 
 func _free_bay() -> void:
@@ -759,10 +792,13 @@ func _free_bay() -> void:
 	_caption(&"BUS2_CAPTION_PUNCH", 2.5)
 	await _wait(2.6)
 	await _say(&"SPEAKER_BAY", &"BUS2_BAY_RELEASE")
+	await _say(&"SPEAKER_BAY", &"BUS2_BAY_PENCIL")
 	_turn_head_towards(bay.get_node_or_null(^"Head") as Node3D if bay else null,
 			_area("Night/Seat08").global_position, 0.6)
 	await _say(&"SPEAKER_BAY", &"BUS2_BAY_NOT_OURS")
 	await _burn_effigy(bay)
+	_set_on(_area("Night/BayPencil"), true)
+	_monologue(&"BUS2_MONO_PENCIL_LEFT")
 	_update_free_objective(false)
 	_busy = false
 
@@ -781,39 +817,71 @@ func _on_tu() -> void:
 	_progress()
 	EventBus.sfx_requested.emit(&"sfx_cloth", _area("Night/TuBody").global_position)
 	_caption(&"BUS2_CAPTION_WIND_OIL", 3.0)
-	var thermos := _area("Night/Thermos")
-	create_tween().tween_property(thermos, "position:z", thermos.position.z + 0.08, 0.8)
 	_nudge_time(1)
 
 
-func _on_thermos() -> void:
-	match _tu_step:
-		0:
-			_monologue(&"BUS2_MONO_THERMOS_HELD")
-		1:
-			_tu_step = 2
-			_progress()
-			EventBus.sfx_requested.emit(&"sfx_pour_tea", _area("Night/Thermos").global_position)
-			_caption(&"BUS2_CAPTION_TEA", 3.0)
-			_nudge_time(1)
-		_:
-			_monologue(&"BUS2_MONO_TEA_DONE")
+## Đài cát-sét trên taplô: lắp cuộn băng Hùng trả lại để cải lương cất lên.
+func _on_dash_deck() -> void:
+	if _tu_step >= 2:
+		_monologue(&"BUS2_MONO_OPERA_DONE")
+		return
+	if not Inventory.has_item(&"cai_luong_tape"):
+		_monologue(&"BUS2_MONO_DASH_EMPTY")
+		return
+	if _tu_step < 1:
+		_wrong_order()
+		return
+	_remove_item(&"cai_luong_tape")
+	_tu_step = 2
+	_progress()
+	var deck := _area("Night/DashDeck")
+	EventBus.sfx_requested.emit(&"sfx_cai_luong", deck.global_position if deck else Vector3.ZERO)
+	_caption(&"BUS2_CAPTION_OPERA", 3.5)
+	_nudge_time(1)
 
 
 func _on_bell_rope() -> void:
 	if not _bay_freed:
 		_monologue(&"BUS2_MONO_ROPE_HELD")
 		return
-	if _tu_step < 2:
-		# Sai thứ tự: thời gian giật lùi một giây, các hình nhân quay đầu nhìn An.
-		EventBus.sfx_requested.emit(&"sfx_bus_bell", _area("Night/BellRope").global_position)
-		_caption(&"BUS2_CAPTION_WRONG_BELL", 3.0)
-		_nudge_time(-1)
-		for path in ["Passenger03", "Passenger04", "Passenger05", "Tu"]:
-			_look_at_player(_night.get_node_or_null(NodePath(path)) as Node3D, 3.0)
-		_monologue(&"BUS2_MONO_WRONG_ORDER")
+	var options: Array[String] = []
+	for key in BELL_OPTIONS:
+		options.append(tr(key))
+	EventBus.selector_requested.emit(&"bell", tr(&"UI_BELL_TITLE"),
+			[{"label": tr(&"UI_BELL_COUNT"), "options": options}], [], false)
+
+
+## Giật [param count] hồi chuông theo quy ước của nhà xe.
+func _ring_bell(count: int) -> void:
+	if count == 3 and _tu_step >= 2:
+		_play_finale()
 		return
-	_play_finale()
+	_busy = true
+	var at := _area("Night/BellRope").global_position
+	for i in count:
+		EventBus.sfx_requested.emit(&"sfx_bus_bell", at)
+		_caption(&"BUS2_CAPTION_BELL_RING", 1.0)
+		await _wait(1.1)
+	_busy = false
+	match count:
+		1:
+			if _nam_shod and not _nam_freed:
+				_free_nam()
+			else:
+				_monologue(&"BUS2_MONO_BELL_NOBODY")
+		2:
+			_monologue(&"BUS2_MONO_BELL_TWO")
+		_:
+			_wrong_order()
+
+
+## Sai thứ tự đánh thức bác Tư: thời gian giật lùi một giây, các hình nhân quay đầu nhìn An.
+func _wrong_order() -> void:
+	_caption(&"BUS2_CAPTION_WRONG_BELL", 3.0)
+	_nudge_time(-1)
+	for path in ["Passenger03", "Passenger04", "Passenger05", "Tu"]:
+		_look_at_player(_night.get_node_or_null(NodePath(path)) as Node3D, 3.0)
+	_monologue(&"BUS2_MONO_WRONG_ORDER")
 
 
 ## Thời gian ở Đêm 1999 nhích lên (hoặc lùi lại) một giây.
@@ -850,7 +918,7 @@ func _play_finale() -> void:
 	await _wait(1.4)
 	level.show_stop_sign(true)
 	await _wait(1.2)
-	await _say(&"SPEAKER_TU", &"BUS_WHISPER_ARRIVED")
+	await _say(&"SPEAKER_TU", &"BUS2_TU_CONFESS")
 	await _say(&"SPEAKER_TU", &"BUS2_TU_THANKS")
 	EventBus.objective_updated.emit(tr(&"OBJ_FREE_PASSENGERS").format({"n": 4}), false)
 	for path in ["Tu", "Passenger03", "Passenger04", "Passenger05"]:
@@ -944,7 +1012,7 @@ func _on_interacted(_actor: Node, target: Interactable) -> void:
 	match String(target.name):
 		"Lamp":
 			_on_lamp()
-		"Kerosene", "Thread", "NonCoi", "ThuocBac", "DieuCay", "GlowClogs", "WindOil":
+		"Kerosene", "Thread", "NonCoi", "ThuocBac", "DieuCay", "GlowClogs", "WindOil", "BayPencil", "HungTape":
 			_pickup(target)
 		"Tin":
 			if _pickup(target):
@@ -967,7 +1035,11 @@ func _on_interacted(_actor: Node, target: Interactable) -> void:
 		"DeckRusted":
 			_monologue(&"BUS2_MONO_DECK_RUSTED")
 		"Hat":
+			var first := not &"nam" in _names
 			_learn_name(&"nam")
+			if first:
+				await EventBus.document_closed
+				_monologue(&"BUS2_MONO_HAT_NAME")
 		"Nam":
 			_on_nam()
 		"Rack":
@@ -975,11 +1047,19 @@ func _on_interacted(_actor: Node, target: Interactable) -> void:
 		"Deck":
 			_on_deck()
 		"Schoolbag":
-			if not _tape_fixed and not Inventory.has_item(&"pencil"):
-				if _give(&"pencil", &"ITEM_PENCIL_NAME", &"ITEM_PENCIL_DESC"):
-					_monologue(&"BUS2_MONO_PENCIL_FOUND")
+			_monologue(&"BUS2_MONO_SCHOOLBAG")
+		"Basket":
+			if not _tape_fixed and not Inventory.has_item(&"sticky_tape"):
+				if _give(&"sticky_tape", &"ITEM_STICKY_TAPE_NAME", &"ITEM_STICKY_TAPE_DESC"):
+					_monologue(&"BUS2_MONO_TAPE_FOUND")
 			else:
-				_monologue(&"BUS2_MONO_SCHOOLBAG")
+				_monologue(&"BUS2_MONO_BASKET")
+		"Footprints":
+			_footprints_seen = true
+			_monologue(&"BUS2_MONO_FOOTPRINTS")
+		"DoorLever":
+			_footprints_seen = true
+			_monologue(&"BUS2_MONO_DOOR_LEVER")
 		"Board":
 			_on_board()
 		"Seat03", "Seat04", "Seat05":
@@ -992,8 +1072,8 @@ func _on_interacted(_actor: Node, target: Interactable) -> void:
 			_on_bell_rope()
 		"TuBody":
 			_on_tu()
-		"Thermos":
-			_on_thermos()
+		"DashDeck":
+			_on_dash_deck()
 		"Seat08":
 			_monologue(&"BUS2_MONO_SEAT08_COUNTED" if _counted else &"BUS2_MONO_SEAT08")
 
@@ -1013,6 +1093,9 @@ func _on_selector_submitted(puzzle_id: StringName, selection: Array, correct: bo
 		"punch":
 			if correct:
 				_free_bay()
+		"bell":
+			if not selection.is_empty():
+				_ring_bell(int(selection[0]) + 1)
 		_:
 			if String(puzzle_id).begins_with("give_") and not selection.is_empty():
 				var index := int(selection[0])
@@ -1122,7 +1205,13 @@ func _current_puzzle() -> String:
 		return "blow"
 	if not _tin_moved:
 		return "tin"
+	if not _bay_freed:
+		if not _counted:
+			return "seats"
+		return "punch" if _footprints_seen else "footprints"
 	if not _nam_freed:
+		if _nam_shod:
+			return "nam_bell"
 		if _clogs_burned:
 			return "give_clogs"
 		if not &"nam" in _names:
@@ -1130,8 +1219,6 @@ func _current_puzzle() -> String:
 		return "burn"
 	if not _hung_freed:
 		return "route" if _tape_fixed else "tape"
-	if not _bay_freed:
-		return "punch" if _counted else "seats"
 	return "wake"
 
 
@@ -1190,8 +1277,12 @@ func _nokia_line(id: String) -> Array:
 			return [&"SPEAKER_NAM", &"NOKIA_CLOGS"]
 		"tape", "route":
 			return [&"SPEAKER_HUNG", &"NOKIA_TAPE"]
-		"seats", "punch":
+		"seats":
 			return [&"SPEAKER_BAY", &"NOKIA_SEATS"]
+		"footprints", "punch":
+			return [&"SPEAKER_BAY", &"NOKIA_PUNCH"]
+		"nam_bell":
+			return [&"SPEAKER_NAM", &"NOKIA_NAM_BELL"]
 		"wake":
 			return [&"SPEAKER_TU", &"NOKIA_WAKE"]
 	return []
@@ -1405,7 +1496,9 @@ func _apply_debug() -> void:
 		_learn_name(&"nam")
 		_learn_name(&"hung")
 		_clogs_burned = true
+		_nam_shod = true
 		_nam_freed = true
+		_footprints_seen = true
 		_tape_fixed = true
 		_hung_freed = true
 		_counted = true
@@ -1424,7 +1517,8 @@ func _apply_debug() -> void:
 		var plaques := _night.get_node_or_null(^"BoardPlaques") as Node3D
 		if plaques:
 			plaques.visible = true
-		_give(&"wind_oil", &"ITEM_WIND_OIL_NAME", &"ITEM_WIND_OIL_DESC")
+		_set_on(_area("Night/WindOil"), true)
+		_set_on(_area("Night/HungTape"), true)
 	_apply_layer(BusLevel.Layer.NIGHT)
 	_update_free_objective(true)
 	if debug_start == DebugStart.FINALE:
