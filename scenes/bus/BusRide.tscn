@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3]
+[gd_scene load_steps=24 format=3]
 
 [ext_resource type="Script" path="res://scripts/bus/BusRideDirector.gd" id="1_director"]
 [ext_resource type="PackedScene" path="res://scenes/levels/Bus.tscn" id="2_bus"]
@@ -7,6 +7,9 @@
 [ext_resource type="Script" path="res://scripts/ui/SfxPlayer.gd" id="5_sfx"]
 [ext_resource type="PackedScene" path="res://scenes/ui/CinematicOverlay.tscn" id="6_overlay"]
 [ext_resource type="Script" path="res://scripts/puzzles/FocusMonologue.gd" id="7_focus"]
+[ext_resource type="PackedScene" path="res://scenes/bus/BusPuzzles.tscn" id="8_puzzles"]
+[ext_resource type="Script" path="res://scripts/bus/BusWreckDirector.gd" id="9_wreck"]
+[ext_resource type="PackedScene" path="res://scenes/ui/SelectorPuzzleUI.tscn" id="10_selector"]
 
 [sub_resource type="StandardMaterial3D" id="Mat_Ticket"]
 albedo_color = Color(0.86, 0.78, 0.58, 1)
@@ -59,15 +62,25 @@ size = Vector3(0.42, 0.45, 0.1)
 [sub_resource type="BoxShape3D" id="Shape_door"]
 size = Vector3(0.12, 1.9, 0.85)
 
-[node name="BusRide" type="Node3D" node_paths=PackedStringArray("level", "seat", "bus_door", "derelict_interactables", "apparition")]
+[node name="BusRide" type="Node3D" node_paths=PackedStringArray("level", "seat", "bus_door", "derelict_interactables", "apparition", "wreck")]
 script = ExtResource("1_director")
 level = NodePath("Level")
 seat = NodePath("AnSeat")
 bus_door = NodePath("BusDoor")
 derelict_interactables = [NodePath("Ticket"), NodePath("OldHat"), NodePath("SeatStains")]
 apparition = NodePath("Apparition")
+wreck = NodePath("WreckDirector")
 
 [node name="Level" parent="." instance=ExtResource("2_bus")]
+
+[node name="Puzzles" parent="." instance=ExtResource("8_puzzles")]
+
+[node name="WreckDirector" type="Node" parent="." node_paths=PackedStringArray("ride", "level", "puzzles", "girl")]
+script = ExtResource("9_wreck")
+ride = NodePath("..")
+level = NodePath("../Level")
+puzzles = NodePath("../Puzzles")
+girl = NodePath("../Apparition")
 
 [node name="AnSeat" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.82, 0.55, -0.5)
@@ -180,3 +193,5 @@ volume_db = 2.0
 bus = &"SFX"
 
 [node name="CinematicOverlay" parent="." instance=ExtResource("6_overlay")]
+
+[node name="SelectorPuzzleUI" parent="." instance=ExtResource("10_selector")]

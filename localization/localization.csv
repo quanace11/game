@@ -265,3 +265,395 @@ BUS_MONO_DOOR_JAMMED,Kẹt cứng... như có ai ghì chặt từ bên ngoài.,I
 BUS_MONO_WHO,Ai... ai vừa đứng đó?,Who... who was standing there?
 OBJ_ESCAPE_BUS,Tìm cách ra khỏi chiếc xe.,Find a way off the bus.
 SIGN_BUS_STOP_THON_DOAI,BẾN THÔN ĐOÀI,THÔN ĐOÀI STOP
+BUS_CONDUCTOR_BRIDGE,"Cây cầu đằng trước ấy, năm 99 có chuyến xe lao xuống sông. Cả xe không ai sống.",That bridge up ahead... back in '99 a bus went off it into the river. Nobody on board survived.
+BUS_CONDUCTOR_HORN,Giờ tài nào qua đấy cũng phải bóp còi ba tiếng xin đường.,Every driver on this route still honks three times crossing it. To ask for the way.
+BUS_DECAL_ROUTE,HUYỆN - THÔN ĐOÀI,DISTRICT - THÔN ĐOÀI
+BUS_ROUTE_BOARD_TITLE,LỘ TRÌNH,ROUTE
+OBJ_TIN_BOX_ENGRAVING,SỐ XE,BUS NO.
+ROUTE_STOP_1,1. Chùa Đoài,1. Đoài Pagoda
+ROUTE_STOP_2,2. Chợ Huyện,2. District Market
+ROUTE_STOP_3,3. Đường Tàu,3. Railway Crossing
+ROUTE_STOP_4,4. Bến Đò,4. Ferry Landing
+ROUTE_PAGODA,Chùa Đoài (quả chuông),Đoài Pagoda (a bell)
+ROUTE_MARKET,Chợ Huyện (quang gánh),District Market (carrying poles)
+ROUTE_TRAIN,Đường Tàu (đầu tàu),Railway Crossing (a locomotive)
+ROUTE_FERRY,Bến Đò (con đò),Ferry Landing (a boat)
+OBJ_STORM_LAMP_NAME,Đèn bão quấn bùa,Storm lantern wrapped in a talisman
+PROMPT_LAMP_UNWRAP,[E] Gỡ lá bùa,[E] Unwrap the talisman
+PROMPT_LAMP_FIX,[E] Lắp và thắp đèn,[E] Fix and light the lantern
+OBJ_TALISMAN_NAME,Lá bùa trên đèn,Talisman on the lantern
+DOC_TALISMAN,"(Mặt sau lá bùa, nét chữ của thầy cúng)
+
+Đèn này thắp đêm mưa ấy, giữ hồn đêm ấy.
+Thổi tắt, về đêm cũ.
+Thắp lại, về chốn này.
+Đừng để đèn tắt quá lâu.","(On the back of the talisman, in the shaman's hand)
+
+This lamp was lit that rainy night; it keeps that night's souls.
+Blow it out, and return to that night.
+Light it again, and return here.
+Do not leave it dark for long."
+ITEM_KEROSENE_NAME,Chai dầu hỏa,Bottle of kerosene
+ITEM_KEROSENE_DESC,"Chai thủy tinh nút bấc, còn non nửa dầu hỏa. Giỏ thì mục hết, thủy tinh vẫn nguyên.","A glass bottle stopped with cork, still a third full of kerosene. The basket rotted away; the glass didn't."
+ITEM_COTTON_THREAD_NAME,Cuộn chỉ bông,Spool of cotton thread
+ITEM_COTTON_THREAD_DESC,Chỉ bông trắng bà cụ dùng khâu hàng mã. Gấp ba sợi là thành bấc đèn.,"White cotton thread the old woman used to sew paper offerings. Folded three times, it makes a wick."
+OBJ_DRIVER_TIN_BOX_NAME,Hộp tôn của bác tài,The driver's tin box
+PROMPT_TIN_BOX_LOCK,[E] Xoay khóa số,[E] Turn the combination lock
+PROMPT_TIN_BOX_READ,[E] Xem đồ trong hộp,[E] Look inside the box
+UI_TIN_BOX_TITLE,Hộp tôn khóa ba vòng số. Nắp khắc: SỐ XE,A tin box with a three-dial lock. The lid reads: BUS NO.
+UI_DIAL,Vòng số {n},Dial {n}
+OBJ_PERMIT_NAME,Giấy phép lưu hành,Route permit
+DOC_PERMIT,"GIẤY PHÉP LƯU HÀNH XE KHÁCH
+
+Tuyến: Bến xe huyện - Thôn Đoài
+Số xe: (nhòe nước) . . . 8 5
+Cấp ngày: (không đọc được)
+
+(Tờ giấy ghim trên taplô, nước ngấm loang gần hết.)","PASSENGER ROUTE PERMIT
+
+Route: District station - Thôn Đoài
+Bus no.: (water-stained) . . . 8 5
+Issued: (illegible)
+
+(Pinned to the dashboard, almost entirely soaked through.)"
+OBJ_NUMBER_DECAL_NAME,Decal số xe,Bus number decal
+OBJ_BISCUIT_TIN_NAME,Hộp bánh quy,Biscuit tin
+PROMPT_TIN_OPEN,[E] Mở hộp,[E] Open the tin
+DOC_PATTERN_BOOK_1,"SÁCH MẪU CẮT GIẤY
+(hàng mã bà Năm, chợ Đoài)
+
+Người đi xa phải có hài dép, kẻo không qua được cầu.
+
+Mẫu guốc có ba cỡ, quai in hoa văn cho khỏi nhầm:
+- Cỡ trẻ con: quai hình con cá.
+- Cỡ đàn bà: quai hình hoa mai.
+- Cỡ đàn ông: quai chữ Thọ.","PAPER-CUTTING PATTERN BOOK
+(Mrs Năm's offerings, Đoài market)
+
+Those who travel far must have shoes, or they cannot cross the bridge.
+
+Clogs come in three sizes, each strap marked so they are never mixed up:
+- Child: a fish.
+- Woman: a plum blossom.
+- Man: the character for longevity."
+DOC_PATTERN_BOOK_2,"Hóa vàng phải ở dương thế. Đốt dưới âm thì giấy chỉ thành tro thường.
+
+Đồ mã phải đề tên người nhận, không thì chẳng đến tay ai.","Offerings must be burned in the world of the living. Burned in the world below, paper is only ash.
+
+Every offering must bear the name of the one who receives it, or it reaches no one."
+DOC_PATTERN_BOOK_3,"(Kẹp giữa sách là xấp giấy điều, giấy vàng và chiếc kéo nhỏ. Nắp hộp kín nên giấy vẫn khô cong.)",(Tucked inside: a stack of red and gold paper and a small pair of scissors. The lid kept it all bone-dry.)
+OBJ_ROTTEN_CLOG_NAME,Chiếc guốc mục,Rotten wooden clog
+OBJ_IRON_BASIN_NAME,Chậu sắt,Iron basin
+PROMPT_BASIN,[E] Hóa vàng,[E] Burn offerings
+OBJ_HUNG_NOTEBOOK_NAME,Vở của cậu học sinh,The schoolboy's notebook
+DOC_HUNG_NOTEBOOK,"Vở của Hùng, lớp 9A. Trang giữa vở còn khô.
+
+Cậu bé vẽ bốn hình rải khắp trang, không đánh số:
+- một quả chuông chùa
+- một đôi quang gánh
+- một đầu tàu hỏa phun khói
+- một con đò
+
+Bên lề: ""Thu tiếng dọc đường cho mẹ nghe. Sinh nhật mẹ 15/4.""","Hùng's notebook, class 9A. The middle page is still dry.
+
+The boy drew four pictures scattered across the page, unnumbered:
+- a temple bell
+- a pair of carrying baskets
+- a smoking locomotive
+- a little boat
+
+In the margin: ""Record the sounds along the way for Mum. Her birthday is 15/4."""
+OBJ_DECK_RUSTED_NAME,Khung đài cát-sét gỉ,Rusted cassette player
+OBJ_PASSENGER_NAME,Hình nhân hành khách,Paper passenger
+PROMPT_PASSENGER,[E] Trả đồ,[E] Return an item
+ITEM_NON_COI_NAME,Mũ cối,Pith helmet
+ITEM_NON_COI_DESC,Chiếc mũ cối xanh văng xuống lối đi khi xe chao.,A green pith helmet that rolled into the aisle when the bus swerved.
+ITEM_THUOC_BAC_NAME,Gói thuốc bắc,Bundle of herbal medicine
+ITEM_THUOC_BAC_DESC,"Gói thuốc bắc gói giấy, buộc lạt đỏ. Mùi cam thảo.",Herbs wrapped in paper and tied with red string. It smells of liquorice.
+ITEM_DIEU_CAY_NAME,Điếu cày,Bamboo water pipe
+ITEM_DIEU_CAY_DESC,"Điếu cày ống tre, nõ điếu còn ám khói.","A bamboo water pipe, its bowl still black with smoke."
+OBJ_BA_NAM_NAME,Hình nhân bà cụ,Paper old woman
+PROMPT_BA_NAM,[E] Đến gần bà,[E] Go to her
+OBJ_NAM_HAT_NAME,Chiếc nón lá,Conical hat
+DOC_NAM_HAT,"Mặt trong vành nón có một dòng mực tím, nét chữ bị lật ngược như soi gương:
+
+    iòĐ ợhc - măN","Inside the brim is a line in purple ink, flipped as if seen in a mirror:
+
+    iòĐ ợhc - măN"
+ITEM_BISCUIT_TIN_NAME,Hộp bánh quy sắt,Metal biscuit tin
+ITEM_BISCUIT_TIN_DESC,"Hộp bánh quy còn mới, nắp đậy khít. Bên trong lạo xạo giấy.",A shiny biscuit tin with a tight lid. Paper rustles inside.
+OBJ_LUGGAGE_RACK_NAME,Giá hành lý,Luggage rack
+PROMPT_RACK,[E] Đặt đồ lên giá,[E] Put something on the rack
+ITEM_PAPER_CLOGS_NAME,Đôi guốc mã,Paper clogs
+ITEM_PAPER_CLOGS_DESC,"Đôi guốc giấy mờ sáng, quai hoa mai, đề tên ""Năm - chợ Đoài"".","A faintly glowing pair of paper clogs with plum-blossom straps, addressed to ""Năm - Đoài market""."
+ITEM_WIND_OIL_NAME,Lọ dầu gió,Bottle of medicated oil
+ITEM_WIND_OIL_DESC,Lọ dầu gió xanh bà Năm để lại. Mùi bạc hà xộc lên mũi.,The little green bottle Mrs Năm left behind. The menthol stings your nose.
+OBJ_CASSETTE_DECK_NAME,Đài cát-sét,Cassette player
+PROMPT_DECK,[E] Xem chiếc đài,[E] Look at the player
+OBJ_SCHOOLBAG_NAME,Cặp sách,Schoolbag
+PROMPT_SEARCH,[E] Lục tìm,[E] Search
+OBJ_ROUTE_BOARD_NAME,Bảng lộ trình,Route board
+PROMPT_ROUTE_BOARD,[E] Treo biển bến,[E] Hang the stop signs
+OBJ_FALLEN_PLAQUES_NAME,Bốn tấm biển bến,Four stop signs
+DOC_FALLEN_PLAQUES,"Bốn tấm biển bến rơi dưới sàn. Mỗi tấm vẽ một hình nhỏ cạnh tên bến:
+
+- Chùa Đoài: quả chuông
+- Chợ Huyện: đôi quang gánh
+- Đường Tàu: đầu tàu hỏa
+- Bến Đò: con đò","Four stop signs lie on the floor, each with a small picture beside the name:
+
+- Đoài Pagoda: a bell
+- District Market: carrying baskets
+- Railway Crossing: a locomotive
+- Ferry Landing: a boat"
+OBJ_CHU_BAY_NAME,Hình nhân phụ xe,Paper conductor
+PROMPT_CHU_BAY,[E] Hỏi chú phụ xe,[E] Speak to the conductor
+OBJ_SATCHEL_NAME,Túi da của phụ xe,Conductor's satchel
+OBJ_TICKET_STUBS_NAME,Xấp cuống vé,Bundle of ticket stubs
+DOC_TICKET_STUBS_1,"Xấp cuống vé chú Bảy đã soát. Mỗi cuống có hai hàng lỗ bấm, góc cuống ghi tay số ghế.
+
+Cuống ghi ""03""
+○ ○ ● ○ ○ ○ ○ ○ ○
+●   ○
+
+Cuống ghi ""05""
+○ ○ ○ ○ ● ○ ○ ○ ○
+●   ○
+
+Cuống ghi ""07""
+○ ○ ○ ○ ○ ○ ● ○ ○
+●   ○","The stubs the conductor has checked. Each has two rows of punch holes; the seat number is handwritten in the corner.
+
+Stub marked ""03""
+○ ○ ● ○ ○ ○ ○ ○ ○
+●   ○
+
+Stub marked ""05""
+○ ○ ○ ○ ● ○ ○ ○ ○
+●   ○
+
+Stub marked ""07""
+○ ○ ○ ○ ○ ○ ● ○ ○
+●   ○"
+DOC_TICKET_STUBS_2,"Cuống ghi ""02"", đóng dấu VÉ TRẺ EM - NỬA GIÁ
+○ ● ○ ○ ○ ○ ○ ○ ○
+○   ●
+
+Mặt sau xấp vé, nét chữ chú Bảy:
+""Thiếu vé ghế nào thì bấm bù ghế ấy.""","Stub marked ""02"", stamped CHILD - HALF FARE
+○ ● ○ ○ ○ ○ ○ ○ ○
+○   ●
+
+On the back of the bundle, in the conductor's hand:
+""Any seat without a ticket gets one punched."""
+OBJ_BELL_ROPE_NAME,Dây chuông báo bến,Stop bell rope
+PROMPT_BELL_ROPE,[E] Giật dây chuông,[E] Pull the bell rope
+OBJ_BAC_TU_NAME,Hình nhân bác tài,Paper driver
+PROMPT_BAC_TU,[E] Lay bác tài,[E] Shake the driver
+OBJ_THERMOS_NAME,Phích chè,Flask of tea
+PROMPT_THERMOS,[E] Rót chè,[E] Pour the tea
+OBJ_SEAT_08_NAME,Ghế 08,Seat 08
+SPEAKER_NAM,Bà Năm,Mrs Năm
+SPEAKER_HUNG,Hùng,Hùng
+SPEAKER_BAY,Chú Bảy,"Bảy, the conductor"
+SPEAKER_TU,Bác Tư,"Tư, the driver"
+BUS2_MONO_DARK,"Đèn tắt hẳn rồi... May còn cái đèn pin, mà pin cũng sắp cạn.","The light's gone completely... I still have the torch, but the battery's nearly dead."
+OBJ_FIND_LIGHT,Tìm cách thắp sáng.,Find a way to make light.
+BUS2_TIP_HINT,[H] Thắp hương hỏi khi bí,"[H] Light incense and ask, when stuck"
+BUS2_MONO_PULLED_BACK,"...Mình vừa chạm tay vào cửa, sao lại đứng cạnh ghế 07?",...I'd only just touched the door. How am I back by seat 07?
+BUS2_NEED_OIL,dầu,oil
+BUS2_NEED_WICK,bấc,a wick
+BUS2_NEED_FIRE,lửa,a flame
+BUS2_MONO_LAMP_NEED,"Bầu dầu khô khốc, bấc cháy cụt. Còn thiếu: {list}.","The oil well is bone dry, the wick burned to a stub. Still missing: {list}."
+BUS2_MONO_LAMP_ASSEMBLE,"Đổ dầu vào bầu, gấp ba sợi chỉ làm bấc... rồi quẹt diêm.","Oil into the well, three strands of thread for a wick... then strike a match."
+BUS2_MONO_LAMP_LIT,Lửa bén rồi. Ánh đèn vàng ấm quá... như chưa từng tắt.,It's caught. Such a warm yellow light... as if it never went out.
+BUS2_WHISPER_BLOW,...thổi đi...,...blow it out...
+OBJ_BLOW_LAMP,Thổi tắt đèn bão (F).,Blow out the lantern (F).
+BUS2_TIP_LAMP,[F] Thổi tắt / châm lại đèn bão    [H] Thắp hương hỏi,[F] Blow out / relight the lantern    [H] Ask with incense
+DOC_DRIVER_LICENSE,"GIẤY PHÉP LÁI XE
+
+Họ tên: TRẦN VĂN TƯ
+Hạng: D
+Nơi cư trú: Thôn Đoài
+
+(Kẹp trong túi nilông nên còn khô.)","DRIVING LICENCE
+
+Name: TRẦN VĂN TƯ
+Class: D
+Residence: Thôn Đoài
+
+(Kept dry in a plastic sleeve.)"
+DOC_CONDUCTOR_LEDGER,"SỔ PHỤ XE - chuyến chiều 14/04
+
+Ghế 03: người đội mũ cối.
+Người ôm gói thuốc bắc ngồi ngay sau lưng người mũ cối.
+Ông cụ cầm điếu cày ngồi phía lối đi, không sát cửa sổ.
+
+(Phần dưới nhòe nước, chỉ còn đọc được: ""...đếm đủ khách mới cho xuống."")","CONDUCTOR'S LEDGER - afternoon run, 14/04
+
+Seat 03: the man in the pith helmet.
+The woman with the herbal medicine sits right behind the man in the helmet.
+The old man with the water pipe sits on the aisle, not by the window.
+
+(The rest is water-stained. Only this is legible: ""...nobody gets off until every passenger is counted."")"
+ITEM_MATCHES_NAME,Lọ diêm,Jar of matches
+ITEM_MATCHES_DESC,Bác Tư giữ diêm trong lọ thủy tinh đậy kín cho khỏi ẩm. Bảy năm rồi vẫn khô.,The driver kept his matches in a sealed glass jar against the damp. Still dry after seven years.
+BUS2_MONO_MATCHES,Diêm vẫn khô... Bác tài cẩn thận thật.,The matches are dry... the driver was a careful man.
+BUS2_MONO_NIGHT_1,"Xe... nguyên vẹn. Ghế còn mới, kính còn trong. Mưa thì đứng yên giữa trời.","The bus is... whole. New seats, clean glass. And the rain is hanging in mid-air."
+BUS2_MONO_NIGHT_2,Thành cầu ngay trước mũi xe... Đây là đêm ấy. Ngay trước lúc xe lao xuống sông.,The bridge railing is right in front of us... This is that night. The moment before the bus went into the river.
+OBJ_FREE_PASSENGERS,Giải thoát những người trên chuyến xe ({n}/4).,Free the people on the bus ({n}/4).
+OBJ_WAKE_DRIVER,Đừng để bác ấy ngủ.,Don't let him fall asleep.
+BUS2_MONO_ASH_HANDS,Những thứ đang cầm trên tay... tan thành tro mất rồi. Chắc chúng lại về chỗ cũ.,The things I was holding... crumbled to ash. They must be back where they were.
+BUS2_MONO_HANDS_FULL,"Tay mình đầy cả rồi, không cầm thêm được.",My hands are full. I can't carry any more.
+BUS2_CAPTION_GLIMPSE,"(tiếng động cơ xe kéo dài, chậm như bị ai kéo dãn ra)","(an engine drones, slowed and stretched as if pulled apart)"
+BUS2_MONO_GLIMPSE_1,Đây không phải xác xe... Là chuyến xe mình đang đi.,This isn't the wreck... it's the bus I'm actually on.
+BUS2_MONO_GLIMPSE_2,Ở ghế 07 kia... là mình. Mình vẫn đang ngủ.,"That's me, in seat 07. I'm still asleep."
+BUS2_MONO_GLIMPSE_3,Ghế bà cụ trống trơn... chỉ còn ít tro giấy. Là bà... bà Năm.,The old woman's seat is empty... just a little paper ash. It was her. Mrs Năm.
+BUS2_MONO_GLIMPSE_4,Xe đang ở đầu cầu. Bác tài cũng đang díp mắt... Không giải được chuyện đêm ấy thì chuyến này cũng lao xuống sông.,"We're at the head of the bridge, and the driver's nodding off too... If that night isn't laid to rest, this bus goes into the river as well."
+BUS2_MONO_GLIMPSE_AFTER,Bà ru mình ngủ... là để kéo mình vào đây giúp họ.,She sang me to sleep... to pull me in here to help them.
+BUS2_MONO_TIN_TAKEN,"Hộp bánh quy nặng tay, nắp đậy kín. Bên trong lạo xạo giấy.","The tin is heavy, the lid tight. Paper rustles inside."
+BUS2_MONO_RACK,Giá hành lý trên cao. Nước có ngập cũng khó mà với tới.,"The luggage rack, up high. Floodwater would hardly reach it."
+BUS2_MONO_RACK_DONE,Hộp bánh quy nằm yên trên giá.,The biscuit tin sits safely on the rack.
+BUS2_MONO_TIN_PLACED,Để trên này... nước không với tới đâu.,Up here... the water won't reach it.
+BUS2_MONO_DECAL,"Decal số xe, dán từ phía ngoài kính.","The bus number decal, stuck on the outside of the glass."
+BUS2_MONO_TIN_RUSTED,Hộp bánh quy gỉ thủng đáy. Bên trong chỉ còn bột giấy nhão.,A biscuit tin rusted right through. Nothing inside but pulp.
+BUS2_MONO_CLOG,Một chiếc guốc mộc mục nát. Quai còn hằn hình hoa mai.,A rotten wooden clog. A plum blossom is still pressed into the strap.
+ITEM_PAPER_KIT_NAME,Giấy hàng mã và kéo,Offering paper and scissors
+ITEM_PAPER_KIT_DESC,"Giấy điều, giấy vàng và chiếc kéo nhỏ của bà Năm. Đủ để cắt một đôi guốc mã.",Mrs Năm's red and gold paper and her little scissors. Enough to cut a pair of paper clogs.
+BUS2_MONO_BASIN,"Chậu sắt, đáy đầy tro cũ. Chắc thầy cúng dùng để hóa vàng.","An iron basin, its bottom thick with old ash. The shaman must have burned offerings here."
+BUS2_MONO_BASIN_DONE,Chỉ còn tro.,Only ash now.
+BUS2_MONO_BASIN_NO_FIRE,Muốn hóa vàng thì phải có lửa.,I need a flame to burn anything.
+BUS2_MONO_NEED_NAME,Đồ mã phải đề tên người nhận... mà mình chưa biết gửi cho ai.,Offerings have to bear a name... and I don't know anyone's yet.
+UI_BURN_TITLE,"Cắt guốc mã, đề tên người nhận rồi hóa","Cut the paper clogs, name the receiver, then burn them"
+UI_CLOG_SIZE,Cỡ guốc,Size
+UI_CLOG_NAME,Đề tên,Name
+UI_CLOG_SIZE_CHILD,Trẻ con,Child
+UI_CLOG_SIZE_WOMAN,Đàn bà,Woman
+UI_CLOG_SIZE_MAN,Đàn ông,Man
+NAME_TRAN_VAN_TU,Trần Văn Tư,Trần Văn Tư
+NAME_NAM_CHO_DOAI,Năm - chợ Đoài,Năm - Đoài market
+NAME_HUNG,Hùng - lớp 9A,Hùng - class 9A
+BUS2_MONO_BURNING,Lửa liếm dần đôi guốc giấy...,The flame curls around the paper clogs...
+BUS2_MONO_BURN_OK,"Tro bay lên thẳng, như có ai đứng đón. Chắc đến tay bà rồi.","The ash rises straight up, as if someone were waiting for it. It must have reached her."
+BUS2_MONO_BURN_WRONG,Giấy cháy thành tro rồi rơi lả tả... chẳng đến tay ai. Mình làm sai chỗ nào rồi.,The paper burns and the ash just falls... it reached no one. I got something wrong.
+BUS2_MONO_NAM_BAREFOOT,"Bà ngồi co ro, hai bàn chân trần co quắp lại. Đôi guốc của bà đâu rồi?","She sits hunched over, her bare feet curled up. Where are her clogs?"
+BUS2_CAPTION_NAM_MOVES,"(Bà Năm khẽ cựa mình, xỏ chân vào đôi guốc giấy)",(Mrs Năm stirs and slips her feet into the paper clogs)
+BUS2_NAM_THANKS,"Cháu ngoan... Còn đứa ngồi sau lưng cháu, đừng ngoái lại.","Good child... And the one sitting behind you, don't look back."
+BUS2_MONO_WIND_OIL,Trên ghế bà để lại một lọ dầu gió.,She's left a little bottle of medicated oil on her seat.
+BUS2_MONO_DECK_JAMMED,"Đài ăn băng. Dải băng rối tung, đứt một đoạn. Ngón tay cậu bé vẫn đặt trên nút Play.",The tape's been chewed. The ribbon is tangled and snapped. The boy's finger still rests on Play.
+BUS2_MONO_DECK_NEED_TAPE,"Có bút chì quấn băng rồi, còn chỗ đứt thì cần gì đó để nối.","I've got a pencil to wind it, but I need something to join the break."
+BUS2_MONO_DECK_NEED_PENCIL,"Có băng dính để nối rồi, còn thiếu cái gì cắm vào lỗ băng để quấn lại.","I've got tape for the break, but I need something to wind the reel."
+BUS2_MONO_TAPE_FIX,"Gỡ dải băng rối, nối chỗ đứt, cắm bút chì vào lỗ băng quấn lại... rồi lắp vào đài.","Untangle the ribbon, tape the break, wind it back with the pencil... and put it back in."
+BUS2_CAPTION_PLAY,(Ngón tay hình nhân giấy tự ấn xuống nút Play),(The paper boy's finger presses Play on its own)
+BUS2_CAPTION_HISS,(tiếng băng rè rè),(tape hiss)
+BUS2_CAPTION_BELL,(chuông chùa ngân xa),"(a temple bell, far away)"
+BUS2_CAPTION_MARKET,"(tiếng rao chợ, gà gáy)","(market hawkers, a rooster)"
+BUS2_CAPTION_TRAIN,(còi tàu hỏa hú dài),(a long train whistle)
+BUS2_CAPTION_FERRY,(nước vỗ mạn đò),(water lapping against a boat)
+BUS2_CAPTION_TAPE_END,(băng rè rè rồi im bặt),"(hiss, then silence)"
+BUS2_MONO_TAPE_ORDER,Bốn tiếng động... Hùng thu dọc đường đi. Băng dừng đúng chỗ bảng lộ trình bị rơi hết biển.,Four sounds... Hùng recorded them along the route. The tape stops just where the route board lost its signs.
+BUS2_MONO_BOARD,Bảng lộ trình. Bốn tấm biển bến rơi cả xuống sàn.,The route board. All four stop signs have fallen to the floor.
+UI_ROUTE_TITLE,Treo biển bến lên bảng lộ trình,Hang the stop signs on the route board
+UI_ROUTE_SLOT,Bến {n},Stop {n}
+BUS2_CAPTION_TAPE_CONTINUES,(băng chạy tiếp),(the tape plays on)
+BUS2_HUNG_MESSAGE,"Mẹ ơi, đây là tiếng đường về nhà mình. Chúc mẹ sinh nhật vui... Con sắp về đến nơi rồi.","Mum, these are the sounds of the road home. Happy birthday... I'm almost there."
+BUS2_CAPTION_YAWN,"(trong băng, tiếng bác tài ngáp dài)","(on the tape, the driver yawns)"
+BUS2_TU_YAWN,"Buồn ngủ quá... Mẹo của bác: xoa dầu gió vào thái dương, nhấp ngụm chè, nghe ba hồi chuông là tỉnh.","So sleepy... My trick: rub oil on the temples, a sip of tea, three rings of the bell and I'm awake."
+BUS2_CAPTION_SCREAM,"(tiếng phanh rít, tiếng hét, rồi băng tắt)","(screeching brakes, a scream, then the tape cuts out)"
+BUS2_MONO_THREE_STEPS,"Dầu gió, chè, rồi ba hồi chuông. Đúng thứ tự ấy.","Oil, tea, then three rings of the bell. In that order."
+BUS2_MONO_PASSENGER,"Hình nhân ngồi ghế {n}, hai tay trống trơn, mặt cứ cúi gằm xuống sàn.","The paper figure in seat {n} sits empty-handed, staring at the floor."
+BUS2_MONO_PASSENGER_SETTLED,"Người này đã ôm lại đồ của mình, ngồi yên.",This one has their belongings back and sits still.
+BUS2_MONO_PASSENGER_OK,"Hình nhân ôm lấy món đồ, ngồi yên lại.",The figure takes it and settles back.
+BUS2_MONO_PASSENGER_WRONG,Hình nhân buông món đồ xuống sàn... rồi từ từ quay đầu nhìn mình.,The figure lets it drop to the floor... and slowly turns its head to look at me.
+UI_GIVE_TITLE,Trả đồ cho người ngồi ghế {n},Give back to the passenger in seat {n}
+UI_GIVE_ITEM,Món đồ,Item
+BUS2_CAPTION_BAY_COUNTS,"(Chú Bảy dò từng ghế, lật từng cuống vé)","(The conductor checks every seat, every stub)"
+BUS2_BAY_COUNT,"Một, hai, ba... đủ đồ, đủ người, đủ vé...","One, two, three... bags, people, tickets, all here..."
+BUS2_BAY_EXTRA,...Thừa một người.,...One too many.
+BUS2_MONO_SEAT08_HINT,Chú ấy nhìn về ghế 08... ngay sau lưng ghế mình.,He's looking at seat 08... right behind mine.
+BUS2_BAY_BLOCK,"Khách chưa ngồi yên, chưa đếm đủ thì chưa ai được xuống!",Nobody gets off till everyone's seated and counted!
+BUS2_BAY_TICKET,Ghế 08... chưa có vé.,Seat 08... has no ticket.
+ITEM_STICKY_TAPE_NAME,Cuộn băng dính,Roll of sticky tape
+ITEM_STICKY_TAPE_DESC,"Băng dính chú Bảy dùng dán vé, dán thùng hàng.",The tape the conductor used for tickets and parcels.
+BUS2_MONO_TAPE_FOUND,Trong túi chú Bảy có cuộn băng dính.,There's a roll of tape in the conductor's satchel.
+BUS2_MONO_SATCHEL,Trong túi còn kìm bấm vé và xấp vé trắng.,There's a ticket punch and a stack of blank tickets in the satchel.
+UI_PUNCH_TITLE,Bấm một vé trắng bằng kìm của chú Bảy,Punch a blank ticket with the conductor's punch
+UI_PUNCH_TOP,Hàng trên,Top row
+UI_PUNCH_BOTTOM,Hàng dưới,Bottom row
+BUS2_CAPTION_PUNCH,(Tách. An đặt tấm vé vừa bấm vào tay chú Bảy),(Click. An presses the fresh ticket into the conductor's hand)
+BUS2_BAY_RELEASE,"Đủ rồi... Đến bến thì giật chuông, cháu nhé.","That's everyone... Ring the bell when we reach the stop, lad."
+BUS2_BAY_NOT_OURS,Đứa bé này... không phải khách xe tôi.,That child... was never one of my passengers.
+BUS2_MONO_TU_ASLEEP,"Bác Tư gục đầu ngủ say, hai tay ôm khư khư phích chè.","The driver's slumped over, fast asleep, hugging his flask of tea."
+BUS2_MONO_TU_STIRRING,"Bác ấy cựa mình rồi, nhưng chưa tỉnh hẳn.","He's stirring, but he's not awake yet."
+BUS2_CAPTION_WIND_OIL,"(An xoa dầu gió lên thái dương bác Tư. Bác cựa mình, tay lỏng ra)",(An rubs the oil into the driver's temples. He stirs and his grip loosens)
+BUS2_MONO_THERMOS_HELD,"Bác ôm chặt quá, không gỡ ra được.",He's holding it too tight to pry loose.
+BUS2_CAPTION_TEA,"(An rót chè ra nắp phích, kề lên môi bác Tư)",(An pours tea into the flask cap and holds it to the driver's lips)
+BUS2_MONO_TEA_DONE,Bác đã nhấp chè rồi.,He's had his tea.
+BUS2_MONO_ROPE_HELD,Đầu dây chuông quấn chặt trong tay chú Bảy.,The end of the bell rope is wound tight around the conductor's hand.
+BUS2_CAPTION_WRONG_BELL,(chuông kêu một tiếng rè... mưa giật ngược lên trời),(the bell rasps once... the rain jerks back upward)
+BUS2_MONO_WRONG_ORDER,Không... chưa đúng lúc. Thời gian vừa lùi lại.,No... not yet. Time just slipped backwards.
+BUS2_CAPTION_BELL_RING,(Kính coong!),(Ding-dong!)
+BUS2_CAPTION_BRAKE,"(Bác Tư mở choàng mắt, đạp phanh. Bánh xe rít dài)",(The driver's eyes snap open and he stamps on the brake. The tyres shriek)
+BUS2_TU_THANKS,...Cảm ơn cháu.,"...Thank you, lad."
+BUS2_CAPTION_STEP_OFF,(An bước xuống bậc xe),(An steps down from the bus)
+BUS2_MONO_LOOK_BACK,Bà dặn đừng ngoái lại... Ghế 08 có một bé gái. Kẹp tóc hình con bướm.,She told me not to look back... There's a little girl in seat 08. A butterfly hairclip.
+BUS2_CAPTION_HORN,(ba tiếng còi dài vang lên trên cầu),(three long horn blasts ring out over the bridge)
+BUS2_CONDUCTOR_LAST_STOP,"Bến cuối, Thôn Đoài đây! Ai xuống thì xuống nhé!","Last stop, Thôn Đoài! Off you get!"
+BUS2_MONO_WAKE_DAY,Mình... tỉnh rồi. Xe đã qua cầu.,I'm... awake. We're over the bridge.
+BUS2_MONO_ASH,Ghế bà cụ trống trơn... chỉ còn một nhúm tro giấy.,The old woman's seat is empty... just a pinch of paper ash.
+ITEM_CHILD_SANDAL_NAME,Chiếc dép nhựa trẻ con,Child's plastic sandal
+ITEM_CHILD_SANDAL_DESC,"Chiếc dép nhựa màu hồng, cỡ chân đứa bé chừng năm tuổi. Chỉ có một chiếc.",A pink plastic sandal for a child of about five. Just the one.
+BUS2_MONO_SANDAL,Chiếc dép trẻ con ở ghế 08... sao lại nằm trong tay mình?,The child's sandal from seat 08... how is it in my hand?
+OBJ_WALK_TO_HOUSE,Đi theo bờ sông về ngôi nhà cũ.,Follow the river to the old house.
+BUS2_END_TITLE,Hết chương,End of chapter
+BUS2_END_SUBTITLE,Chuyến xe không về bến,The Bus That Never Arrived
+BUS2_MONO_DECK_RUSTED,Chỉ còn bộ khung đài gỉ sét. Băng bên trong mục thành bột.,Just a rusted shell. The tape inside has crumbled to dust.
+ITEM_PENCIL_NAME,Bút chì,Pencil
+ITEM_PENCIL_DESC,"Bút chì gỗ của Hùng, vừa khít lỗ cuộn băng cát-sét.",Hùng's wooden pencil. It fits a cassette reel perfectly.
+BUS2_MONO_PENCIL_FOUND,Trong cặp có cây bút chì.,There's a pencil in the schoolbag.
+BUS2_MONO_SCHOOLBAG,Chỉ còn sách vở.,Just books.
+BUS2_MONO_SEAT08,"Ghế 08, ngay sau lưng ghế mình... có một chiếc dép nhựa trẻ con.","Seat 08, right behind mine... there's a child's plastic sandal."
+BUS2_MONO_SEAT08_COUNTED,Chiếc dép nhựa trẻ con. Ghế 08 không có cuống vé nào.,A child's sandal. There's no ticket stub for seat 08.
+UI_INCENSE_TITLE,Thắp hương hỏi,Ask with incense
+UI_INCENSE_LEVEL,(Nén hương thứ {n}),(Incense stick {n})
+HINT_LAMP_1,"Khói hương bay về cuối xe, quấn quanh chiếc đèn bão treo ở vách sau.",The smoke drifts to the back of the bus and curls around the lantern hanging there.
+HINT_LAMP_2,"Đến cuối xe, gỡ lá bùa quấn quanh đèn bão và đọc mặt sau.","Go to the back of the bus, unwrap the talisman on the lantern and read the back."
+HINT_OIL_1,Thủy tinh thì không mục. Xem đồ của bà cụ dưới sàn.,Glass doesn't rot. Look at the old woman's things on the floor.
+HINT_OIL_2,"Chai dầu hỏa nằm trong chiếc giỏ đổ dưới ghế bà cụ, bên kia lối đi, ngang ghế 07.","The kerosene is in the tipped basket under the old woman's seat, across the aisle from seat 07."
+HINT_WICK_1,"Bà cụ làm hàng mã, ắt có kim chỉ.",The old woman made paper offerings. She'd have had thread.
+HINT_WICK_2,"Cuộn chỉ bông kẹt trong khe ghế bà cụ, chỗ mặt ghế giáp lưng ghế.",The cotton thread is stuck in the gap at the back of the old woman's seat.
+HINT_BOX_1,"Bác tài cất diêm trong hộp tôn trên taplô. Nắp khắc ""Số xe"". Số xe dán ở đâu, nhìn từ phía nào?","The driver kept his matches in the tin box on the dashboard. The lid says ""Bus no."" Where is the number, and which side is it meant to be read from?"
+HINT_BOX_2,"Decal dán ngoài kính lái, đứng trong nhìn ra thì chữ bị lật như soi gương. Mã đúng: 3 - 8 - 5.","The decal is stuck outside the windscreen, so from inside it reads mirrored. The code is 3 - 8 - 5."
+HINT_LIGHT_1,"Đủ dầu, bấc, lửa rồi. Quay lại chỗ chiếc đèn.","Oil, wick, flame: you have them all. Go back to the lantern."
+HINT_LIGHT_2,Bấm E vào đèn bão ở vách sau để lắp và thắp.,Press E on the lantern at the back to fix and light it.
+HINT_BLOW_1,"Lá bùa dặn: thổi tắt, về đêm cũ.","The talisman said: blow it out, and return to that night."
+HINT_BLOW_2,Bấm F để thổi tắt đèn bão. Bấm F lần nữa để châm lại.,Press F to blow out the lantern. Press F again to relight it.
+HINT_TIN_1,So vệt nước ngập trên vách xác xe với chỗ hộp bánh quy nằm.,Compare the flood line on the wreck's walls with where the biscuit tin lies.
+HINT_TIN_2,"Ở Đêm 1999, nhặt hộp bánh quy dưới chân bà cụ, đặt lên giá hành lý ngay trên ghế bà. Rồi bấm F châm đèn về xác xe.","In the night of 1999, take the biscuit tin from the old woman's feet and put it on the luggage rack above her seat. Then press F to relight and return."
+HINT_NAME_1,Đồ mã phải đề tên người nhận. Người bán hàng ở chợ hay viết tên vào đồ của mình.,Offerings need the receiver's name. Market sellers often write their names on their things.
+HINT_NAME_2,"Ở Đêm 1999, xem chiếc nón trên đùi bà cụ. Tên viết lật như soi gương: ""Năm - chợ Đoài"".","In the night of 1999, look at the hat in the old woman's lap. The name is mirrored: ""Năm - Đoài market""."
+HINT_BURN_1,So chiếc guốc mục dưới ghế bà với trang mẫu: quai guốc có hoa văn gì?,Compare the rotten clog under her seat with the pattern book. What's on the strap?
+HINT_BURN_2,"Ở xác xe, mang giấy và kéo đến chậu sắt cuối xe: cỡ đàn bà (hoa mai), đề tên ""Năm - chợ Đoài"".","In the wreck, take the paper and scissors to the iron basin at the back: woman's size (plum blossom), addressed to ""Năm - Đoài market""."
+HINT_GIVE_CLOGS_1,"Hóa ở dương, nhận ở âm. Thổi tắt đèn rồi xem chỗ chậu sắt.","Burned among the living, received among the dead. Blow out the lantern and look where the basin was."
+HINT_GIVE_CLOGS_2,"Ở Đêm 1999, nhặt đôi guốc mã mờ sáng ở cuối xe, đưa cho bà cụ.","In the night of 1999, pick up the glowing paper clogs at the back and give them to the old woman."
+HINT_TAPE_1,"Muốn quấn lại băng cần một cây bút, muốn nối chỗ đứt cần băng dính.",To wind the tape you need a pencil; to join the break you need sticky tape.
+HINT_TAPE_2,"Bút chì trong cặp sách của cậu học sinh, băng dính trong túi chú phụ xe. Mang cả hai đến chiếc đài.","The pencil is in the schoolboy's bag, the tape in the conductor's satchel. Bring both to the cassette player."
+HINT_ROUTE_1,Treo biển theo đúng thứ tự tiếng động trong băng. Vở của Hùng ở xác xe vẽ hình từng bến.,Hang the signs in the order of the sounds on the tape. Hùng's notebook in the wreck shows each stop's picture.
+HINT_ROUTE_2,"Thứ tự: Chùa Đoài, Chợ Huyện, Đường Tàu, Bến Đò.","Order: Đoài Pagoda, District Market, Railway Crossing, Ferry Landing."
+HINT_SEATS_1,Sổ phụ xe trong hộp tôn của bác tài ghi ai ngồi ghế nào. Số ghế dán trên vách.,The conductor's ledger in the driver's tin box says who sat where. Seat numbers are on the wall.
+HINT_SEATS_2,Ghế 03: mũ cối. Ghế 05: gói thuốc bắc. Ghế 04: điếu cày.,Seat 03: pith helmet. Seat 05: herbal medicine. Seat 04: water pipe.
+HINT_PUNCH_1,"So các cuống vé mẫu chú Bảy cầm: hàng trên ứng với số ghế, hàng dưới ứng với loại vé.","Compare the conductor's sample stubs: the top row is the seat number, the bottom row the ticket type."
+HINT_PUNCH_2,Hàng trên bấm lỗ thứ 8 (ghế 08). Hàng dưới bấm bên phải (vé trẻ em). Lấy kìm trong túi chú Bảy.,Top row: the 8th hole (seat 08). Bottom row: the right hole (child). The punch is in the conductor's satchel.
+HINT_WAKE_1,"Đoạn cuối băng của Hùng có mẹo của bác tài: ba bước, đúng thứ tự.","The end of Hùng's tape has the driver's trick: three steps, in order."
+HINT_WAKE_2,"Xoa dầu gió vào bác tài, rót chè từ phích, rồi giật dây chuông.","Rub the oil on the driver, pour the tea from the flask, then pull the bell rope."
+BUS2_CAPTION_NOKIA,"(Chiếc Nokia trong túi An đổ chuông. Đầu dây bên kia rè rè, như gọi từ rất xa)","(The Nokia in An's pocket rings. The line crackles, as if from very far away)"
+BUS2_CAPTION_NOKIA_END,(tút... tút... tút...),(beep... beep... beep...)
+NOKIA_BOX,"Diêm à... bác cất trong hộp, khóa bằng số xe... nhìn từ ngoài vào ấy...","Matches... I keep them in the box, locked with the bus number... the way you'd read it from outside..."
+NOKIA_TIN,Nước lên đến đâu... thì mất đến đấy cháu ạ...,"Wherever the water reached... everything was lost, child..."
+NOKIA_CLOGS,Không có dép... sao bà qua cầu được hả cháu...,"Without shoes... how can I cross the bridge, child..."
+NOKIA_TAPE,Mẹ ơi... tiếng đầu tiên con thu là tiếng chuông chùa đấy...,Mum... the first sound I recorded was the temple bell...
+NOKIA_SEATS,Ghế 03... ghế 03 là ông đội mũ cối... còn ghế 08...,Seat 03... seat 03's the man in the helmet... and seat 08...
+NOKIA_WAKE,Buồn ngủ quá... dầu gió đâu rồi...,So sleepy... where's that oil...
+UI_SELECTOR_HINT,[W/S] Chọn hàng    [A/D] Đổi lựa chọn    [E] Xác nhận    [Esc] Thôi,[W/S] Row    [A/D] Change    [E] Confirm    [Esc] Leave
+UI_SELECTOR_RIGHT,Khớp rồi.,That's it.
+UI_SELECTOR_WRONG,Chưa đúng.,Not right.
