@@ -124,4 +124,13 @@ signal morning_state_changed(state: int)
 ## Phân cảnh xe khách chuyển trạng thái. [param state] là BusRideDirector.State.
 signal bus_state_changed(state: int)
 
+## Mở giao diện chọn đáp án nhiều hàng (khóa số, xếp biển, bấm vé...).
+## [param rows]: mỗi phần tử là {"label": String, "options": Array[String]} đã dịch.
+## [param answer]: chỉ số lựa chọn đúng từng hàng, rỗng = không kiểm tra, trả lựa chọn về luôn.
+## [param close_on_wrong]: true = chọn sai cũng đóng (ví dụ đốt mã sai là mất giấy).
+signal selector_requested(puzzle_id: StringName, title: String, rows: Array, answer: Array, close_on_wrong: bool)
+
+## Người chơi xác nhận ở giao diện chọn đáp án. [param selection] là chỉ số đã chọn từng hàng.
+signal selector_submitted(puzzle_id: StringName, selection: Array, correct: bool)
+
 @warning_ignore_restore("unused_signal")

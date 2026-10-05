@@ -1,4 +1,4 @@
-[gd_scene load_steps=250 format=3]
+[gd_scene load_steps=317 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/player/Player.tscn" id="1_player"]
 [ext_resource type="Script" path="res://scripts/bus/BusLevel.gd" id="2_buslevel"]
@@ -523,6 +523,36 @@ glow_bloom = 0.04
 fog_enabled = true
 fog_light_color = Color(0.12, 0.15, 0.18, 1)
 fog_density = 0.09
+fog_sky_affect = 0.6
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMat_Night1999"]
+sky_top_color = Color(0.01, 0.018, 0.022, 1)
+sky_horizon_color = Color(0.03, 0.05, 0.05, 1)
+ground_bottom_color = Color(0.01, 0.01, 0.012, 1)
+ground_horizon_color = Color(0.03, 0.05, 0.05, 1)
+sky_energy_multiplier = 0.2
+
+[sub_resource type="Sky" id="Sky_Night1999"]
+sky_material = SubResource("SkyMat_Night1999")
+
+[sub_resource type="Environment" id="Env_Night1999"]
+background_mode = 2
+sky = SubResource("Sky_Night1999")
+ambient_light_source = 3
+ambient_light_color = Color(0.3, 0.45, 0.42, 1)
+ambient_light_sky_contribution = 0.25
+ambient_light_energy = 0.16
+tonemap_mode = 3
+tonemap_exposure = 1.15
+ssao_enabled = true
+ssao_radius = 0.8
+ssao_intensity = 2.0
+glow_enabled = true
+glow_intensity = 0.5
+glow_bloom = 0.04
+fog_enabled = true
+fog_light_color = Color(0.05, 0.08, 0.08, 1)
+fog_density = 0.045
 fog_sky_affect = 0.6
 
 [sub_resource type="BoxMesh" id="Mesh_1"]
@@ -1150,10 +1180,333 @@ height = 1.8
 radial_segments = 6
 rings = 1
 
+[sub_resource type="StandardMaterial3D" id="Mat_Waterline"]
+albedo_color = Color(0.16, 0.12, 0.08, 1)
+roughness = 1
+
+[sub_resource type="StandardMaterial3D" id="Mat_Silt"]
+transparency = 1
+cull_mode = 2
+albedo_color = Color(0.32, 0.27, 0.19, 0.55)
+roughness = 1
+
+[sub_resource type="BoxMesh" id="Mesh_126"]
+size = Vector3(0.006, 0.025, 8.2)
+
+[sub_resource type="BoxMesh" id="Mesh_127"]
+size = Vector3(0.005, 0.05, 8.2)
+
+[sub_resource type="BoxMesh" id="Mesh_128"]
+size = Vector3(0.95, 0.025, 0.006)
+
+[sub_resource type="BoxMesh" id="Mesh_129"]
+size = Vector3(0.32, 0.12, 0.09)
+
+[sub_resource type="TorusMesh" id="Mesh_130"]
+inner_radius = 0.05
+outer_radius = 0.06
+rings = 32
+ring_segments = 8
+
+[sub_resource type="StandardMaterial3D" id="Mat_BagRotten"]
+albedo_color = Color(0.16, 0.18, 0.15, 1)
+roughness = 1
+
+[sub_resource type="BoxMesh" id="Mesh_131"]
+size = Vector3(0.3, 0.24, 0.1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_RopeRotten"]
+albedo_color = Color(0.3, 0.26, 0.2, 1)
+roughness = 1
+
+[sub_resource type="CylinderMesh" id="Mesh_132"]
+top_radius = 0.006
+bottom_radius = 0.006
+height = 3.4
+radial_segments = 5
+rings = 1
+
+[sub_resource type="CylinderMesh" id="Mesh_133"]
+top_radius = 0.006
+bottom_radius = 0.006
+height = 0.6
+radial_segments = 5
+rings = 1
+
+[sub_resource type="CylinderMesh" id="Mesh_134"]
+top_radius = 0.03
+bottom_radius = 0.05
+height = 0.06
+radial_segments = 10
+rings = 1
+
+[sub_resource type="StandardMaterial3D" id="Mat_LampTin"]
+albedo_color = Color(0.42, 0.4, 0.34, 1)
+metallic = 0.7
+roughness = 0.5
+
+[sub_resource type="StandardMaterial3D" id="Mat_LampGlass"]
+transparency = 1
+cull_mode = 2
+albedo_color = Color(1, 0.9, 0.7, 0.35)
+roughness = 0.1
+
+[sub_resource type="StandardMaterial3D" id="Mat_LampFlame"]
+shading_mode = 0
+albedo_color = Color(1, 0.7, 0.3, 1)
+roughness = 0.5
+emission_enabled = true
+emission = Color(1, 0.62, 0.25, 1)
+emission_energy_multiplier = 6
+
+[sub_resource type="CylinderMesh" id="Mesh_135"]
+top_radius = 0.07
+bottom_radius = 0.08
+height = 0.05
+radial_segments = 14
+rings = 1
+
+[sub_resource type="CylinderMesh" id="Mesh_136"]
+top_radius = 0.05
+bottom_radius = 0.065
+height = 0.02
+radial_segments = 14
+rings = 1
+
+[sub_resource type="CylinderMesh" id="Mesh_137"]
+top_radius = 0.045
+bottom_radius = 0.055
+height = 0.13
+radial_segments = 14
+rings = 1
+
+[sub_resource type="CylinderMesh" id="Mesh_138"]
+top_radius = 0.025
+bottom_radius = 0.065
+height = 0.04
+radial_segments = 14
+rings = 1
+
+[sub_resource type="CylinderMesh" id="Mesh_139"]
+top_radius = 0.018
+bottom_radius = 0.02
+height = 0.03
+radial_segments = 8
+rings = 1
+
+[sub_resource type="CylinderMesh" id="Mesh_140"]
+top_radius = 0.004
+bottom_radius = 0.004
+height = 0.17
+radial_segments = 6
+rings = 1
+
+[sub_resource type="TorusMesh" id="Mesh_141"]
+inner_radius = 0.075
+outer_radius = 0.085
+rings = 32
+ring_segments = 8
+
+[sub_resource type="SphereMesh" id="Mesh_142"]
+radius = 0.012
+height = 0.045
+radial_segments = 20
+rings = 10
+
+[sub_resource type="StandardMaterial3D" id="Mat_HeadlightLens"]
+albedo_color = Color(1, 0.95, 0.8, 1)
+roughness = 0.2
+emission_enabled = true
+emission = Color(1, 0.95, 0.8, 1)
+emission_energy_multiplier = 4
+
+[sub_resource type="CylinderMesh" id="Mesh_143"]
+top_radius = 0.09
+bottom_radius = 0.09
+height = 0.03
+radial_segments = 14
+rings = 1
+
+[sub_resource type="BoxMesh" id="Mesh_144"]
+size = Vector3(0.02, 0.5, 0.36)
+
+[sub_resource type="CylinderMesh" id="Mesh_145"]
+top_radius = 0.004
+bottom_radius = 0.004
+height = 0.03
+radial_segments = 6
+rings = 1
+
+[sub_resource type="StandardMaterial3D" id="Mat_Rope"]
+albedo_color = Color(0.62, 0.55, 0.4, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="Mat_Brass"]
+albedo_color = Color(0.75, 0.6, 0.3, 1)
+metallic = 0.9
+roughness = 0.3
+
+[sub_resource type="CylinderMesh" id="Mesh_146"]
+top_radius = 0.006
+bottom_radius = 0.006
+height = 7.6
+radial_segments = 5
+rings = 1
+
+[sub_resource type="StandardMaterial3D" id="Mat_NightSack"]
+albedo_color = Color(0.55, 0.5, 0.4, 1)
+roughness = 1
+
+[sub_resource type="StandardMaterial3D" id="Mat_BridgeConcrete"]
+albedo_color = Color(0.36, 0.36, 0.34, 1)
+roughness = 0.6
+
+[sub_resource type="StandardMaterial3D" id="Mat_WetAsphalt"]
+albedo_color = Color(0.08, 0.08, 0.09, 1)
+metallic = 0.2
+roughness = 0.15
+
+[sub_resource type="StandardMaterial3D" id="Mat_RiverNight"]
+albedo_color = Color(0.02, 0.04, 0.05, 1)
+metallic = 0.4
+roughness = 0.05
+
+[sub_resource type="PlaneMesh" id="Mesh_BridgeDeck"]
+size = Vector2(7.5, 80)
+
+[sub_resource type="PlaneMesh" id="Mesh_River"]
+size = Vector2(300, 300)
+
+[sub_resource type="BoxMesh" id="Mesh_147"]
+size = Vector3(0.15, 0.12, 80)
+
+[sub_resource type="BoxMesh" id="Mesh_148"]
+size = Vector3(0.14, 0.9, 0.14)
+
+[sub_resource type="BoxMesh" id="Mesh_149"]
+size = Vector3(7, 0.14, 0.16)
+
+[sub_resource type="BoxMesh" id="Mesh_150"]
+size = Vector3(7, 0.1, 0.14)
+
+[sub_resource type="BoxMesh" id="Mesh_151"]
+size = Vector3(0.15, 0.95, 0.15)
+
+[sub_resource type="BoxMesh" id="Mesh_152"]
+size = Vector3(1, 0.45, 0.03)
+
+[sub_resource type="CylinderMesh" id="Mesh_153"]
+top_radius = 0.17
+bottom_radius = 0.13
+height = 0.18
+radial_segments = 14
+rings = 1
+
+[sub_resource type="StandardMaterial3D" id="Mat_PaperGoods0"]
+albedo_color = Color(0.85, 0.12, 0.1, 1)
+roughness = 0.9
+
+[sub_resource type="BoxMesh" id="Mesh_154"]
+size = Vector3(0.08, 0.16, 0.07)
+
+[sub_resource type="StandardMaterial3D" id="Mat_PaperGoods1"]
+albedo_color = Color(0.9, 0.7, 0.2, 1)
+roughness = 0.9
+
+[sub_resource type="BoxMesh" id="Mesh_155"]
+size = Vector3(0.08, 0.2, 0.07)
+
+[sub_resource type="StandardMaterial3D" id="Mat_PaperGoods2"]
+albedo_color = Color(0.3, 0.5, 0.85, 1)
+roughness = 0.9
+
+[sub_resource type="BoxMesh" id="Mesh_156"]
+size = Vector3(0.08, 0.12, 0.07)
+
+[sub_resource type="StandardMaterial3D" id="Mat_PaperAsh"]
+albedo_color = Color(0.16, 0.15, 0.14, 1)
+roughness = 1
+
+[sub_resource type="StandardMaterial3D" id="Mat_PaperAshEdge"]
+albedo_color = Color(0.5, 0.45, 0.4, 1)
+roughness = 1
+
+[sub_resource type="CylinderMesh" id="Mesh_157"]
+top_radius = 0.03
+bottom_radius = 0.035
+height = 0.004
+radial_segments = 7
+rings = 1
+
+[sub_resource type="StandardMaterial3D" id="Mat_FrozenWater"]
+transparency = 1
+cull_mode = 2
+albedo_color = Color(0.7, 0.85, 0.95, 0.5)
+roughness = 0.05
+
+[sub_resource type="StandardMaterial3D" id="Mat_CupGlass"]
+transparency = 1
+cull_mode = 2
+albedo_color = Color(0.85, 0.9, 0.9, 0.3)
+roughness = 0.05
+
+[sub_resource type="CylinderMesh" id="Mesh_158"]
+top_radius = 0.035
+bottom_radius = 0.03
+height = 0.1
+radial_segments = 12
+rings = 1
+
+[sub_resource type="SphereMesh" id="Mesh_159"]
+radius = 0.012
+height = 0.024
+radial_segments = 20
+rings = 10
+
+[sub_resource type="SphereMesh" id="Mesh_160"]
+radius = 0.0113
+height = 0.0227
+radial_segments = 20
+rings = 10
+
+[sub_resource type="SphereMesh" id="Mesh_161"]
+radius = 0.0107
+height = 0.0213
+radial_segments = 20
+rings = 10
+
+[sub_resource type="SphereMesh" id="Mesh_162"]
+radius = 0.01
+height = 0.02
+radial_segments = 20
+rings = 10
+
+[sub_resource type="SphereMesh" id="Mesh_163"]
+radius = 0.0093
+height = 0.0187
+radial_segments = 20
+rings = 10
+
+[sub_resource type="SphereMesh" id="Mesh_164"]
+radius = 0.0087
+height = 0.0173
+radial_segments = 20
+rings = 10
+
+[sub_resource type="SphereMesh" id="Mesh_165"]
+radius = 0.008
+height = 0.016
+radial_segments = 20
+rings = 10
+
+[sub_resource type="BoxMesh" id="Mesh_166"]
+size = Vector3(0.15, 0.12, 40)
+
 [node name="Bus" type="Node3D"]
 script = ExtResource("2_buslevel")
 day_environment = SubResource("Env_Day")
 derelict_environment = SubResource("Env_Derelict")
+night_environment = SubResource("Env_Night1999")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Env_Day")
@@ -6257,6 +6610,1600 @@ material_override = SubResource("Mat_Trunk")
 transform = Transform3D(-0.265, 0.424, -0.866, 0.848, 0.5299, 0, 0.4589, -0.7344, -0.5, 0.45, 3.95, 0)
 mesh = SubResource("Mesh_125")
 material_override = SubResource("Mat_Trunk")
+
+[node name="Waterline" type="MeshInstance3D" parent="Derelict"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.244, 1.72, 0.5)
+cast_shadow = 0
+mesh = SubResource("Mesh_126")
+material_override = SubResource("Mat_Waterline")
+
+[node name="SiltBand" type="MeshInstance3D" parent="Derelict"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.244, 1.68, 0.5)
+cast_shadow = 0
+mesh = SubResource("Mesh_127")
+material_override = SubResource("Mat_Silt")
+
+[node name="Waterline2" type="MeshInstance3D" parent="Derelict"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.244, 1.72, 0.5)
+cast_shadow = 0
+mesh = SubResource("Mesh_126")
+material_override = SubResource("Mat_Waterline")
+
+[node name="SiltBand2" type="MeshInstance3D" parent="Derelict"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.244, 1.68, 0.5)
+cast_shadow = 0
+mesh = SubResource("Mesh_127")
+material_override = SubResource("Mat_Silt")
+
+[node name="WaterlineFront" type="MeshInstance3D" parent="Derelict"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.72, 1.72, -3.6)
+cast_shadow = 0
+mesh = SubResource("Mesh_128")
+material_override = SubResource("Mat_Waterline")
+
+[node name="NumberDecal" type="Label3D" parent="Derelict"]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0.62, 1.16, -5.052)
+pixel_size = 0.0016
+modulate = Color(0.95, 0.86, 0.55, 1)
+outline_size = 0
+alpha_cut = 1
+text = "385"
+font_size = 96
+
+[node name="NumberDecal2" type="Label3D" parent="Derelict"]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0.62, 1.07, -5.052)
+pixel_size = 0.0012
+modulate = Color(0.95, 0.86, 0.55, 1)
+outline_size = 0
+alpha_cut = 1
+text = "BUS_DECAL_ROUTE"
+font_size = 40
+
+[node name="DeckRusted" type="MeshInstance3D" parent="Derelict"]
+transform = Transform3D(0.9903, 0, 0.1392, 0, 1, 0, -0.1392, 0, 0.9903, 0.61, 0.54, -1.32)
+mesh = SubResource("Mesh_129")
+material_override = SubResource("Mat_Rust")
+
+[node name="DeckHandle" type="MeshInstance3D" parent="Derelict"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0.61, 0.62, -1.32)
+mesh = SubResource("Mesh_130")
+material_override = SubResource("Mat_Rust")
+
+[node name="SchoolbagRotten" type="MeshInstance3D" parent="Derelict"]
+transform = Transform3D(0.9397, -0.0711, 0.3345, 0, 0.9781, 0.2079, -0.342, -0.1954, 0.9192, 0.73, 0.12, -1.6)
+mesh = SubResource("Mesh_131")
+material_override = SubResource("Mat_BagRotten")
+
+[node name="BellRope" type="MeshInstance3D" parent="Derelict"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0.3, 2.08, -2.5)
+mesh = SubResource("Mesh_132")
+material_override = SubResource("Mat_RopeRotten")
+
+[node name="BellRopeEnd" type="MeshInstance3D" parent="Derelict"]
+transform = Transform3D(0.9781, -0.2079, 0, 0.2079, 0.9781, 0, 0, 0, 1, 0.3, 1.8, -0.8)
+mesh = SubResource("Mesh_133")
+material_override = SubResource("Mat_RopeRotten")
+
+[node name="Bell" type="MeshInstance3D" parent="Derelict"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 2.1, -4.3)
+mesh = SubResource("Mesh_134")
+material_override = SubResource("Mat_Rust")
+
+[node name="Night1999" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+visible = false
+
+[node name="Cushions" type="Node3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="CushionL1" type="MeshInstance3D" parent="Night1999/Cushions"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.82, 0.48, -2.91)
+mesh = SubResource("Mesh_20")
+material_override = SubResource("Mat_VinylRed")
+
+[node name="BackrestL1" type="MeshInstance3D" parent="Night1999/Cushions"]
+transform = Transform3D(1, 0, 0, 0, 0.9903, -0.1392, 0, 0.1392, 0.9903, -0.82, 0.8, -2.725)
+mesh = SubResource("Mesh_21")
+material_override = SubResource("Mat_VinylRed")
+
+[node name="CushionL2" type="MeshInstance3D" parent="Night1999/Cushions"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.82, 0.48, -2.11)
+mesh = SubResource("Mesh_20")
+material_override = SubResource("Mat_VinylRed")
+
+[node name="BackrestL2" type="MeshInstance3D" parent="Night1999/Cushions"]
+transform = Transform3D(1, 0, 0, 0, 0.9903, -0.1392, 0, 0.1392, 0.9903, -0.82, 0.8, -1.925)
+mesh = SubResource("Mesh_21")
+material_override = SubResource("Mat_VinylRed")
+
+[node name="CushionL3" type="MeshInstance3D" parent="Night1999/Cushions"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.82, 0.48, -1.31)
+mesh = SubResource("Mesh_20")
+material_override = SubResource("Mat_VinylBlue")
+
+[node name="BackrestL3" type="MeshInstance3D" parent="Night1999/Cushions"]
+transform = Transform3D(1, 0, 0, 0, 0.9903, -0.1392, 0, 0.1392, 0.9903, -0.82, 0.8, -1.125)
+mesh = SubResource("Mesh_21")
+material_override = SubResource("Mat_VinylBlue")
+
+[node name="CushionL4" type="MeshInstance3D" parent="Night1999/Cushions"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.82, 0.48, -0.51)
+mesh = SubResource("Mesh_20")
+material_override = SubResource("Mat_VinylRed")
+
+[node name="BackrestL4" type="MeshInstance3D" parent="Night1999/Cushions"]
+transform = Transform3D(1, 0, 0, 0, 0.9903, -0.1392, 0, 0.1392, 0.9903, -0.82, 0.8, -0.325)
+mesh = SubResource("Mesh_21")
+material_override = SubResource("Mat_VinylRed")
+
+[node name="CushionL5" type="MeshInstance3D" parent="Night1999/Cushions"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.82, 0.48, 0.29)
+mesh = SubResource("Mesh_20")
+material_override = SubResource("Mat_VinylRed")
+
+[node name="BackrestL5" type="MeshInstance3D" parent="Night1999/Cushions"]
+transform = Transform3D(1, 0, 0, 0, 0.9903, -0.1392, 0, 0.1392, 0.9903, -0.82, 0.8, 0.475)
+mesh = SubResource("Mesh_21")
+material_override = SubResource("Mat_VinylRed")
+
+[node name="CushionL6" type="MeshInstance3D" parent="Night1999/Cushions"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.82, 0.48, 1.09)
+mesh = SubResource("Mesh_20")
+material_override = SubResource("Mat_VinylBlue")
+
+[node name="BackrestL6" type="MeshInstance3D" parent="Night1999/Cushions"]
+transform = Transform3D(1, 0, 0, 0, 0.9903, -0.1392, 0, 0.1392, 0.9903, -0.82, 0.8, 1.275)
+mesh = SubResource("Mesh_21")
+material_override = SubResource("Mat_VinylBlue")
+
+[node name="CushionL7" type="MeshInstance3D" parent="Night1999/Cushions"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.82, 0.48, 1.89)
+mesh = SubResource("Mesh_20")
+material_override = SubResource("Mat_VinylRed")
+
+[node name="BackrestL7" type="MeshInstance3D" parent="Night1999/Cushions"]
+transform = Transform3D(1, 0, 0, 0, 0.9903, -0.1392, 0, 0.1392, 0.9903, -0.82, 0.8, 2.075)
+mesh = SubResource("Mesh_21")
+material_override = SubResource("Mat_VinylRed")
+
+[node name="CushionL8" type="MeshInstance3D" parent="Night1999/Cushions"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.82, 0.48, 2.69)
+mesh = SubResource("Mesh_20")
+material_override = SubResource("Mat_VinylRed")
+
+[node name="BackrestL8" type="MeshInstance3D" parent="Night1999/Cushions"]
+transform = Transform3D(1, 0, 0, 0, 0.9903, -0.1392, 0, 0.1392, 0.9903, -0.82, 0.8, 2.875)
+mesh = SubResource("Mesh_21")
+material_override = SubResource("Mat_VinylRed")
+
+[node name="CushionL9" type="MeshInstance3D" parent="Night1999/Cushions"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.82, 0.48, 3.49)
+mesh = SubResource("Mesh_20")
+material_override = SubResource("Mat_VinylBlue")
+
+[node name="BackrestL9" type="MeshInstance3D" parent="Night1999/Cushions"]
+transform = Transform3D(1, 0, 0, 0, 0.9903, -0.1392, 0, 0.1392, 0.9903, -0.82, 0.8, 3.675)
+mesh = SubResource("Mesh_21")
+material_override = SubResource("Mat_VinylBlue")
+
+[node name="CushionR1" type="MeshInstance3D" parent="Night1999/Cushions"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.82, 0.48, -2.91)
+mesh = SubResource("Mesh_20")
+material_override = SubResource("Mat_VinylRed")
+
+[node name="BackrestR1" type="MeshInstance3D" parent="Night1999/Cushions"]
+transform = Transform3D(1, 0, 0, 0, 0.9903, -0.1392, 0, 0.1392, 0.9903, 0.82, 0.8, -2.725)
+mesh = SubResource("Mesh_21")
+material_override = SubResource("Mat_VinylRed")
+
+[node name="CushionR2" type="MeshInstance3D" parent="Night1999/Cushions"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.82, 0.48, -2.11)
+mesh = SubResource("Mesh_20")
+material_override = SubResource("Mat_VinylRed")
+
+[node name="BackrestR2" type="MeshInstance3D" parent="Night1999/Cushions"]
+transform = Transform3D(1, 0, 0, 0, 0.9903, -0.1392, 0, 0.1392, 0.9903, 0.82, 0.8, -1.925)
+mesh = SubResource("Mesh_21")
+material_override = SubResource("Mat_VinylRed")
+
+[node name="CushionR3" type="MeshInstance3D" parent="Night1999/Cushions"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.82, 0.48, -1.31)
+mesh = SubResource("Mesh_20")
+material_override = SubResource("Mat_VinylBlue")
+
+[node name="BackrestR3" type="MeshInstance3D" parent="Night1999/Cushions"]
+transform = Transform3D(1, 0, 0, 0, 0.9903, -0.1392, 0, 0.1392, 0.9903, 0.82, 0.8, -1.125)
+mesh = SubResource("Mesh_21")
+material_override = SubResource("Mat_VinylBlue")
+
+[node name="CushionR4" type="MeshInstance3D" parent="Night1999/Cushions"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.82, 0.48, -0.51)
+mesh = SubResource("Mesh_20")
+material_override = SubResource("Mat_VinylRed")
+
+[node name="BackrestR4" type="MeshInstance3D" parent="Night1999/Cushions"]
+transform = Transform3D(1, 0, 0, 0, 0.9903, -0.1392, 0, 0.1392, 0.9903, 0.82, 0.8, -0.325)
+mesh = SubResource("Mesh_21")
+material_override = SubResource("Mat_VinylRed")
+
+[node name="CushionR5" type="MeshInstance3D" parent="Night1999/Cushions"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.82, 0.48, 0.29)
+mesh = SubResource("Mesh_20")
+material_override = SubResource("Mat_VinylRed")
+
+[node name="BackrestR5" type="MeshInstance3D" parent="Night1999/Cushions"]
+transform = Transform3D(1, 0, 0, 0, 0.9903, -0.1392, 0, 0.1392, 0.9903, 0.82, 0.8, 0.475)
+mesh = SubResource("Mesh_21")
+material_override = SubResource("Mat_VinylRed")
+
+[node name="CushionR6" type="MeshInstance3D" parent="Night1999/Cushions"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.82, 0.48, 1.09)
+mesh = SubResource("Mesh_20")
+material_override = SubResource("Mat_VinylBlue")
+
+[node name="BackrestR6" type="MeshInstance3D" parent="Night1999/Cushions"]
+transform = Transform3D(1, 0, 0, 0, 0.9903, -0.1392, 0, 0.1392, 0.9903, 0.82, 0.8, 1.275)
+mesh = SubResource("Mesh_21")
+material_override = SubResource("Mat_VinylBlue")
+
+[node name="CushionR7" type="MeshInstance3D" parent="Night1999/Cushions"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.82, 0.48, 1.89)
+mesh = SubResource("Mesh_20")
+material_override = SubResource("Mat_VinylRed")
+
+[node name="BackrestR7" type="MeshInstance3D" parent="Night1999/Cushions"]
+transform = Transform3D(1, 0, 0, 0, 0.9903, -0.1392, 0, 0.1392, 0.9903, 0.82, 0.8, 2.075)
+mesh = SubResource("Mesh_21")
+material_override = SubResource("Mat_VinylRed")
+
+[node name="CushionR8" type="MeshInstance3D" parent="Night1999/Cushions"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.82, 0.48, 2.69)
+mesh = SubResource("Mesh_20")
+material_override = SubResource("Mat_VinylRed")
+
+[node name="BackrestR8" type="MeshInstance3D" parent="Night1999/Cushions"]
+transform = Transform3D(1, 0, 0, 0, 0.9903, -0.1392, 0, 0.1392, 0.9903, 0.82, 0.8, 2.875)
+mesh = SubResource("Mesh_21")
+material_override = SubResource("Mat_VinylRed")
+
+[node name="CushionR9" type="MeshInstance3D" parent="Night1999/Cushions"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.82, 0.48, 3.49)
+mesh = SubResource("Mesh_20")
+material_override = SubResource("Mat_VinylBlue")
+
+[node name="BackrestR9" type="MeshInstance3D" parent="Night1999/Cushions"]
+transform = Transform3D(1, 0, 0, 0, 0.9903, -0.1392, 0, 0.1392, 0.9903, 0.82, 0.8, 3.675)
+mesh = SubResource("Mesh_21")
+material_override = SubResource("Mat_VinylBlue")
+
+[node name="BenchCushion" type="MeshInstance3D" parent="Night1999/Cushions"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.48, 4.2)
+mesh = SubResource("Mesh_22")
+material_override = SubResource("Mat_VinylRed")
+
+[node name="BenchBackrest" type="MeshInstance3D" parent="Night1999/Cushions"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.82, 4.39)
+mesh = SubResource("Mesh_23")
+material_override = SubResource("Mat_VinylRed")
+
+[node name="Glass" type="MeshInstance3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.29, 1.3, -2.9)
+cast_shadow = 0
+mesh = SubResource("Mesh_24")
+material_override = SubResource("Mat_BusGlass")
+
+[node name="Glass2" type="MeshInstance3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.29, 1.3, -2.1)
+cast_shadow = 0
+mesh = SubResource("Mesh_24")
+material_override = SubResource("Mat_BusGlass")
+
+[node name="Glass3" type="MeshInstance3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.29, 1.3, -1.3)
+cast_shadow = 0
+mesh = SubResource("Mesh_24")
+material_override = SubResource("Mat_BusGlass")
+
+[node name="Glass4" type="MeshInstance3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.29, 1.3, -0.5)
+cast_shadow = 0
+mesh = SubResource("Mesh_24")
+material_override = SubResource("Mat_BusGlass")
+
+[node name="Glass5" type="MeshInstance3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.29, 1.3, 0.3)
+cast_shadow = 0
+mesh = SubResource("Mesh_24")
+material_override = SubResource("Mat_BusGlass")
+
+[node name="Glass6" type="MeshInstance3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.29, 1.3, 1.1)
+cast_shadow = 0
+mesh = SubResource("Mesh_24")
+material_override = SubResource("Mat_BusGlass")
+
+[node name="Glass7" type="MeshInstance3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.29, 1.3, 1.9)
+cast_shadow = 0
+mesh = SubResource("Mesh_24")
+material_override = SubResource("Mat_BusGlass")
+
+[node name="Glass8" type="MeshInstance3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.29, 1.3, 2.7)
+cast_shadow = 0
+mesh = SubResource("Mesh_24")
+material_override = SubResource("Mat_BusGlass")
+
+[node name="Glass9" type="MeshInstance3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.29, 1.3, 3.5)
+cast_shadow = 0
+mesh = SubResource("Mesh_24")
+material_override = SubResource("Mat_BusGlass")
+
+[node name="Glass10" type="MeshInstance3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.29, 1.3, 4.2)
+cast_shadow = 0
+mesh = SubResource("Mesh_24")
+material_override = SubResource("Mat_BusGlass")
+
+[node name="Glass11" type="MeshInstance3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.29, 1.3, -2.9)
+cast_shadow = 0
+mesh = SubResource("Mesh_24")
+material_override = SubResource("Mat_BusGlass")
+
+[node name="Glass12" type="MeshInstance3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.29, 1.3, -2.1)
+cast_shadow = 0
+mesh = SubResource("Mesh_24")
+material_override = SubResource("Mat_BusGlass")
+
+[node name="Glass13" type="MeshInstance3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.29, 1.3, -1.3)
+cast_shadow = 0
+mesh = SubResource("Mesh_24")
+material_override = SubResource("Mat_BusGlass")
+
+[node name="Glass14" type="MeshInstance3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.29, 1.3, -0.5)
+cast_shadow = 0
+mesh = SubResource("Mesh_24")
+material_override = SubResource("Mat_BusGlass")
+
+[node name="Glass15" type="MeshInstance3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.29, 1.3, 0.3)
+cast_shadow = 0
+mesh = SubResource("Mesh_24")
+material_override = SubResource("Mat_BusGlass")
+
+[node name="Glass16" type="MeshInstance3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.29, 1.3, 1.1)
+cast_shadow = 0
+mesh = SubResource("Mesh_24")
+material_override = SubResource("Mat_BusGlass")
+
+[node name="Glass17" type="MeshInstance3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.29, 1.3, 1.9)
+cast_shadow = 0
+mesh = SubResource("Mesh_24")
+material_override = SubResource("Mat_BusGlass")
+
+[node name="Glass18" type="MeshInstance3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.29, 1.3, 2.7)
+cast_shadow = 0
+mesh = SubResource("Mesh_24")
+material_override = SubResource("Mat_BusGlass")
+
+[node name="Glass19" type="MeshInstance3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.29, 1.3, 3.5)
+cast_shadow = 0
+mesh = SubResource("Mesh_24")
+material_override = SubResource("Mat_BusGlass")
+
+[node name="Glass20" type="MeshInstance3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.29, 1.3, 4.2)
+cast_shadow = 0
+mesh = SubResource("Mesh_24")
+material_override = SubResource("Mat_BusGlass")
+
+[node name="GlassDoor" type="MeshInstance3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.29, 1.35, -4.15)
+cast_shadow = 0
+mesh = SubResource("Mesh_26")
+material_override = SubResource("Mat_BusGlass")
+
+[node name="GlassFront" type="MeshInstance3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, -5.04)
+cast_shadow = 0
+mesh = SubResource("Mesh_27")
+material_override = SubResource("Mat_BusGlass")
+
+[node name="GlassRear" type="MeshInstance3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 4.64)
+cast_shadow = 0
+mesh = SubResource("Mesh_28")
+material_override = SubResource("Mat_BusGlass")
+
+[node name="TubeDead" type="MeshInstance3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 2.09, -2.5)
+cast_shadow = 0
+mesh = SubResource("Mesh_29")
+material_override = SubResource("Mat_TubeDead")
+
+[node name="TubeDead2" type="MeshInstance3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 2.09, 0.5)
+cast_shadow = 0
+mesh = SubResource("Mesh_29")
+material_override = SubResource("Mat_TubeDead")
+
+[node name="TubeDead3" type="MeshInstance3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 2.09, 3)
+cast_shadow = 0
+mesh = SubResource("Mesh_29")
+material_override = SubResource("Mat_TubeDead")
+
+[node name="Talisman" type="MeshInstance3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, -4.9)
+cast_shadow = 0
+mesh = SubResource("Mesh_35")
+material_override = SubResource("Mat_DecalTalisman")
+
+[node name="NumberDecal" type="Label3D" parent="Night1999"]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0.62, 1.16, -5.052)
+pixel_size = 0.0016
+modulate = Color(0.95, 0.86, 0.55, 1)
+outline_size = 0
+alpha_cut = 1
+text = "385"
+font_size = 96
+
+[node name="NumberDecal2" type="Label3D" parent="Night1999"]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0.62, 1.07, -5.052)
+pixel_size = 0.0012
+modulate = Color(0.95, 0.86, 0.55, 1)
+outline_size = 0
+alpha_cut = 1
+text = "BUS_DECAL_ROUTE"
+font_size = 40
+
+[node name="ConductorLamp" type="Node3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1.5, 4.5)
+
+[node name="Tank" type="MeshInstance3D" parent="Night1999/ConductorLamp"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.025, 0)
+mesh = SubResource("Mesh_135")
+material_override = SubResource("Mat_LampTin")
+
+[node name="Collar" type="MeshInstance3D" parent="Night1999/ConductorLamp"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0)
+mesh = SubResource("Mesh_136")
+material_override = SubResource("Mat_LampTin")
+
+[node name="Globe" type="MeshInstance3D" parent="Night1999/ConductorLamp"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.135, 0)
+cast_shadow = 0
+mesh = SubResource("Mesh_137")
+material_override = SubResource("Mat_LampGlass")
+
+[node name="Cap" type="MeshInstance3D" parent="Night1999/ConductorLamp"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.22, 0)
+mesh = SubResource("Mesh_138")
+material_override = SubResource("Mat_LampTin")
+
+[node name="Chimney" type="MeshInstance3D" parent="Night1999/ConductorLamp"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.255, 0)
+mesh = SubResource("Mesh_139")
+material_override = SubResource("Mat_LampTin")
+
+[node name="Guard" type="MeshInstance3D" parent="Night1999/ConductorLamp"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.07, 0.14, 0)
+mesh = SubResource("Mesh_140")
+material_override = SubResource("Mat_LampTin")
+
+[node name="Guard2" type="MeshInstance3D" parent="Night1999/ConductorLamp"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.07, 0.14, 0)
+mesh = SubResource("Mesh_140")
+material_override = SubResource("Mat_LampTin")
+
+[node name="Handle" type="MeshInstance3D" parent="Night1999/ConductorLamp"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0.27, 0)
+mesh = SubResource("Mesh_141")
+material_override = SubResource("Mat_LampTin")
+
+[node name="Flame" type="MeshInstance3D" parent="Night1999/ConductorLamp"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.11, 0)
+cast_shadow = 0
+mesh = SubResource("Mesh_142")
+material_override = SubResource("Mat_LampFlame")
+
+[node name="LampLight" type="OmniLight3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.95, 1.62, 4.35)
+light_color = Color(1, 0.68, 0.38, 1)
+light_energy = 1.6
+omni_range = 8.5
+omni_attenuation = 1.3
+shadow_enabled = true
+shadow_blur = 2.0
+
+[node name="Fill" type="OmniLight3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9, -1.5)
+light_color = Color(0.42, 0.55, 0.6, 1)
+light_energy = 0.3
+omni_range = 7.0
+
+[node name="DashGlow" type="OmniLight3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 1.3, -4.5)
+light_color = Color(0.4, 0.9, 0.5, 1)
+light_energy = 0.15
+omni_range = 1.6
+
+[node name="HeadlightLens" type="MeshInstance3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, -0.85, 0.35, -5.1)
+cast_shadow = 0
+mesh = SubResource("Mesh_143")
+material_override = SubResource("Mat_HeadlightLens")
+
+[node name="Headlight" type="SpotLight3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 0.9976, 0.0698, 0, -0.0698, 0.9976, -0.85, 0.35, -5.18)
+light_color = Color(1, 0.94, 0.8, 1)
+light_energy = 7.0
+spot_range = 32.0
+spot_angle = 24.0
+spot_attenuation = 0.8
+shadow_enabled = true
+
+[node name="HeadlightLens2" type="MeshInstance3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0.85, 0.35, -5.1)
+cast_shadow = 0
+mesh = SubResource("Mesh_143")
+material_override = SubResource("Mat_HeadlightLens")
+
+[node name="Headlight2" type="SpotLight3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 0.9976, 0.0698, 0, -0.0698, 0.9976, 0.85, 0.35, -5.18)
+light_color = Color(1, 0.94, 0.8, 1)
+light_energy = 7.0
+spot_range = 32.0
+spot_angle = 24.0
+spot_attenuation = 0.8
+shadow_enabled = true
+
+[node name="RouteBoard" type="MeshInstance3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.23, 1.45, -3.42)
+mesh = SubResource("Mesh_144")
+material_override = SubResource("Mat_SignWood")
+
+[node name="RouteTitle" type="Label3D" parent="Night1999"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -1.218, 1.65, -3.42)
+pixel_size = 0.0012
+modulate = Color(0.15, 0.1, 0.06, 1)
+outline_size = 0
+text = "BUS_ROUTE_BOARD_TITLE"
+font_size = 40
+
+[node name="Hook" type="MeshInstance3D" parent="Night1999"]
+transform = Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, -1.21, 1.57, -3.54)
+mesh = SubResource("Mesh_145")
+material_override = SubResource("Mat_BusChrome")
+
+[node name="Hook2" type="MeshInstance3D" parent="Night1999"]
+transform = Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, -1.21, 1.47, -3.54)
+mesh = SubResource("Mesh_145")
+material_override = SubResource("Mat_BusChrome")
+
+[node name="Hook3" type="MeshInstance3D" parent="Night1999"]
+transform = Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, -1.21, 1.37, -3.54)
+mesh = SubResource("Mesh_145")
+material_override = SubResource("Mat_BusChrome")
+
+[node name="Hook4" type="MeshInstance3D" parent="Night1999"]
+transform = Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, -1.21, 1.27, -3.54)
+mesh = SubResource("Mesh_145")
+material_override = SubResource("Mat_BusChrome")
+
+[node name="BellRope" type="MeshInstance3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0.3, 2.08, -0.4)
+mesh = SubResource("Mesh_146")
+material_override = SubResource("Mat_Rope")
+
+[node name="Bell" type="MeshInstance3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 2.1, -4.3)
+mesh = SubResource("Mesh_134")
+material_override = SubResource("Mat_Brass")
+
+[node name="Luggage" type="MeshInstance3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.02, 1.95, -2.1)
+mesh = SubResource("Mesh_62")
+material_override = SubResource("Mat_NightSack")
+
+[node name="Luggage2" type="MeshInstance3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.02, 1.95, 1.9)
+mesh = SubResource("Mesh_62")
+material_override = SubResource("Mat_NightSack")
+
+[node name="Outside" type="Node3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="Deck" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, -0.95, -30)
+cast_shadow = 0
+mesh = SubResource("Mesh_BridgeDeck")
+material_override = SubResource("Mat_WetAsphalt")
+
+[node name="River" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -7, 0)
+cast_shadow = 0
+mesh = SubResource("Mesh_River")
+material_override = SubResource("Mat_RiverNight")
+
+[node name="RailBeam" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.05, -30)
+mesh = SubResource("Mesh_147")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, 9.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost2" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, 7.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost3" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, 5.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost4" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, 3.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost5" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, 1.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost6" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, -0.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost7" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, -2.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost8" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, -4.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost9" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, -6.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost10" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, -8.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost11" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, -10.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost12" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, -12.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost13" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, -14.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost14" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, -16.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost15" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, -18.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost16" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, -20.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost17" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, -22.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost18" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, -24.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost19" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, -26.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost20" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, -28.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost21" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, -30.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost22" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, -32.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost23" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, -34.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost24" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, -36.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost25" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, -38.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost26" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, -40.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost27" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, -42.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost28" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, -44.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost29" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, -46.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost30" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, -48.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost31" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, -50.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost32" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, -52.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost33" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, -54.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost34" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, -56.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost35" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, -58.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost36" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, -60.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost37" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, -62.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost38" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, -64.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost39" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, -66.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost40" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.35, -0.5, -68.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailBeam2" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.05, -30)
+mesh = SubResource("Mesh_147")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost41" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, 9.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost42" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, 7.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost43" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, 5.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost44" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, 3.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost45" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, 1.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost46" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, -0.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost47" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, -2.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost48" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, -4.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost49" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, -6.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost50" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, -8.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost51" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, -10.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost52" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, -12.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost53" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, -14.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost54" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, -16.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost55" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, -18.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost56" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, -20.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost57" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, -22.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost58" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, -24.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost59" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, -26.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost60" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, -28.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost61" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, -30.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost62" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, -32.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost63" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, -34.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost64" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, -36.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost65" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, -38.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost66" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, -40.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost67" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, -42.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost68" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, -44.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost69" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, -46.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost70" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, -48.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost71" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, -50.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost72" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, -52.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost73" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, -54.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost74" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, -56.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost75" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, -58.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost76" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, -60.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost77" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, -62.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost78" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, -64.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost79" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, -66.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="RailPost80" type="MeshInstance3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, -0.5, -68.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgeRail" type="Node3D" parent="Night1999/Outside"]
+transform = Transform3D(0.8829, 0, -0.4695, 0, 1, 0, 0.4695, 0, 0.8829, 1.6, -0.95, -8.5)
+
+[node name="Beam" type="MeshInstance3D" parent="Night1999/Outside/BridgeRail"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+mesh = SubResource("Mesh_149")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BeamLow" type="MeshInstance3D" parent="Night1999/Outside/BridgeRail"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+mesh = SubResource("Mesh_150")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="Post" type="MeshInstance3D" parent="Night1999/Outside/BridgeRail"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.3, 0.475, 0)
+mesh = SubResource("Mesh_151")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="Post2" type="MeshInstance3D" parent="Night1999/Outside/BridgeRail"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.36, 0.475, 0)
+mesh = SubResource("Mesh_151")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="Post3" type="MeshInstance3D" parent="Night1999/Outside/BridgeRail"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.42, 0.475, 0)
+mesh = SubResource("Mesh_151")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="Post4" type="MeshInstance3D" parent="Night1999/Outside/BridgeRail"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.48, 0.475, 0)
+mesh = SubResource("Mesh_151")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="Post5" type="MeshInstance3D" parent="Night1999/Outside/BridgeRail"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.46, 0.475, 0)
+mesh = SubResource("Mesh_151")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="Post6" type="MeshInstance3D" parent="Night1999/Outside/BridgeRail"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4, 0.475, 0)
+mesh = SubResource("Mesh_151")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="Post7" type="MeshInstance3D" parent="Night1999/Outside/BridgeRail"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.34, 0.475, 0)
+mesh = SubResource("Mesh_151")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="Post8" type="MeshInstance3D" parent="Night1999/Outside/BridgeRail"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.28, 0.475, 0)
+mesh = SubResource("Mesh_151")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="StopSign" type="Node3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.6, -0.95, -11)
+visible = false
+
+[node name="Post" type="MeshInstance3D" parent="Night1999/Outside/StopSign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.15, 0)
+mesh = SubResource("Mesh_122")
+material_override = SubResource("Mat_Rust")
+
+[node name="Board" type="MeshInstance3D" parent="Night1999/Outside/StopSign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.25, 0)
+mesh = SubResource("Mesh_152")
+material_override = SubResource("Mat_SignWood")
+
+[node name="Label" type="Label3D" parent="Night1999/Outside/StopSign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.25, 0.02)
+pixel_size = 0.0024
+modulate = Color(0.12, 0.1, 0.08, 1)
+outline_size = 0
+text = "SIGN_BUS_STOP_THON_DOAI"
+font_size = 64
+width = 400.0
+autowrap_mode = 3
+horizontal_alignment = 1
+
+[node name="Tree0" type="Node3D" parent="Night1999/Outside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, -0.95, -14)
+
+[node name="Trunk" type="MeshInstance3D" parent="Night1999/Outside/Tree0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+mesh = SubResource("Mesh_124")
+material_override = SubResource("Mat_Trunk")
+
+[node name="Tree1" type="Node3D" parent="Night1999/Outside"]
+transform = Transform3D(0.342, 0, 0.9397, 0, 1, 0, -0.9397, 0, 0.342, 8, -0.95, -18)
+
+[node name="Trunk" type="MeshInstance3D" parent="Night1999/Outside/Tree1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+mesh = SubResource("Mesh_124")
+material_override = SubResource("Mat_Trunk")
+
+[node name="Tree2" type="Node3D" parent="Night1999/Outside"]
+transform = Transform3D(-0.766, 0, 0.6428, 0, 1, 0, -0.6428, 0, -0.766, -10, -0.95, -26)
+
+[node name="Trunk" type="MeshInstance3D" parent="Night1999/Outside/Tree2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+mesh = SubResource("Mesh_124")
+material_override = SubResource("Mat_Trunk")
+
+[node name="Rain" type="Node3D" parent="Night1999"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="PaperBasket" type="MeshInstance3D" parent="Day/Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.03, 0.57, -0.5)
+mesh = SubResource("Mesh_153")
+material_override = SubResource("Mat_Basket")
+
+[node name="PaperGoods" type="MeshInstance3D" parent="Day/Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.08, 0.68, -0.47)
+mesh = SubResource("Mesh_154")
+material_override = SubResource("Mat_PaperGoods0")
+
+[node name="PaperGoods2" type="MeshInstance3D" parent="Day/Props"]
+transform = Transform3D(0.9063, 0, 0.4226, 0, 1, 0, -0.4226, 0, 0.9063, -0.97, 0.7, -0.52)
+mesh = SubResource("Mesh_155")
+material_override = SubResource("Mat_PaperGoods1")
+
+[node name="PaperGoods3" type="MeshInstance3D" parent="Day/Props"]
+transform = Transform3D(0.6428, 0, 0.766, 0, 1, 0, -0.766, 0, 0.6428, -1.03, 0.66, -0.43)
+mesh = SubResource("Mesh_156")
+material_override = SubResource("Mat_PaperGoods2")
+
+[node name="Glimpse" type="Node3D" parent="Day"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+visible = false
+
+[node name="AnBody" type="Node3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.03, 0.05, -0.5)
+
+[node name="Thighs" type="MeshInstance3D" parent="Day/Glimpse/AnBody"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.52, -0.1)
+mesh = SubResource("Mesh_36")
+material_override = SubResource("Mat_Pants2")
+
+[node name="Shins" type="MeshInstance3D" parent="Day/Glimpse/AnBody"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.24, -0.33)
+mesh = SubResource("Mesh_37")
+material_override = SubResource("Mat_Pants2")
+
+[node name="Feet" type="MeshInstance3D" parent="Day/Glimpse/AnBody"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.035, -0.4)
+mesh = SubResource("Mesh_38")
+material_override = SubResource("Mat_Hair")
+
+[node name="Upper" type="Node3D" parent="Day/Glimpse/AnBody"]
+transform = Transform3D(1, 0, 0, 0, 0.9703, -0.2419, 0, 0.2419, 0.9703, 0, 0.58, 0.06)
+
+[node name="Torso" type="MeshInstance3D" parent="Day/Glimpse/AnBody/Upper"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.28, 0)
+mesh = SubResource("Mesh_39")
+material_override = SubResource("Mat_Shirt3")
+
+[node name="Arm" type="MeshInstance3D" parent="Day/Glimpse/AnBody/Upper"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.235, 0.33, 0)
+mesh = SubResource("Mesh_40")
+material_override = SubResource("Mat_Shirt3")
+
+[node name="Forearm" type="MeshInstance3D" parent="Day/Glimpse/AnBody/Upper"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 0.06, -0.16)
+mesh = SubResource("Mesh_41")
+material_override = SubResource("Mat_Shirt3")
+
+[node name="Hand" type="MeshInstance3D" parent="Day/Glimpse/AnBody/Upper"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.17, 0.05, -0.33)
+mesh = SubResource("Mesh_42")
+material_override = SubResource("Mat_Skin")
+
+[node name="Arm2" type="MeshInstance3D" parent="Day/Glimpse/AnBody/Upper"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.235, 0.33, 0)
+mesh = SubResource("Mesh_40")
+material_override = SubResource("Mat_Shirt3")
+
+[node name="Forearm2" type="MeshInstance3D" parent="Day/Glimpse/AnBody/Upper"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 0.06, -0.16)
+mesh = SubResource("Mesh_41")
+material_override = SubResource("Mat_Shirt3")
+
+[node name="Hand2" type="MeshInstance3D" parent="Day/Glimpse/AnBody/Upper"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.17, 0.05, -0.33)
+mesh = SubResource("Mesh_42")
+material_override = SubResource("Mat_Skin")
+
+[node name="Neck" type="MeshInstance3D" parent="Day/Glimpse/AnBody/Upper"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+mesh = SubResource("Mesh_43")
+material_override = SubResource("Mat_Skin")
+
+[node name="Head" type="Node3D" parent="Day/Glimpse/AnBody/Upper"]
+transform = Transform3D(0.9135, -0.4067, 0, 0.4067, 0.9135, 0, 0, 0, 1, 0, 0.72, 0)
+
+[node name="Face" type="MeshInstance3D" parent="Day/Glimpse/AnBody/Upper/Head"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("Mesh_44")
+material_override = SubResource("Mat_Skin")
+
+[node name="Hair" type="MeshInstance3D" parent="Day/Glimpse/AnBody/Upper/Head"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04, 0.02)
+mesh = SubResource("Mesh_45")
+material_override = SubResource("Mat_Hair")
+
+[node name="Ash" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(-0.1159, 0, 0.9933, 0, 1, 0, -0.9933, 0, -0.1159, -0.526, 0.52, -0.5827)
+cast_shadow = 0
+mesh = SubResource("Mesh_157")
+material_override = SubResource("Mat_PaperAshEdge")
+
+[node name="Ash2" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(0.2092, 0, -0.9779, 0, 1, 0, 0.9779, 0, 0.2092, -0.5746, 0.52, -0.4119)
+cast_shadow = 0
+mesh = SubResource("Mesh_157")
+material_override = SubResource("Mat_PaperAsh")
+
+[node name="Ash3" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(-0.1098, 0, -0.994, 0, 1, 0, 0.994, 0, -0.1098, -0.7054, 0.52, -0.6056)
+cast_shadow = 0
+mesh = SubResource("Mesh_157")
+material_override = SubResource("Mat_PaperAsh")
+
+[node name="Ash4" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(-0.2798, 0, 0.9601, 0, 1, 0, -0.9601, 0, -0.2798, -0.497, 0.52, -0.5954)
+cast_shadow = 0
+mesh = SubResource("Mesh_157")
+material_override = SubResource("Mat_PaperAshEdge")
+
+[node name="Ash5" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(0.9187, 0, 0.3949, 0, 1, 0, -0.3949, 0, 0.9187, -0.6303, 0.52, -0.5003)
+cast_shadow = 0
+mesh = SubResource("Mesh_157")
+material_override = SubResource("Mat_PaperAsh")
+
+[node name="Ash6" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(0.8607, 0, -0.509, 0, 1, 0, 0.509, 0, 0.8607, -0.641, 0.52, -0.4811)
+cast_shadow = 0
+mesh = SubResource("Mesh_157")
+material_override = SubResource("Mat_PaperAsh")
+
+[node name="Ash7" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(0.5304, 0, -0.8478, 0, 1, 0, 0.8478, 0, 0.5304, -0.6042, 0.52, -0.4352)
+cast_shadow = 0
+mesh = SubResource("Mesh_157")
+material_override = SubResource("Mat_PaperAshEdge")
+
+[node name="Ash8" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(-0.2239, 0, -0.9746, 0, 1, 0, 0.9746, 0, -0.2239, -0.7021, 0.52, -0.5117)
+cast_shadow = 0
+mesh = SubResource("Mesh_157")
+material_override = SubResource("Mat_PaperAsh")
+
+[node name="Ash9" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(0.6244, 0, 0.7811, 0, 1, 0, -0.7811, 0, 0.6244, -0.6648, 0.52, -0.4258)
+cast_shadow = 0
+mesh = SubResource("Mesh_157")
+material_override = SubResource("Mat_PaperAsh")
+
+[node name="Cup" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(0.5736, 0.8192, 0, -0.8192, 0.5736, 0, 0, 0, 1, 0.25, 1.18, -4.55)
+cast_shadow = 0
+mesh = SubResource("Mesh_158")
+material_override = SubResource("Mat_CupGlass")
+
+[node name="WaterDrop" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.32, 1.2, -4.5592)
+cast_shadow = 0
+mesh = SubResource("Mesh_159")
+material_override = SubResource("Mat_FrozenWater")
+
+[node name="WaterDrop2" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.34, 1.195, -4.5447)
+cast_shadow = 0
+mesh = SubResource("Mesh_160")
+material_override = SubResource("Mat_FrozenWater")
+
+[node name="WaterDrop3" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.36, 1.18, -4.543)
+cast_shadow = 0
+mesh = SubResource("Mesh_161")
+material_override = SubResource("Mat_FrozenWater")
+
+[node name="WaterDrop4" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.38, 1.155, -4.5427)
+cast_shadow = 0
+mesh = SubResource("Mesh_162")
+material_override = SubResource("Mat_FrozenWater")
+
+[node name="WaterDrop5" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 1.12, -4.554)
+cast_shadow = 0
+mesh = SubResource("Mesh_163")
+material_override = SubResource("Mat_FrozenWater")
+
+[node name="WaterDrop6" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.42, 1.075, -4.5499)
+cast_shadow = 0
+mesh = SubResource("Mesh_164")
+material_override = SubResource("Mat_FrozenWater")
+
+[node name="WaterDrop7" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.44, 1.02, -4.5582)
+cast_shadow = 0
+mesh = SubResource("Mesh_165")
+material_override = SubResource("Mat_FrozenWater")
+
+[node name="BridgeBeam" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.45, -0.05, -32)
+mesh = SubResource("Mesh_166")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.45, -0.5, -12.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost2" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.45, -0.5, -14.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost3" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.45, -0.5, -16.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost4" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.45, -0.5, -18.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost5" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.45, -0.5, -20.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost6" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.45, -0.5, -22.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost7" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.45, -0.5, -24.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost8" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.45, -0.5, -26.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost9" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.45, -0.5, -28.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost10" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.45, -0.5, -30.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost11" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.45, -0.5, -32.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost12" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.45, -0.5, -34.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost13" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.45, -0.5, -36.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost14" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.45, -0.5, -38.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost15" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.45, -0.5, -40.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost16" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.45, -0.5, -42.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost17" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.45, -0.5, -44.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost18" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.45, -0.5, -46.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost19" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.45, -0.5, -48.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost20" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.45, -0.5, -50.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgeBeam2" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.05, -0.05, -32)
+mesh = SubResource("Mesh_166")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost21" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.05, -0.5, -12.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost22" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.05, -0.5, -14.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost23" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.05, -0.5, -16.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost24" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.05, -0.5, -18.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost25" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.05, -0.5, -20.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost26" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.05, -0.5, -22.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost27" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.05, -0.5, -24.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost28" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.05, -0.5, -26.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost29" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.05, -0.5, -28.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost30" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.05, -0.5, -30.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost31" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.05, -0.5, -32.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost32" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.05, -0.5, -34.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost33" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.05, -0.5, -36.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost34" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.05, -0.5, -38.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost35" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.05, -0.5, -40.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost36" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.05, -0.5, -42.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost37" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.05, -0.5, -44.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost38" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.05, -0.5, -46.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost39" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.05, -0.5, -48.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="BridgePost40" type="MeshInstance3D" parent="Day/Glimpse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.05, -0.5, -50.5)
+mesh = SubResource("Mesh_148")
+material_override = SubResource("Mat_BridgeConcrete")
+
+[node name="SeatNo03" type="Label3D" parent="Fixtures"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -1.238, 1.8, -2.1)
+pixel_size = 0.0011
+modulate = Color(0.92, 0.9, 0.82, 1)
+outline_size = 6
+outline_modulate = Color(0.1, 0.1, 0.1, 1)
+text = "03"
+font_size = 48
+
+[node name="SeatNo04" type="Label3D" parent="Fixtures"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -1.238, 1.8, -2.1)
+pixel_size = 0.0011
+modulate = Color(0.92, 0.9, 0.82, 1)
+outline_size = 6
+outline_modulate = Color(0.1, 0.1, 0.1, 1)
+text = "04"
+font_size = 48
+
+[node name="SeatNo05" type="Label3D" parent="Fixtures"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -1.238, 1.8, -1.3)
+pixel_size = 0.0011
+modulate = Color(0.92, 0.9, 0.82, 1)
+outline_size = 6
+outline_modulate = Color(0.1, 0.1, 0.1, 1)
+text = "05"
+font_size = 48
+
+[node name="SeatNo07" type="Label3D" parent="Fixtures"]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 1.238, 1.8, -0.5)
+pixel_size = 0.0011
+modulate = Color(0.92, 0.9, 0.82, 1)
+outline_size = 6
+outline_modulate = Color(0.1, 0.1, 0.1, 1)
+text = "07"
+font_size = 48
+
+[node name="SeatNo08" type="Label3D" parent="Fixtures"]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 1.238, 1.8, 0.3)
+pixel_size = 0.0011
+modulate = Color(0.92, 0.9, 0.82, 1)
+outline_size = 6
+outline_modulate = Color(0.1, 0.1, 0.1, 1)
+text = "08"
+font_size = 48
 
 [node name="Player" parent="." instance=ExtResource("1_player")]
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0.05, -3.1)

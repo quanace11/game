@@ -37,6 +37,8 @@ const STANDING_HEAD_Y := 1.6
 @export var derelict_interactables: Array[Interactable] = []
 ## Bóng người hiện ngoài ô kính cửa xe trong khoảnh khắc mất điện (GhostGirl hoặc node chứa nó).
 @export var apparition: Node3D
+## Đạo diễn phần câu đố trong xác xe, nhận việc sau khi An thấy bóng người ngoài cửa kính.
+@export var wreck: BusWreckDirector
 @export var ticket_item_id: StringName = &"bus_ticket_1999"
 
 @export_group("Chỗ ngồi")
@@ -157,6 +159,10 @@ func _process(delta: float) -> void:
 func _run() -> void:
 	if _player == null:
 		return
+	if wreck and wreck.skips_ride():
+		_jump_to_trapped()
+		wreck.begin()
+		return
 	if start_state <= State.BOARDING:
 		await _play_intro()
 		if not is_inside_tree():
@@ -268,6 +274,11 @@ func _play_ride() -> void:
 	await _wait(1.0)
 	await _say(&"SPEAKER_OLD_WOMAN", &"BUS_OLD_WOMAN_RIVER")
 	await _say_monologue(&"BUS_MONO_RIVER")
+	await _wait(1.5)
+	# Gần đến cầu: phụ xe kể chuyện chuyến xe năm 99 và tục bóp còi ba tiếng.
+	await _say(&"SPEAKER_CONDUCTOR", &"BUS_CONDUCTOR_BRIDGE")
+	await _say(&"SPEAKER_CONDUCTOR", &"BUS_CONDUCTOR_HORN")
+	await _wait(1.0)
 	await _say(&"SPEAKER_OLD_WOMAN", &"BUS_OLD_WOMAN_SLEEP")
 	await _wait(2.0)
 
@@ -379,6 +390,9 @@ func _stand_up() -> void:
 func _on_bus_door_interacted(_actor: Node) -> void:
 	if state < State.DERELICT:
 		return
+	if state == State.TRAPPED and wreck and wreck.is_active():
+		wreck.on_bus_door()
+		return
 	EventBus.camera_shake_requested.emit(0.015, 0.4)
 	if _door_tried:
 		_monologue(&"BUS_MONO_DOOR_JAMMED")
@@ -414,8 +428,11 @@ func _play_apparition() -> void:
 	if not is_inside_tree():
 		return
 	_set_state(State.TRAPPED)
-	EventBus.objective_updated.emit(tr(&"OBJ_ESCAPE_BUS"), true)
 	GameManager.set_flag(&"bus_trapped")
+	if wreck:
+		wreck.begin()
+	else:
+		EventBus.objective_updated.emit(tr(&"OBJ_ESCAPE_BUS"), true)
 
 
 func _on_item_picked_up(item: ItemData, _slot: int) -> void:
@@ -430,6 +447,46 @@ func _on_document_closed() -> void:
 	_monologue(&"BUS_MONO_TICKET")
 
 
+## Chạy thử phần xác xe: bỏ qua đoạn đi xe, An đứng sẵn trong xác xe, đã thấy bóng người.
+func _jump_to_trapped() -> void:
+	_set_state(State.TRAPPED)
+	_door_tried = true
+	level.set_layer(BusLevel.Layer.DERELICT)
+	level.set_moving(false, true)
+	set_derelict_interactables(true)
+	_play(_derelict_amb, -8.0)
+	_player.global_position = stand_position
+	_player.rotation.y = deg_to_rad(stand_yaw_degrees)
+	_player.head.position.y = STANDING_HEAD_Y
+	_player.movement_locked = false
+	_player.set_physics_process(true)
+	_set_hotbar_visible(true)
+	EventBus.screen_fade_requested.emit(Color.BLACK, 0.0, 0.0)
+	EventBus.player_controls_locked.emit(false)
+
+
+# --- Dùng chung với BusWreckDirector -------------------------------------------------
+
+## Bật/tắt các vật chỉ có trong xác xe (vé, nón mục, vết thâm, cửa xe).
+func set_derelict_interactables(on: bool) -> void:
+	_set_derelict_interactables(on)
+
+
+## Tiếng gió rít trong xác xe.
+func set_derelict_ambience(on: bool) -> void:
+	if on and not _derelict_amb.playing:
+		_play(_derelict_amb, -8.0)
+	elif not on:
+		_derelict_amb.stop()
+
+
+## An ngồi lại ở ghế 07 (tỉnh dậy trên xe thật cuối chương).
+func place_seated() -> void:
+	_riding = false
+	_player.head.rotation = Vector3.ZERO
+	_place_seated()
+
+
 # --- Tiện ích ----------------------------------------------------------------------
 
 func _set_state(new_state: State) -> void:
@@ -438,11 +495,13 @@ func _set_state(new_state: State) -> void:
 
 
 func _set_derelict_interactables(on: bool) -> void:
-	for node in derelict_interactables:
-		if node == null:
+	for i in derelict_interactables.size():
+		# Vé xe nhặt rồi thì node đã bị giải phóng.
+		var node: Variant = derelict_interactables[i]
+		if not is_instance_valid(node):
 			continue
-		node.visible = on
-		node.enabled = on
+		(node as Interactable).visible = on
+		(node as Interactable).enabled = on
 	if bus_door:
 		bus_door.enabled = on
 

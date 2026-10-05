@@ -52,8 +52,12 @@ signal interacted(actor: Node)
 @export var interact_sfx: StringName
 ## Tắt tương tác sau lần dùng đầu tiên.
 @export var one_shot: bool = false
-## Tắt thì tâm ngắm bỏ qua vật này.
-@export var enabled: bool = true
+## Tắt thì tâm ngắm bỏ qua vật này (tia ngắm đi xuyên qua, không bị vật đang tắt che mất).
+@export var enabled: bool = true:
+	set(value):
+		enabled = value
+		if is_node_ready():
+			set_collision_layer_value(INTERACTABLE_LAYER, value)
 
 
 func _ready() -> void:
@@ -62,7 +66,7 @@ func _ready() -> void:
 	monitorable = true
 	collision_layer = 0
 	collision_mask = 0
-	set_collision_layer_value(INTERACTABLE_LAYER, true)
+	set_collision_layer_value(INTERACTABLE_LAYER, enabled)
 
 
 func is_memory_trigger() -> bool:
