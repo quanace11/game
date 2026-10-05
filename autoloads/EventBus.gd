@@ -41,6 +41,10 @@ signal inventory_full
 ## Mở trình đọc tài liệu. [param title] và [param pages] đã được dịch bằng tr().
 signal document_requested(title: String, pages: Array[String])
 
+## Như [signal document_requested] nhưng chỉ định luôn kiểu giấy [param style]
+## (xem DocumentStyles.STYLES, ví dụ &"note", &"form", &"talisman"); &"" = tự chọn theo nội dung.
+signal styled_document_requested(title: String, pages: Array[String], style: StringName)
+
 ## Khóa/mở khóa điều khiển của An (di chuyển, xoay nhìn, tương tác) khi UI mở.
 signal player_controls_locked(locked: bool)
 

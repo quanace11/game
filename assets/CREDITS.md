@@ -39,3 +39,21 @@ Các bộ `rug_dream`, `newspaper`, `reed_mat` và toàn bộ `decals/` vẫn l�
 | `wicker_basket_01` | https://polyhaven.com/a/wicker_basket_01 | Kuutti Siitonen |
 | `wooden_bucket_01` | https://polyhaven.com/a/wooden_bucket_01 | James Ray Cock |
 | `wooden_crate_01` | https://polyhaven.com/a/wooden_crate_01 | James Ray Cock |
+
+## Phông chữ giấy tờ (`assets/fonts/`)
+
+Tất cả theo giấy phép SIL Open Font License 1.1 (bản OFL.txt để kèm trong từng thư mục). Tệp woff2 tách theo bộ ký tự (vietnamese, latin, latin-ext) lấy từ gói @fontsource trên npm, bản gốc phát hành trên Google Fonts. Tải lại: `python3 tools/fetch_ui_fonts.py`.
+
+| Thư mục | Phông | Dùng cho | Tác giả |
+|---|---|---|---|
+| `charm` | Charm 400/700 | chữ bút mực, bút lông (nhật ký, bùa, tên trên giấy điều) | The Charm Project Authors (Cadson Demak) |
+| `mynerve` | Mynerve 400 | chữ bút bi (giấy ghi chú, sổ chi tiêu) | The Mynerve Project Authors (Carolina Short) |
+| `grape-nuts` | Grape Nuts 400 | chữ bút chì | The Grape Nuts Project Authors |
+| `mali` | Mali 400/500 | chữ học trò (vở ô li) | The Mali Project Authors (Cadson Demak) |
+| `tinos` | Tinos 400/700 | chữ in trên giấy tờ, vé | The Tinos Project Authors |
+| `xanh-mono` | Xanh Mono 400 | chữ đánh máy | The XanhMono Project Authors (Yellow Type Foundry) |
+| `oswald` | Oswald 500/700 | chữ con dấu, biển số | The Oswald Project Authors |
+
+## Ảnh giao diện giấy tờ (`assets/ui/`)
+
+`paper_fibers.png`, `paper_stains.png`, `tin_metal.png`, `wood_grain.png` là nhiễu tự sinh bằng `tools/bake_ui_textures.py` (thớ giấy, vết ố, tôn hộp sắt, vân gỗ), dùng cho shader `shaders/ui/paper_sheet.gdshader` và các câu đố.

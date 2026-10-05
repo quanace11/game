@@ -717,3 +717,25 @@ HINT_NAM_BELL_1,Bà Năm lỡ bến. Đọc tờ quy ước dán cạnh đầu d
 HINT_NAM_BELL_2,Giật dây chuông đúng 1 hồi: có khách xuống bến. Dây chuông chỉ dùng được sau khi chú Bảy buông tay.,Ring the bell exactly once: a passenger getting off. The rope is only free once the conductor lets go.
 NOKIA_PUNCH,"Khách lên ở đâu... thì bấm đúng bến ấy... mà lên lúc nào, tôi có thấy đâu...","Wherever they got on... you punch that stop... but when did she get on, I never saw..."
 NOKIA_NAM_BELL,Lỡ bến rồi... phải có chuông thì bà mới xuống được cháu ạ...,"I've missed my stop... I can't get off without the bell, child..."
+UI_PAPER_HINT_PAGES,[A/D] Lật trang    [E/Esc] Đặt xuống,[A/D] Turn over    [E/Esc] Put down
+UI_PAPER_HINT_SINGLE,[E/Esc] Đặt xuống,[E/Esc] Put down
+PAPER_STATE_HEADER,CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM,SOCIALIST REPUBLIC OF VIETNAM
+PAPER_STATE_MOTTO,Độc lập - Tự do - Hạnh phúc,Independence - Freedom - Happiness
+PAPER_BUS_COOP,HTX VẬN TẢI HUYỆN,DISTRICT TRANSPORT CO-OP
+PAPER_TICKET_COPY,Liên 2: giao khách - giữ vé để soát,Copy 2: passenger - keep for inspection
+PAPER_TRANSPORT_STAMP,SỞ GIAO THÔNG VẬN TẢI,TRANSPORT DEPARTMENT
+PAPER_PUNCH_SEAT,Ghế,Seat
+PAPER_PUNCH_FARE,Loại vé,Fare
+PAPER_PUNCH_STOP,Bến lên,Boarded at
+PAPER_PUNCH_ADULT,Người lớn,Adult
+PAPER_PUNCH_CHILD,Trẻ em,Child
+UI_TIN_HINT,"[A/D] Chọn vòng    [W/S, lăn chuột] Xoay số    [E] Mở nắp    [Esc] Thôi","[A/D] Pick a dial    [W/S, mouse wheel] Turn    [E] Open the lid    [Esc] Leave"
+UI_ROUTE_HINT,[Chuột] Kéo biển treo lên móc    [A/D] Chọn móc    [W/S] Đổi biển    [E] Xong    [Esc] Thôi,[Mouse] Drag a sign onto the hooks    [A/D] Pick hooks    [W/S] Change sign    [E] Done    [Esc] Leave
+UI_ROUTE_EMPTY,Còn móc chưa treo biển.,Some hooks are still empty.
+PAPER_ROUTE_BOARD,BẾN XE HUYỆN - THÔN ĐOÀI,DISTRICT STATION - THÔN ĐOÀI
+UI_PUNCH_HINT,"[Chuột] Rê kìm, bấm lỗ    [W/S] Hàng    [A/D] Lỗ    [Space] Bấm    [R] Vé mới    [E] Đưa vé    [Esc] Thôi","[Mouse] Move the punch, click    [W/S] Row    [A/D] Hole    [Space] Punch    [R] New ticket    [E] Hand it over    [Esc] Leave"
+UI_PUNCH_ROW_DONE,"Hàng này bấm rồi, lỗ không lấp lại được. Lấy vé khác [R].",This row is already punched; holes don't close. Take another ticket [R].
+UI_PUNCH_INCOMPLETE,Mỗi hàng phải bấm đúng một lỗ.,Each row needs exactly one hole.
+UI_BURN_HINT,"[Chuột] Chọn mẫu, đổi tên    [W/S] Mẫu guốc / tên    [A/D] Đổi    [E] Cắt rồi hóa    [Esc] Thôi","[Mouse] Pick a pattern, change the name    [W/S] Pattern / name    [A/D] Change    [E] Cut and burn    [Esc] Leave"
+UI_BELL_HINT,"[Kéo chuột xuống, S hoặc Space] Giật một hồi    [E] Buông tay    [Esc] Thôi","[Drag down, S or Space] Pull once    [E] Let go    [Esc] Leave"
+UI_GIVE_HINT,[Chuột] Kéo món đồ vào tay    [A/D] Chọn món    [E] Đặt vào tay    [Esc] Thôi,[Mouse] Drag an item into the hands    [A/D] Pick    [E] Place it    [Esc] Leave

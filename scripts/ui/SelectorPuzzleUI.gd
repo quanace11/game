@@ -1,45 +1,34 @@
-## Giao diện chọn đáp án nhiều hàng (CanvasLayer): khóa số, xếp biển bến, bấm vé...
+## Giao diện câu đố "cầm đồ vật lên tay" (CanvasLayer): hộp tôn khóa số, bảng lộ trình,
+## vé bấm lỗ, giấy cắt guốc mã, dây chuông, trả đồ cho hình nhân...
 ##
-## Mở khi nhận [signal EventBus.selector_requested]. Mỗi hàng là một danh sách lựa
-## chọn, người chơi xoay vòng từng hàng rồi xác nhận.
-## - W/S hoặc mũi tên Lên/Xuống: chọn hàng. A/D hoặc Trái/Phải: đổi lựa chọn.
-## - E / Enter: xác nhận. Esc: thoát, không tính gì.
-## - Có đáp án: sai thì nháy đỏ và giữ nguyên (hoặc đóng luôn nếu [code]close_on_wrong[/code]),
-##   đúng thì nháy xanh rồi đóng. Không có đáp án: đóng ngay và trả lựa chọn về.
-## Kết quả trả qua [signal EventBus.selector_submitted].
+## Mở khi nhận [signal EventBus.selector_requested]. Mỗi [code]puzzle_id[/code] có một
+## [PuzzleView] vẽ đồ vật thật (xem [method _make_view]); id lạ dùng [PaperFormView] (tờ giấy
+## ghi các hàng lựa chọn). View tự xử lý chuột/phím; Esc luôn là thôi, không tính gì.
+## - Có đáp án: sai thì view diễn phản hồi vật lý (khóa không nhả, biển lắc, vé bị vò...) rồi
+##   giữ nguyên (hoặc đóng luôn nếu [code]close_on_wrong[/code]); đúng thì diễn rồi đóng.
+## - Không có đáp án: đóng ngay sau khi view diễn xong và trả lựa chọn về.
+## Kết quả trả qua [signal EventBus.selector_submitted] (cùng định dạng như trước).
 class_name SelectorPuzzleUI
 extends CanvasLayer
 
-const COLOR_ROW := Color(0.16, 0.15, 0.13)
-const COLOR_ROW_SELECTED := Color(0.93, 0.9, 0.82)
-const COLOR_TEXT := Color(0.9, 0.88, 0.82)
-const COLOR_TEXT_SELECTED := Color(0.08, 0.07, 0.06)
-const COLOR_WRONG := Color(0.9, 0.3, 0.25)
-const COLOR_RIGHT := Color(0.45, 0.85, 0.5)
+const COLOR_WRONG := Color(0.95, 0.55, 0.45)
+const COLOR_RIGHT := Color(0.7, 0.9, 0.6)
 
-@export var right_hold: float = 0.7
-@export var wrong_hold: float = 0.9
-@export var tick_sfx: StringName = &"sfx_dial_tick"
 @export var wrong_sfx: StringName = &"sfx_keypad_error"
 @export var right_sfx: StringName = &"sfx_lock_click"
 
 var _puzzle_id: StringName
-var _rows: Array = []
 var _answer: Array = []
 var _close_on_wrong := false
-var _selection: Array[int] = []
-var _row := 0
 var _busy := false
 var _tween: Tween
+var _status_tween: Tween
 
+var _stage: UIStage
+var _view: PuzzleView
 var _title: Label
-var _list: VBoxContainer
 var _status: Label
 var _hint: Label
-var _row_panels: Array[PanelContainer] = []
-var _row_values: Array[Label] = []
-var _row_names: Array[Label] = []
-var _row_arrows: Array[Array] = []
 
 
 func _ready() -> void:
@@ -62,33 +51,33 @@ func is_open() -> bool:
 	return visible
 
 
+## Đồ vật đang mở (để kiểm thử).
+func get_view() -> PuzzleView:
+	return _view
+
+
 ## [param rows]: mỗi phần tử là Dictionary {"label": String, "options": Array[String]} đã dịch.
 ## [param answer]: chỉ số lựa chọn đúng của từng hàng; rỗng = không kiểm tra.
 func open(puzzle_id: StringName, title: String, rows: Array, answer: Array, close_on_wrong: bool) -> void:
 	if visible or rows.is_empty():
 		return
 	_puzzle_id = puzzle_id
-	_rows = rows
 	_answer = answer
 	_close_on_wrong = close_on_wrong
 	_busy = false
+	if _view:
+		_view.queue_free()
+	_view = _make_view(puzzle_id)
+	_stage.add_child(_view)
+	_stage.move_child(_view, 0)
+	_view.setup(puzzle_id, title, rows, _stage)
+	_view.submit_requested.connect(_submit)
+	_view.status_requested.connect(_show_status.bind(Color(0.9, 0.86, 0.78)))
 	_title.text = title
-	_hint.text = tr(&"UI_SELECTOR_HINT")
+	_hint.text = _view.hint_text()
 	_status.text = ""
-	_selection.clear()
-	for child in _list.get_children():
-		child.queue_free()
-	_row_panels.clear()
-	_row_values.clear()
-	_row_names.clear()
-	_row_arrows.clear()
-	for row: Dictionary in rows:
-		_selection.append(0)
-		_add_row(String(row.get("label", "")))
-	_row = 0
-	_refresh()
 	visible = true
-	UIModal.open(false)
+	UIModal.open(true)
 
 
 func close() -> void:
@@ -98,11 +87,32 @@ func close() -> void:
 		_tween.kill()
 	visible = false
 	_busy = false
+	if _view:
+		_view.queue_free()
+		_view = null
 	UIModal.close()
 
 
 func get_selection() -> Array[int]:
-	return _selection.duplicate()
+	return _view.get_selection() if _view else ([] as Array[int])
+
+
+func _make_view(puzzle_id: StringName) -> PuzzleView:
+	var id := String(puzzle_id)
+	match id:
+		"tin_box":
+			return TinBoxView.new()
+		"route":
+			return RouteBoardView.new()
+		"punch":
+			return TicketPunchView.new()
+		"burn_clogs":
+			return ClogPatternView.new()
+		"bell":
+			return BellRopeView.new()
+	if id.begins_with("give_"):
+		return GiveItemView.new()
+	return PaperFormView.new()
 
 
 func _input(event: InputEvent) -> void:
@@ -114,68 +124,53 @@ func _input(event: InputEvent) -> void:
 		return
 	if event.is_action_pressed(&"ui_cancel"):
 		close()
-	elif event.is_action_pressed(&"interact") or event.is_action_pressed(&"ui_accept"):
-		_submit()
-	elif event.is_action_pressed(&"move_forward") or event.is_action_pressed(&"ui_up"):
-		_move_row(-1)
-	elif event.is_action_pressed(&"move_back") or event.is_action_pressed(&"ui_down"):
-		_move_row(1)
-	elif event.is_action_pressed(&"move_left") or event.is_action_pressed(&"ui_left"):
-		_cycle(-1)
-	elif event.is_action_pressed(&"move_right") or event.is_action_pressed(&"ui_right"):
-		_cycle(1)
-	else:
+		get_viewport().set_input_as_handled()
 		return
-	get_viewport().set_input_as_handled()
-
-
-func _move_row(step: int) -> void:
-	_row = wrapi(_row + step, 0, _rows.size())
-	_refresh()
-
-
-func _cycle(step: int) -> void:
-	var options: Array = _rows[_row].get("options", [])
-	if options.is_empty():
-		return
-	_selection[_row] = wrapi(_selection[_row] + step, 0, options.size())
-	EventBus.ui_sfx_requested.emit(tick_sfx)
-	_status.text = ""
-	_refresh()
+	if _view and _view.handle_input(event):
+		get_viewport().set_input_as_handled()
+	elif event is InputEventKey or event is InputEventMouseButton:
+		# Không để phím/chuột lọt xuống người chơi khi đang cầm đồ vật.
+		get_viewport().set_input_as_handled()
 
 
 func _submit() -> void:
-	var selection := get_selection()
+	if _busy or _view == null:
+		return
+	var selection := _view.get_selection()
+	_busy = true
+	_view.set_busy(true)
+	if _tween:
+		_tween.kill()
+	_tween = create_tween()
 	if _answer.is_empty():
-		_finish(selection, true)
+		_tween.tween_interval(_view.play_right())
+		_tween.tween_callback(_finish.bind(selection, true))
 		return
 	var correct := true
 	for i in _answer.size():
 		if i >= selection.size() or selection[i] != int(_answer[i]):
 			correct = false
 			break
-	_busy = true
-	if _tween:
-		_tween.kill()
-	_tween = create_tween()
 	if correct:
 		EventBus.ui_sfx_requested.emit(right_sfx)
-		_set_status(tr(&"UI_SELECTOR_RIGHT"), COLOR_RIGHT)
-		_tween.tween_interval(right_hold)
+		_tween.tween_interval(_view.play_right())
+		_tween.tween_callback(_show_status.bind(tr(&"UI_SELECTOR_RIGHT"), COLOR_RIGHT))
+		_tween.tween_interval(0.35)
 		_tween.tween_callback(_finish.bind(selection, true))
 		return
 	EventBus.ui_sfx_requested.emit(wrong_sfx)
-	_set_status(tr(&"UI_SELECTOR_WRONG"), COLOR_WRONG)
+	var hold := _view.play_wrong(_close_on_wrong)
+	_tween.tween_interval(hold * 0.5)
+	_tween.tween_callback(_show_status.bind(tr(&"UI_SELECTOR_WRONG"), COLOR_WRONG))
+	_tween.tween_interval(hold * 0.5)
 	if _close_on_wrong:
-		_tween.tween_interval(wrong_hold * 0.6)
+		_tween.tween_interval(0.3)
 		_tween.tween_callback(_finish.bind(selection, false))
 		return
-	for i in 3:
-		_tween.tween_callback(_status.set_modulate.bind(Color(1, 1, 1, 0.3)))
-		_tween.tween_interval(wrong_hold / 6.0)
-		_tween.tween_callback(_status.set_modulate.bind(Color.WHITE))
-		_tween.tween_interval(wrong_hold / 6.0)
-	_tween.tween_callback(func() -> void: _busy = false)
+	_tween.tween_callback(func() -> void:
+		_busy = false
+		if _view:
+			_view.set_busy(false))
 
 
 func _finish(selection: Array[int], correct: bool) -> void:
@@ -184,112 +179,56 @@ func _finish(selection: Array[int], correct: bool) -> void:
 	EventBus.selector_submitted.emit(id, selection, correct)
 
 
-func _set_status(text: String, c: Color) -> void:
+func _show_status(text: String, color: Color) -> void:
 	_status.text = text
-	_status.add_theme_color_override(&"font_color", c)
-	_status.modulate = Color.WHITE
-
-
-func _refresh() -> void:
-	for i in _row_panels.size():
-		var selected := i == _row
-		var style := _row_panels[i].get_theme_stylebox(&"panel") as StyleBoxFlat
-		style.bg_color = COLOR_ROW_SELECTED if selected else COLOR_ROW
-		var text_color := COLOR_TEXT_SELECTED if selected else COLOR_TEXT
-		_row_names[i].add_theme_color_override(&"font_color", text_color)
-		_row_values[i].add_theme_color_override(&"font_color", text_color)
-		for arrow: Label in _row_arrows[i]:
-			arrow.add_theme_color_override(&"font_color", text_color)
-		var options: Array = _rows[i].get("options", [])
-		_row_values[i].text = String(options[_selection[i]]) if not options.is_empty() else ""
+	_status.add_theme_color_override(&"font_color", color)
+	_status.modulate.a = 1.0
+	if _status_tween:
+		_status_tween.kill()
+	_status_tween = create_tween()
+	_status_tween.tween_interval(1.8)
+	_status_tween.tween_property(_status, "modulate:a", 0.0, 0.8)
 
 
 # --- Dựng giao diện -----------------------------------------------------------
 
 func _build() -> void:
 	var dim := ColorRect.new()
-	dim.color = Color(0.02, 0.015, 0.01, 0.75)
+	dim.color = Color(0.012, 0.01, 0.008, 0.82)
 	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
 	dim.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(dim)
+	var vignette := TextureRect.new()
+	vignette.texture = DocumentViewer._vignette_texture()
+	vignette.set_anchors_preset(Control.PRESET_FULL_RECT)
+	vignette.stretch_mode = TextureRect.STRETCH_SCALE
+	vignette.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(vignette)
+	_stage = UIStage.new()
+	add_child(_stage)
 
-	var center := CenterContainer.new()
-	center.set_anchors_preset(Control.PRESET_FULL_RECT)
-	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(center)
-	var body := PanelContainer.new()
-	body.custom_minimum_size = Vector2(560, 0)
-	body.add_theme_stylebox_override(&"panel", _make_style(Color(0.09, 0.085, 0.075), Color(0.42, 0.36, 0.26), 26))
-	center.add_child(body)
-	var vbox := VBoxContainer.new()
-	vbox.add_theme_constant_override(&"separation", 14)
-	body.add_child(vbox)
-
-	_title = Label.new()
-	_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_title.add_theme_font_size_override(&"font_size", 20)
-	_title.add_theme_color_override(&"font_color", Color(0.85, 0.8, 0.68))
-	vbox.add_child(_title)
-
-	_list = VBoxContainer.new()
-	_list.add_theme_constant_override(&"separation", 8)
-	vbox.add_child(_list)
-
-	_status = Label.new()
-	_status.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_status.add_theme_font_size_override(&"font_size", 18)
-	_status.custom_minimum_size = Vector2(0, 26)
-	vbox.add_child(_status)
-
-	_hint = Label.new()
-	_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_hint.add_theme_font_size_override(&"font_size", 13)
-	_hint.add_theme_color_override(&"font_color", Color(0.6, 0.58, 0.54))
-	vbox.add_child(_hint)
+	_title = _label(17, Color(0.86, 0.80, 0.68), HORIZONTAL_ALIGNMENT_CENTER)
+	_title.position = Vector2(140, 18)
+	_title.size = Vector2(1000, 30)
+	_title.uppercase = true
+	_stage.add_child(_title)
+	_status = _label(20, Color.WHITE, HORIZONTAL_ALIGNMENT_CENTER)
+	_status.position = Vector2(240, 640)
+	_status.size = Vector2(800, 30)
+	_stage.add_child(_status)
+	_hint = _label(13, Color(0.62, 0.58, 0.52), HORIZONTAL_ALIGNMENT_CENTER)
+	_hint.position = Vector2(40, 684)
+	_hint.size = Vector2(1200, 22)
+	_stage.add_child(_hint)
 
 
-func _add_row(label_text: String) -> void:
-	var panel := PanelContainer.new()
-	panel.add_theme_stylebox_override(&"panel", _make_style(COLOR_ROW, Color(0.3, 0.27, 0.22), 10))
-	_list.add_child(panel)
-	var hbox := HBoxContainer.new()
-	hbox.add_theme_constant_override(&"separation", 10)
-	panel.add_child(hbox)
-	var name_label := Label.new()
-	name_label.text = label_text
-	name_label.custom_minimum_size = Vector2(170, 0)
-	name_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	name_label.add_theme_font_size_override(&"font_size", 16)
-	hbox.add_child(name_label)
-	var left := _arrow("◀")
-	hbox.add_child(left)
-	var value := Label.new()
-	value.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	value.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	value.add_theme_font_size_override(&"font_size", 20)
-	hbox.add_child(value)
-	var right := _arrow("▶")
-	hbox.add_child(right)
-	_row_panels.append(panel)
-	_row_names.append(name_label)
-	_row_values.append(value)
-	_row_arrows.append([left, right])
-
-
-func _arrow(text: String) -> Label:
-	var arrow := Label.new()
-	arrow.text = text
-	arrow.add_theme_font_size_override(&"font_size", 18)
-	return arrow
-
-
-func _make_style(bg: Color, border: Color, margin: float) -> StyleBoxFlat:
-	var style := StyleBoxFlat.new()
-	style.bg_color = bg
-	style.border_color = border
-	style.set_border_width_all(2)
-	style.set_corner_radius_all(8)
-	style.set_content_margin_all(margin)
-	return style
+func _label(font_size: int, color: Color, align: HorizontalAlignment) -> Label:
+	var label := Label.new()
+	label.horizontal_alignment = align
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	label.add_theme_font_size_override(&"font_size", font_size)
+	label.add_theme_color_override(&"font_color", color)
+	label.add_theme_color_override(&"font_shadow_color", Color(0, 0, 0, 0.85))
+	label.add_theme_constant_override(&"shadow_offset_x", 0)
+	label.add_theme_constant_override(&"shadow_offset_y", 2)
+	return label

@@ -51,7 +51,20 @@ func _ready() -> void:
 	_cover.draw.connect(_draw_cover)
 	_paper.draw.connect(_draw_paper)
 	_lines.draw.connect(_draw_lines)
+	_apply_handwriting()
+	_paper.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
 	EventBus.book_requested.connect(_on_book_requested)
+
+
+## Chữ trong sổ là nét bút bi viết tay, mỗi dòng ngồi đúng lên dòng kẻ của trang giấy.
+func _apply_handwriting() -> void:
+	var font := PaperFonts.get_font(PaperFonts.BALLPOINT)
+	var size := 21
+	_body.add_theme_font_override("font", font)
+	_body.add_theme_font_size_override("font_size", size)
+	_body.add_theme_color_override("font_color", Color(0.12, 0.17, 0.42, 0.92))
+	_body.add_theme_constant_override("line_spacing", int(round(RULE_SPACING - font.get_height(size))))
+	_body.offset_top = RULE_TOP - 4.0 - font.get_ascent(size)
 
 
 func _exit_tree() -> void:
@@ -225,7 +238,10 @@ func _draw_cover() -> void:
 
 func _draw_paper() -> void:
 	for poly in _current_polygons():
+		# Giấy có thớ sợi và ngả vàng dần về phía mép dưới.
 		_paper.draw_colored_polygon(poly, PAPER)
+		PuzzleArt.tex_poly(_paper, poly, PuzzleArt.FIBER_TEX, Color(1.75, 1.64, 1.38, 0.35), 1.0 / 420.0)
+		PuzzleArt.grad_poly(_paper, poly, Color(0.55, 0.4, 0.15, 0.0), Color(0.55, 0.4, 0.15, 0.12))
 		var edge := poly.duplicate()
 		edge.append(poly[0])
 		_paper.draw_polyline(edge, PAPER_EDGE, 2.0)
@@ -239,5 +255,16 @@ func _draw_lines() -> void:
 		y += RULE_SPACING
 	_lines.draw_line(Vector2(56, 0), Vector2(56, s.y), MARGIN_LINE, 1.5)
 	# Vết ố vàng của giấy cũ.
-	_lines.draw_circle(Vector2(s.x * 0.78, s.y * 0.82), 46, Color(0.6, 0.45, 0.2, 0.08))
-	_lines.draw_circle(Vector2(s.x * 0.2, s.y * 0.15), 30, Color(0.6, 0.45, 0.2, 0.06))
+	_tide_mark(Vector2(s.x * 0.78, s.y * 0.82), 46.0, 0.08)
+	_tide_mark(Vector2(s.x * 0.2, s.y * 0.15), 30.0, 0.06)
+
+
+## Vệt nước loang đã khô: lòng nhạt, viền đậm hơn, mép không tròn đều.
+func _tide_mark(c: Vector2, r: float, alpha: float) -> void:
+	var pts := PackedVector2Array()
+	for i in 32:
+		var a := TAU * i / 32.0
+		pts.append(c + Vector2(cos(a), sin(a)) * r * (1.0 + 0.08 * sin(a * 3.0 + r) + 0.05 * sin(a * 7.0)))
+	_lines.draw_colored_polygon(pts, Color(0.6, 0.45, 0.2, alpha * 0.5))
+	pts.append(pts[0])
+	_lines.draw_polyline(pts, Color(0.5, 0.35, 0.15, alpha * 1.6), 2.0, true)
